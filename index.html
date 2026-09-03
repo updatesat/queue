@@ -650,13 +650,32 @@
                 });
         }
 
-        // --- Helper for Foreground Native Notifications ---
-        function sendLocalNotification(title, body) {
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification(title, { 
-                    body: body,
-                    icon: 'https://cdn-icons-png.flaticon.com/512/1828/1828859.png'
-                });
+        // --- Helper for Mobile-Compatible Notifications ---
+        async function sendLocalNotification(title, body) {
+            if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+            const options = {
+                body: body,
+                icon: 'https://cdn-icons-png.flaticon.com/512/1828/1828859.png',
+                badge: 'https://cdn-icons-png.flaticon.com/512/1828/1828859.png'
+            };
+
+            try {
+                // Preferred approach for Mobile Chrome / Service Worker browsers
+                if ('serviceWorker' in navigator) {
+                    const registration = await navigator.serviceWorker.ready;
+                    await registration.showNotification(title, options);
+                    return;
+                }
+            } catch (err) {
+                console.warn("ServiceWorker notification failed, attempting desktop constructor:", err);
+            }
+
+            // Fallback for Desktop browsers that support direct constructor
+            try {
+                new Notification(title, options);
+            } catch (err) {
+                console.error("Failed to construct notification:", err);
             }
         }
 
@@ -696,7 +715,7 @@
                     if (currentToken) {
                         console.log('Client Token:', currentToken);
                         await setDoc(doc(db, "fcm_tokens", currentToken), { token: currentToken, timestamp: Date.now() });
-                        sendLocalNotification("Notifications Enabled", "You will now receive queue updates.");
+                        await sendLocalNotification("Notifications Enabled", "You will now receive queue updates.");
                         alert("Notifications enabled successfully!");
                     } else {
                         alert("Could not retrieve token. Please refresh and try again.");
