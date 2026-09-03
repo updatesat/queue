@@ -633,6 +633,17 @@
         const auth = getAuth(app);
         const messaging = getMessaging(app);
 
+        // --- Register Firebase Service Worker ---
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./firebase-messaging-sw.js')
+                .then((registration) => {
+                    console.log('Firebase Service Worker registered with scope:', registration.scope);
+                })
+                .catch((err) => {
+                    console.error('Firebase Service Worker registration failed:', err);
+                });
+        }
+
         // --- Helper for Foreground Native Notifications ---
         function sendLocalNotification(title, body) {
             if (Notification.permission === 'granted') {
@@ -648,8 +659,12 @@
             try {
                 const permission = await Notification.requestPermission();
                 if (permission === 'granted') {
+                    // Get current service worker registration
+                    const swRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
+                    
                     const currentToken = await getToken(messaging, { 
-                        vapidKey: 'BPPFCDrHVbVyYPgJB9NGrag4kuB7GxqZHTx1pRT46VkgSzb7pM1dXZ7ZV1oYHLfNLB645XIRauSrwXcTmCyXcCU' 
+                        vapidKey: 'BPPFCDrHVbVyYPgJB9NGrag4kuB7GxqZHTx1pRT46VkgSzb7pM1dXZ7ZV1oYHLfNLB645XIRauSrwXcTmCyXcCU',
+                        serviceWorkerRegistration: swRegistration
                     });
                     
                     if (currentToken) {
