@@ -71,41 +71,72 @@
         #announcementContainer {
             display: none;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.8rem;
             margin-bottom: 1.5rem;
         }
 
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shine {
+            to { left: 200%; }
+        }
+
         .announcement-item {
-            background-color: #0284c7;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
             color: white;
-            padding: 0.75rem 1rem;
+            padding: 1rem 1.5rem;
             border-radius: var(--radius);
             font-weight: 600;
-            box-shadow: var(--shadow);
+            font-size: 1.05rem;
+            box-shadow: 0 6px 12px rgba(2, 132, 199, 0.25);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 0.5rem;
-            animation: fadeIn 0.3s ease;
+            gap: 1rem;
+            border-left: 6px solid #bae6fd;
+            animation: slideInDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle animated shine effect across the announcement */
+        .announcement-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
+            animation: shine 4s infinite;
         }
 
         .announcement-item .remove-ann-btn {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.25);
             border: none;
             color: white;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             line-height: 1;
             padding: 0;
-            transition: background 0.2s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 2; /* Keeps button clickable above shine effect */
         }
-        .announcement-item .remove-ann-btn:hover { background: rgba(239, 68, 68, 0.8); }
+        
+        .announcement-item .remove-ann-btn:hover { 
+            background: rgba(239, 68, 68, 0.9); 
+            transform: scale(1.1) rotate(90deg);
+        }
 
         #maintenanceBanner { 
             display: none; 
@@ -360,7 +391,9 @@
                 min-height: 98vh !important;
             } 
             .main-content {
-                flex: 1 0 auto !important;
+                display: flex !important;
+                flex-direction: column !important;
+                flex: 1 !important;
             }
             .header-container {
                 margin-bottom: 0.4rem !important;
@@ -375,7 +408,8 @@
                 display: grid !important;
                 grid-template-columns: repeat(7, 1fr) !important;
                 gap: 2px !important;
-                align-items: start !important;
+                align-items: stretch !important; /* Stretches cards vertically */
+                flex: 1 !important; /* Pushes the grid to the bottom of the page */
                 width: 100% !important;
             } 
             .product-card { 
@@ -502,7 +536,7 @@
             </div>
         </div>
 
-        <div id="announcementContainer"></div>
+        <div id="announcementContainer" class="no-print"></div>
 
         <div id="maintenanceBanner" class="no-print">
             ⚠️ CRUSHER UNDER MAINTENANCE - LOADING PAUSED / EXPECT DELAYS ⚠️
