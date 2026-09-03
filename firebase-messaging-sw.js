@@ -14,10 +14,15 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-    const notificationTitle = payload.notification.title;
+    // Customize notifications safely or handle data-only payloads
+    const notificationTitle = payload.notification?.title || payload.data?.title || 'New Message';
     const notificationOptions = {
-        body: payload.notification.body,
+        body: payload.notification?.body || payload.data?.body || '',
         icon: 'https://cdn-icons-png.flaticon.com/512/1828/1828859.png'
     };
-    self.registration.showNotification(notificationTitle, notificationOptions);
+
+    // Only manually trigger if FCM hasn't automatically handled a notification payload
+    if (!payload.notification) {
+        self.registration.showNotification(notificationTitle, notificationOptions);
+    }
 });
