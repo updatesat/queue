@@ -606,7 +606,7 @@
     <footer class="print-footer">
         <div class="print-footer-text">
             TO GET LIVE UPDATE OF THE LIST PLS LOGIN:<br>
-            <a href="https://myqueuelist.netlify.app/" target="_blank" rel="noopener noreferrer">https://myqueuelist.netlify.app/</a>
+            <a href="https://updatesat.github.io/queue/" target="_blank" rel="noopener noreferrer">https://updatesat.github.io/queue/</a>
         </div>
         <div id="qrcode"></div>
     </footer>
@@ -621,7 +621,7 @@
         from "https://www.gstatic.com/firebasejs/10.4.0/firebase-messaging.js";
 
         new QRCode(document.getElementById("qrcode"), {
-            text: "https://myqueuelist.netlify.app/",
+            text: "https://updatesat.github.io/queue/",
             width: 45,
             height: 45
         });
@@ -745,7 +745,7 @@
         const savedAnnouncementsRef = collection(db, "saved_announcements");
         
         // Define standard footer string
-        const linkFooter = "\n\n🌐 Live updates: https://myqueuelist.netlify.app/";
+        const linkFooter = "\n\n🌐 Live updates: https://updatesat.github.io/queue/";
 
         let isMaintenance = false;
         let announcementsList = [];
