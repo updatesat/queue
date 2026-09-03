@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Vehicle Queue</title>
+    
+    <!-- Mobile PWA Support Meta Tags -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" 
             integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" 
@@ -646,7 +652,7 @@
 
         // --- Helper for Foreground Native Notifications ---
         function sendLocalNotification(title, body) {
-            if (Notification.permission === 'granted') {
+            if ('Notification' in window && Notification.permission === 'granted') {
                 new Notification(title, { 
                     body: body,
                     icon: 'https://cdn-icons-png.flaticon.com/512/1828/1828859.png'
@@ -656,11 +662,31 @@
 
         // --- Push Notification Setup with VAPID Key ---
         document.getElementById('enablePushBtn').addEventListener('click', async () => {
+            if (!('Notification' in window)) {
+                alert("This browser does not support mobile push notifications.");
+                return;
+            }
+
+            if (!('serviceWorker' in navigator)) {
+                alert("Service Workers are not supported on this browser.");
+                return;
+            }
+
             try {
-                const permission = await Notification.requestPermission();
+                // Cross-browser requestPermission handler
+                let permission;
+                if (Notification.requestPermission) {
+                    permission = await new Promise((resolve) => {
+                        const res = Notification.requestPermission(resolve);
+                        if (res && typeof res.then === 'function') {
+                            res.then(resolve);
+                        }
+                    });
+                }
+
                 if (permission === 'granted') {
-                    // Get current service worker registration
-                    const swRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
+                    // Wait until service worker is active
+                    const swRegistration = await navigator.serviceWorker.ready;
                     
                     const currentToken = await getToken(messaging, { 
                         vapidKey: 'BPPFCDrHVbVyYPgJB9NGrag4kuB7GxqZHTx1pRT46VkgSzb7pM1dXZ7ZV1oYHLfNLB645XIRauSrwXcTmCyXcCU',
@@ -670,16 +696,17 @@
                     if (currentToken) {
                         console.log('Client Token:', currentToken);
                         await setDoc(doc(db, "fcm_tokens", currentToken), { token: currentToken, timestamp: Date.now() });
-                        sendLocalNotification("Notifications Enabled", "You will now receive queue updates when this tab is open.");
+                        sendLocalNotification("Notifications Enabled", "You will now receive queue updates.");
+                        alert("Notifications enabled successfully!");
                     } else {
-                        console.log('No registration token available. Request permission to generate one.');
+                        alert("Could not retrieve token. Please refresh and try again.");
                     }
                 } else {
-                    alert("Notification permission denied.");
+                    alert("Notification permission denied by user or browser.");
                 }
             } catch (err) {
-                console.log('An error occurred while retrieving token. ', err);
-                alert("Please ensure you are viewing this via HTTPS or a local server to enable push notifications.");
+                console.error('An error occurred while retrieving token:', err);
+                alert("Push Notification Error: " + (err.message || err));
             }
         });
 
