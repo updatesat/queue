@@ -1,0 +1,9 @@
+{
+  "name": "Live Vehicle Queue",
+  "short_name": "Queue",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f3f4f6",
+  "theme_color": "#4f46e5",
+  "gcm_sender_id": "982753224888"
+}
