@@ -242,16 +242,15 @@
         }
         input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15); background-color: white; }
 
-        /* UPDATED: Product Grid for Single Page Fit */
+        /* UPDATED: Responsive Product Grid (7 cols PC, 2 cols Mobile) */
         .product-grid { 
-            display: flex; 
-            flex-direction: row;
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); /* 7 columns for PC */
             gap: 0.5rem; 
             width: 100%;
-            /* Removed overflow-x to prevent scrolling, relies on flex shrinking */
         }
 
-        /* UPDATED: Product Card to squeeze onto one screen */
+        /* UPDATED: Product Card for Grid Layout */
         .product-card { 
             background: var(--card-bg); 
             border-radius: var(--radius); 
@@ -262,10 +261,14 @@
             border-top: 4px solid var(--primary); 
             transition: var(--transition); 
             overflow: hidden;
-            
-            /* These properties force all 7 columns to scale and fit side by side */
-            flex: 1 1 0; 
             min-width: 0; /* Prevents long text from breaking the layout */
+        }
+        
+        /* Mobile View: 2 Columns Side-by-Side */
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         .product-card h3 { 
