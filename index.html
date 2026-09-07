@@ -56,8 +56,8 @@
 
         .main-content {
             flex: 1 0 auto;
-            padding: 1.5rem;
-            max-width: 1600px;
+            padding: 1rem;
+            max-width: 100%; /* Use full width for single page fit */
             margin: 0 auto;
             width: 100%;
             box-sizing: border-box;
@@ -222,7 +222,7 @@
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
             padding: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             display: flex;
             flex-direction: column;
             gap: 1.25rem;
@@ -242,69 +242,87 @@
         }
         input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15); background-color: white; }
 
-        /* Product Grid */
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; width: 100%; }
-        .product-card { 
-            background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow-sm); 
-            display: flex; flex-direction: column; border: 1px solid var(--border); border-top: 4px solid var(--primary); 
-            transition: var(--transition); overflow: hidden;
+        /* UPDATED: Product Grid for Single Page Fit */
+        .product-grid { 
+            display: flex; 
+            flex-direction: row;
+            gap: 0.5rem; 
+            width: 100%;
+            /* Removed overflow-x to prevent scrolling, relies on flex shrinking */
         }
-        .product-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+
+        /* UPDATED: Product Card to squeeze onto one screen */
+        .product-card { 
+            background: var(--card-bg); 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow-sm); 
+            display: flex; 
+            flex-direction: column; 
+            border: 1px solid var(--border); 
+            border-top: 4px solid var(--primary); 
+            transition: var(--transition); 
+            overflow: hidden;
+            
+            /* These properties force all 7 columns to scale and fit side by side */
+            flex: 1 1 0; 
+            min-width: 0; /* Prevents long text from breaking the layout */
+        }
         
         .product-card h3 { 
-            margin: 0; padding: 1rem 0.75rem; background-color: #f8fafc; border-bottom: 1px solid var(--border); 
-            text-align: center; display: flex; flex-direction: column; gap: 0.5rem; font-weight: 700; font-size: 1rem;
-            color: var(--text-main); position: sticky; top: 0; z-index: 10;
+            margin: 0; padding: 0.75rem 0.25rem; background-color: #f8fafc; border-bottom: 1px solid var(--border); 
+            text-align: center; display: flex; flex-direction: column; gap: 0.5rem; font-weight: 700; font-size: 0.9rem;
+            color: var(--text-main); position: sticky; top: 0; z-index: 10; word-wrap: break-word;
         }
         
-        .stock-badge { font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 99px; font-weight: 600; width: fit-content; margin: 0 auto; letter-spacing: 0.3px;}
+        .stock-badge { font-size: 0.65rem; padding: 0.2rem 0.4rem; border-radius: 99px; font-weight: 600; width: fit-content; margin: 0 auto; letter-spacing: 0.3px;}
         .stock-in { background-color: var(--success-light); color: var(--dark-green); border: 1px solid #bbf7d0;}
         .stock-out { background-color: var(--danger-light); color: var(--danger); border: 1px solid #fecaca;}
 
         /* Quick Add Panel Styles */
         .quick-add-container { display: none; }
         body.admin-mode .quick-add-container { display: block; }
-        .quick-add-panel { display: none; padding: 0.75rem; background-color: #f1f5f9; border-bottom: 1px solid var(--border); gap: 0.5rem; flex-wrap: wrap; }
+        .quick-add-panel { display: none; padding: 0.5rem; background-color: #f1f5f9; border-bottom: 1px solid var(--border); gap: 0.25rem; flex-wrap: wrap; justify-content: center; }
         .quick-add-panel.active { display: flex; animation: fadeIn 0.2s ease; }
+        .quick-add-panel input { min-width: 100px; padding: 0.4rem; font-size: 0.8rem; }
         
-        .vehicle-list { list-style: none; padding: 0; margin: 0; min-height: 150px; max-height: 400px; overflow-y: auto; }
-        .vehicle-list::-webkit-scrollbar { width: 6px; }
+        .vehicle-list { list-style: none; padding: 0; margin: 0; min-height: 150px; max-height: 400px; overflow-y: auto; overflow-x: hidden; }
+        .vehicle-list::-webkit-scrollbar { width: 4px; }
         .vehicle-list::-webkit-scrollbar-track { background: transparent; }
         .vehicle-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .vehicle-list::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
         .empty-msg { 
-            text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); 
-            font-size: 0.85rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+            text-align: center; padding: 2rem 0.5rem; color: var(--text-muted); 
+            font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
         }
-        .empty-msg svg { width: 32px; height: 32px; opacity: 0.5; }
+        .empty-msg svg { width: 24px; height: 24px; opacity: 0.5; }
         
         .vehicle-item { 
-            display: flex; flex-direction: column; padding: 0.8rem; border-bottom: 1px solid var(--border); 
-            gap: 0.6rem; animation: fadeIn 0.3s ease; background: white;
+            display: flex; flex-direction: column; padding: 0.6rem; border-bottom: 1px solid var(--border); 
+            gap: 0.4rem; animation: fadeIn 0.3s ease; background: white; word-wrap: break-word;
         }
         .vehicle-item:last-child { border-bottom: none; }
         .vehicle-item:hover { background-color: #f8fafc; }
         
         .vehicle-info { display: flex; flex-direction: column; gap: 0.2rem; }
-        .vehicle-no { font-weight: 700; font-size: 0.95rem; color: var(--text-main); letter-spacing: 0.5px; }
-        .vehicle-meta { font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center;}
-        .status-text { font-weight: 600; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; text-transform: uppercase; }
+        .vehicle-no { font-weight: 700; font-size: 0.85rem; color: var(--text-main); letter-spacing: 0.5px; text-align: center; }
+        .vehicle-meta { font-size: 0.7rem; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 2px;}
+        .status-text { font-weight: 600; padding: 2px 4px; border-radius: 4px; font-size: 0.65rem; text-transform: uppercase; }
         
         .status-Waiting { background-color: var(--warning-light); color: var(--warning); }
         .status-Loading { background-color: #dbeafe; color: #2563eb; }
         .status-Loaded { background-color: var(--success-light); color: var(--success); }
 
-        .narration-text { font-size: 0.75rem; color: var(--text-muted); background: #f1f5f9; padding: 4px 8px; border-radius: 4px; border-left: 2px solid #94a3b8; margin-top: 4px; }
+        .narration-text { font-size: 0.7rem; color: var(--text-muted); background: #f1f5f9; padding: 4px; border-radius: 4px; border-left: 2px solid #94a3b8; margin-top: 4px; text-align: center;}
         
         .vehicle-item.is-loading { border-left: 3px solid #3b82f6; background-color: #f8fafc;}
         .vehicle-item.is-loaded { opacity: 0.6; filter: grayscale(50%); }
         .vehicle-item.is-loaded .vehicle-no { text-decoration: line-through; }
         
-        .btn-group { display: flex; gap: 0.25rem; flex-wrap: wrap; margin-top: 0.2rem; }
-        .mini-btn { padding: 4px; border-radius: 4px; background: transparent; color: var(--text-muted); border: 1px solid transparent; width: 26px; height: 26px;}
+        .btn-group { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-top: 0.2rem; justify-content: center; }
+        .mini-btn { padding: 2px; border-radius: 4px; background: transparent; color: var(--text-muted); border: 1px solid transparent; width: 22px; height: 22px; font-size: 0.8rem;}
         .mini-btn:hover { background-color: #e2e8f0; color: var(--text-main); }
-        .action-btn { flex: 1; padding: 0.4rem; font-size: 0.75rem; }
+        .action-btn { flex: 1; padding: 0.3rem; font-size: 0.7rem; min-width: 100%;}
 
         .admin-only { display: none !important; }
         body.admin-mode .admin-only { display: flex !important; }
@@ -320,8 +338,8 @@
             html, body { background-color: white !important; }
             .app-header { border: none; padding: 0; margin-bottom: 10px; position: static; }
             .main-content { padding: 0; max-width: 100%; }
-            .product-grid { grid-template-columns: repeat(7, 1fr) !important; gap: 2px !important; } 
-            .product-card { box-shadow: none !important; border: 1px solid #000 !important; border-top: 2px solid #000 !important; border-radius: 0; } 
+            .product-grid { display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 2px !important; flex-wrap: wrap !important; overflow: visible !important;} 
+            .product-card { box-shadow: none !important; border: 1px solid #000 !important; border-top: 2px solid #000 !important; border-radius: 0; flex: 1 1 auto !important;} 
             .product-card h3 { font-size: 0.6rem !important; padding: 2px !important; border-bottom: 1px solid #000 !important; }
             .stock-badge { font-size: 0.45rem !important; padding: 0 !important; border: none !important; }
             .vehicle-item { padding: 2px !important; border-bottom: 1px solid #ccc !important; }
@@ -417,12 +435,12 @@
             <div class="controls-row admin-only" style="border-top: 1px solid var(--border); padding-top: 1.25rem;">
                 <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2.281 4.385A2.999 2.999 0 0 0 4 7v3.5a2.5 2.5 0 0 1-2.5 2.5H1v1h14v-1h-.5A2.5 2.5 0 0 1 12 10.5V7a3 3 0 0 0-1.719-2.615l-.838-.419a2.001 2.001 0 0 0-2.886 0l-.838.419zm1.751-2.072A4.002 4.002 0 0 1 8 1.001 4.002 4.002 0 0 1 11.968 2.313a3.001 3.001 0 0 1 2.21 2.766 4.003 4.003 0 0 1-3.14 3.902V10.5a3.5 3.5 0 0 0 3.5 3.5h.962V15H.5v-1h.962a3.5 3.5 0 0 0 3.5-3.5V8.98a4.002 4.002 0 0 1-3.14-3.902 3.001 3.001 0 0 1 2.21-2.765z"/></svg> Megaphone</span>
                 <select id="announcementPresetSelect" style="flex: 1;"><option value="" disabled selected>-- Select Saved Announcement --</option><option value="Crusher Maintenance in progress. Loading expects delay of 1-2 hours.">⚙️ Maintenance Delay</option><option value="Heavy rain in plant area. Loading operations paused temporarily.">🌧️ Heavy Rain Pause</option><option value="Grid power outage. Generator setup in progress.">⚡ Power Outage</option><option value="Crusher operations running normally. All materials available.">✅ Normal Operations</option></select>
-                <div class="btn-group">
+                <div class="btn-group" style="margin-top:0;">
                     <button id="editPresetBtn" class="icon-only-btn btn-secondary" title="Edit Selected Preset"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5z"/></svg></button>
                     <button id="deletePresetBtn" class="icon-only-btn btn-secondary" title="Delete Selected Preset"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></button>
                 </div>
                 <input type="text" id="announcementInput" placeholder="Enter custom message..." style="flex: 2;">
-                <div class="btn-group">
+                <div class="btn-group" style="margin-top:0;">
                     <button class="btn-primary" id="updateAnnouncementBtn">Publish</button>
                     <button class="btn-secondary" id="saveAnnouncementBtn" title="Save as template">💾</button>
                     <button class="btn-secondary" id="clearAnnouncementBtn" title="Clear All">Clear</button>
@@ -437,14 +455,14 @@
             <div class="product-card">
                 <h3>
                     <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        6MM Queue 
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('6MM')" style="position: absolute; right: 0;" title="Quick Add">➕</button>
+                        6MM
+                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('6MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
                     </div>
                     <span id="badge-6MM" class="stock-badge stock-in">Available</span>
                 </h3>
                 <div class="quick-add-container">
                     <div id="quick-add-6MM" class="quick-add-panel">
-                        <input type="text" id="quick-input-6MM" list="savedVehiclesList" placeholder="No. (KL-26-H-1670)" oninput="this.value = formatVehicleNumber(this.value)">
+                        <input type="text" id="quick-input-6MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
                         <button class="btn-primary action-btn" onclick="quickAddVehicle('6MM')">Add</button>
                     </div>
                 </div>
@@ -455,14 +473,14 @@
             <div class="product-card">
                 <h3>
                     <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        12MM Queue 
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('12MM')" style="position: absolute; right: 0;" title="Quick Add">➕</button>
+                        12MM
+                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('12MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
                     </div>
                     <span id="badge-12MM" class="stock-badge stock-in">Available</span>
                 </h3>
                 <div class="quick-add-container">
                     <div id="quick-add-12MM" class="quick-add-panel">
-                        <input type="text" id="quick-input-12MM" list="savedVehiclesList" placeholder="No. (KL-26-H-1670)" oninput="this.value = formatVehicleNumber(this.value)">
+                        <input type="text" id="quick-input-12MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
                         <button class="btn-primary action-btn" onclick="quickAddVehicle('12MM')">Add</button>
                     </div>
                 </div>
@@ -473,14 +491,14 @@
             <div class="product-card">
                 <h3>
                     <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        20MM Queue 
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('20MM')" style="position: absolute; right: 0;" title="Quick Add">➕</button>
+                        20MM
+                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('20MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
                     </div>
                     <span id="badge-20MM" class="stock-badge stock-in">Available</span>
                 </h3>
                 <div class="quick-add-container">
                     <div id="quick-add-20MM" class="quick-add-panel">
-                        <input type="text" id="quick-input-20MM" list="savedVehiclesList" placeholder="No. (KL-26-H-1670)" oninput="this.value = formatVehicleNumber(this.value)">
+                        <input type="text" id="quick-input-20MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
                         <button class="btn-primary action-btn" onclick="quickAddVehicle('20MM')">Add</button>
                     </div>
                 </div>
@@ -491,14 +509,14 @@
             <div class="product-card">
                 <h3>
                     <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        25MM Queue 
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('25MM')" style="position: absolute; right: 0;" title="Quick Add">➕</button>
+                        25MM
+                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('25MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
                     </div>
                     <span id="badge-25MM" class="stock-badge stock-in">Available</span>
                 </h3>
                 <div class="quick-add-container">
                     <div id="quick-add-25MM" class="quick-add-panel">
-                        <input type="text" id="quick-input-25MM" list="savedVehiclesList" placeholder="No. (KL-26-H-1670)" oninput="this.value = formatVehicleNumber(this.value)">
+                        <input type="text" id="quick-input-25MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
                         <button class="btn-primary action-btn" onclick="quickAddVehicle('25MM')">Add</button>
                     </div>
                 </div>
@@ -509,14 +527,14 @@
             <div class="product-card">
                 <h3>
                     <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        40MM Queue 
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('40MM')" style="position: absolute; right: 0;" title="Quick Add">➕</button>
+                        40MM
+                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('40MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
                     </div>
                     <span id="badge-40MM" class="stock-badge stock-in">Available</span>
                 </h3>
                 <div class="quick-add-container">
                     <div id="quick-add-40MM" class="quick-add-panel">
-                        <input type="text" id="quick-input-40MM" list="savedVehiclesList" placeholder="No. (KL-26-H-1670)" oninput="this.value = formatVehicleNumber(this.value)">
+                        <input type="text" id="quick-input-40MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
                         <button class="btn-primary action-btn" onclick="quickAddVehicle('40MM')">Add</button>
                     </div>
                 </div>
@@ -527,14 +545,14 @@
             <div class="product-card">
                 <h3>
                     <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        DUST Queue 
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('DUST')" style="position: absolute; right: 0;" title="Quick Add">➕</button>
+                        DUST
+                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('DUST')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
                     </div>
                     <span id="badge-DUST" class="stock-badge stock-in">Available</span>
                 </h3>
                 <div class="quick-add-container">
                     <div id="quick-add-DUST" class="quick-add-panel">
-                        <input type="text" id="quick-input-DUST" list="savedVehiclesList" placeholder="No. (KL-26-H-1670)" oninput="this.value = formatVehicleNumber(this.value)">
+                        <input type="text" id="quick-input-DUST" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
                         <button class="btn-primary action-btn" onclick="quickAddVehicle('DUST')">Add</button>
                     </div>
                 </div>
@@ -545,14 +563,14 @@
             <div class="product-card">
                 <h3>
                     <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        M-SAND Queue 
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('M-SAND')" style="position: absolute; right: 0;" title="Quick Add">➕</button>
+                        M-SAND
+                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('M-SAND')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
                     </div>
                     <span id="badge-M-SAND" class="stock-badge stock-in">Available</span>
                 </h3>
                 <div class="quick-add-container">
                     <div id="quick-add-M-SAND" class="quick-add-panel">
-                        <input type="text" id="quick-input-M-SAND" list="savedVehiclesList" placeholder="No. (KL-26-H-1670)" oninput="this.value = formatVehicleNumber(this.value)">
+                        <input type="text" id="quick-input-M-SAND" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
                         <button class="btn-primary action-btn" onclick="quickAddVehicle('M-SAND')">Add</button>
                     </div>
                 </div>
