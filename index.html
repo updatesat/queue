@@ -219,7 +219,6 @@
         }
         .notification-modal-actions {
             display: flex;
-            gap: 0.75rgh;
             gap: 0.75rem;
         }
         .notification-modal-actions button {
@@ -959,7 +958,7 @@
             new Notification(title, options);
         }
 
-        async function registerAndSaveToken() {
+        async function registerAndSaveToken(showSuccessToast = false) {
             try {
                 const swRegistration = await navigator.serviceWorker.ready;
                 const currentToken = await getToken(messaging, { 
@@ -968,10 +967,14 @@
                 });
                 if (currentToken) {
                     await setDoc(doc(db, "fcm_tokens", currentToken), { token: currentToken, timestamp: Date.now() });
-                    await sendLocalNotification("Notifications Activated", "You will now receive live updates.");
-                    window.showToast("Notifications activated successfully!", "success");
+                    if (showSuccessToast) {
+                        await sendLocalNotification("Notifications Activated", "You will now receive live updates.");
+                        window.showToast("Notifications activated successfully!", "success");
+                    }
                 }
-            } catch (err) { window.showToast("Error: " + err.message, "error"); }
+            } catch (err) { 
+                if (showSuccessToast) window.showToast("Error: " + err.message, "error"); 
+            }
         }
 
         // --- AUTOMATIC POPUP NOTIFICATION PROMPT LOGIC ---
@@ -982,11 +985,11 @@
             const acceptBtn = document.getElementById('acceptNotificationBtn');
             const denyBtn = document.getElementById('denyNotificationBtn');
 
-            // If already granted, register quietly in background
+            // If already granted, run token sync silently WITHOUT showing any success toast
             if (Notification.permission === 'granted') {
-                registerAndSaveToken();
+                registerAndSaveToken(false);
             } 
-            // If default (not answered yet) or denied, pop up the neat box every time they visit
+            // If default or denied, show the neat custom prompt modal
             else if (Notification.permission === 'default' || Notification.permission === 'denied') {
                 setTimeout(() => {
                     modal.style.display = 'flex';
@@ -998,7 +1001,8 @@
                 try {
                     const permission = await Notification.requestPermission();
                     if (permission === 'granted') {
-                        registerAndSaveToken();
+                        // Show success toast only when they explicitly click Accept
+                        registerAndSaveToken(true);
                     } else {
                         window.showToast("Notification permission denied.", "error");
                     }
