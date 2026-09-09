@@ -14,14 +14,13 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-    // Customize notifications safely or handle data-only payloads
-    const notificationTitle = payload.notification?.title || payload.data?.title || 'New Message';
+    const notificationTitle = payload.notification?.title || payload.data?.title || 'Live Queue Update';
     const notificationOptions = {
         body: payload.notification?.body || payload.data?.body || '',
-        icon: 'https://cdn-icons-png.flaticon.com/512/1828/1828859.png'
+        tag: 'crusher-queue-notification' // Professional grouping tag to prevent stacking clutter
+        // Icon property intentionally omitted for a clean, professional icon-free look
     };
 
-    // Only manually trigger if FCM hasn't automatically handled a notification payload
     if (!payload.notification) {
         self.registration.showNotification(notificationTitle, notificationOptions);
     }
