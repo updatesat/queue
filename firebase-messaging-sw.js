@@ -1,27 +1,48 @@
-importScripts('https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/10.4.0/firebase-messaging-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js');
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDOCw1bFl4DQNd4BimbHAiyRNUl8bf_i_U",
-    authDomain: "queue-6a3cf.firebaseapp.com",
-    projectId: "queue-6a3cf",
-    storageBucket: "queue-6a3cf.firebasestorage.app",
-    messagingSenderId: "982753224888",
-    appId: "1:982753224888:web:e1e9a7e008235f248fac4d"
-};
+// Initialize Firebase inside the Service Worker
+firebase.initializeApp({
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+});
 
-// Initialize Firebase inside the service worker[cite: 3]
-firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-// Handle incoming background messages for data-only payloads
+// Handle background notification reception
 messaging.onBackgroundMessage((payload) => {
-    const notificationTitle = payload.data?.title || 'Live Queue Update';
-    const notificationOptions = {
-        body: payload.data?.body || '',
-        icon: 'https://cdn-icons-png.flaticon.com/512/1828/1828859.png'
-    };
+  console.log('[firebase-messaging-sw.js] Received background message: ', payload);
 
-    // Force display the notification since the payload is data-only[cite: 1, 3]
-    self.registration.showNotification(notificationTitle, notificationOptions);
+  const notificationTitle = payload.notification.title || "Status Update";
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: '/icon.png', // Optional: path to your app icon
+    badge: '/badge.png', // Optional: small icon for mobile devices
+    data: payload.data || {}
+  };
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+// Handle notification click event
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const targetUrl = event.notification.data.url || '/';
+  
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
+      for (let client of windowClients) {
+        if (client.url === targetUrl && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(targetUrl);
+      }
+    })
+  );
 });
