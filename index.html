@@ -402,6 +402,7 @@
             transition: var(--transition); 
             overflow: hidden;
             min-width: 0; 
+            position: relative;
         }
         
         /* Mobile View: 2 Columns Side-by-Side */
@@ -428,7 +429,7 @@
         .quick-add-panel.active { display: flex; animation: fadeIn 0.2s ease; }
         .quick-add-panel input { min-width: 100px; padding: 0.4rem; font-size: 0.8rem; }
         
-        .vehicle-list { list-style: none; padding: 0; margin: 0; min-height: 150px; max-height: 400px; overflow-y: auto; overflow-x: hidden; }
+        .vehicle-list { list-style: none; padding: 0; margin: 0; min-height: 150px; max-height: 400px; overflow-y: auto; overflow-x: hidden; position: relative; z-index: 2; }
         .vehicle-list::-webkit-scrollbar { width: 4px; }
         .vehicle-list::-webkit-scrollbar-track { background: transparent; }
         .vehicle-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -475,11 +476,16 @@
         
         .print-footer { display: none; }
 
-        /* PRINT STYLES - Updated for Full Page Stretch */
+        /* Vertical Watermark Styles */
+        .card-watermark {
+            display: none;
+        }
+
+        /* PRINT STYLES - Updated for Times New Roman, Bigger & Bolder Heading & Watermark */
         @media print { 
             @page { size: A4 portrait; margin: 4mm; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .no-print, .vehicle-meta { display: none !important; } 
+            .no-print, .vehicle-meta, .empty-msg { display: none !important; } 
             
             html, body { 
                 background-color: white !important; 
@@ -516,12 +522,33 @@
                 border-radius: 0; 
                 display: flex !important; 
                 flex-direction: column !important;
+                position: relative !important;
             } 
             
+            /* Times New Roman, Bigger & Bolder Heading */
             .product-card h3 { 
-                font-size: 0.6rem !important; 
-                padding: 2px !important; 
+                font-family: "Times New Roman", Times, serif !important;
+                font-size: 1.1rem !important; 
+                font-weight: 900 !important; 
+                padding: 5px 2px !important; 
                 border-bottom: 1px solid #000 !important; 
+            }
+
+            /* Times New Roman, Bigger & Bolder Vertical Watermark */
+            .card-watermark {
+                display: block !important;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(270deg);
+                font-family: "Times New Roman", Times, serif !important;
+                font-size: 1.6rem !important;
+                font-weight: 900 !important;
+                color: rgba(0, 0, 0, 0.08) !important;
+                white-space: nowrap;
+                pointer-events: none;
+                z-index: 1;
+                letter-spacing: 3px;
             }
             
             .vehicle-list {
@@ -531,10 +558,8 @@
             }
             
             .stock-badge { font-size: 0.45rem !important; padding: 0 !important; border: none !important; }
-            .vehicle-item { padding: 2px !important; border-bottom: 1px solid #ccc !important; }
-            .vehicle-no { font-size: 0.65rem !important; text-align: center; }
-            .empty-msg { padding: 0.2rem !important; font-size: 0.5rem !important; }
-            .empty-msg svg { display: none; }
+            .vehicle-item { padding: 3px 2px !important; border-bottom: 1px solid #ccc !important; background: transparent !important; }
+            .vehicle-no { font-size: 0.75rem !important; font-weight: 700 !important; text-align: center; }
             
             .print-footer { 
                 display: flex !important; 
@@ -644,13 +669,13 @@
                 <input type="text" id="vehicleNo" list="savedVehiclesList" placeholder="Vehicle No. (KL-26-H-1670)" oninput="this.value = formatVehicleNumber(this.value)">
                 <select id="productType">
                     <option value="" disabled selected>Select Material</option>
+                    <option value="40MM">40MM</option>
+                    <option value="25MM">25MM</option>
+                    <option value="20MM">20MM</option>
                     <option value="6MM">6MM</option>
                     <option value="12MM">12MM</option>
-                    <option value="20MM">20MM</option>
-                    <option value="25MM">25MM</option>
-                    <option value="40MM">40MM</option>
                     <option value="DUST">DUST</option>
-                    <option value="M-SAND">M-SAND</option>
+                    <option value="MSAND">MSAND</option>
                 </select>
                 <input type="text" id="vehicleNarration" placeholder="Remarks (Optional)">
                 <button class="btn-primary" id="addVehicleBtn">Add to Queue</button>
@@ -666,7 +691,7 @@
                     <button class="btn-success icon-only-btn" id="shareMaintBtn" title="Broadcast Maintenance Alert"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592z"/></svg></button>
                 </div>
                 <div style="display: flex; gap: 0.5rem; flex: 1.5; min-width: 250px; flex-wrap: wrap;">
-                    <select id="stockProductSelect" style="min-width: 100px;"><option value="6MM">6MM</option><option value="12MM">12MM</option><option value="20MM">20MM</option><option value="25MM">25MM</option><option value="40MM">40MM</option><option value="DUST">DUST</option><option value="M-SAND">M-SAND</option></select>
+                    <select id="stockProductSelect" style="min-width: 100px;"><option value="40MM">40MM</option><option value="25MM">25MM</option><option value="20MM">20MM</option><option value="6MM">6MM</option><option value="12MM">12MM</option><option value="DUST">DUST</option><option value="MSAND">MSAND</option></select>
                     <button class="btn-warning" id="toggleStockBtn">Toggle Stock</button>
                     <button class="btn-success icon-only-btn" id="shareStockBtn" title="Broadcast Stock Alert"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592z"/></svg></button>
                 </div>
@@ -692,8 +717,66 @@
 
         <!-- Product Grid -->
         <div class="product-grid" id="mainGrid">
+            <!-- 40MM Card -->
+            <div class="product-card">
+                <div class="card-watermark">40MM</div>
+                <h3>
+                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
+                        40MM
+                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('40MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
+                    </div>
+                    <span id="badge-40MM" class="stock-badge stock-in">Available</span>
+                </h3>
+                <div class="quick-add-container">
+                    <div id="quick-add-40MM" class="quick-add-panel">
+                        <input type="text" id="quick-input-40MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
+                        <button class="btn-primary action-btn" onclick="quickAddVehicle('40MM')">Add</button>
+                    </div>
+                </div>
+                <ul class="vehicle-list" id="list-40MM"></ul>
+            </div>
+
+            <!-- 25MM Card -->
+            <div class="product-card">
+                <div class="card-watermark">25MM</div>
+                <h3>
+                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
+                        25MM
+                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('25MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
+                    </div>
+                    <span id="badge-25MM" class="stock-badge stock-in">Available</span>
+                </h3>
+                <div class="quick-add-container">
+                    <div id="quick-add-25MM" class="quick-add-panel">
+                        <input type="text" id="quick-input-25MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
+                        <button class="btn-primary action-btn" onclick="quickAddVehicle('25MM')">Add</button>
+                    </div>
+                </div>
+                <ul class="vehicle-list" id="list-25MM"></ul>
+            </div>
+
+            <!-- 20MM Card -->
+            <div class="product-card">
+                <div class="card-watermark">20MM</div>
+                <h3>
+                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
+                        20MM
+                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('20MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
+                    </div>
+                    <span id="badge-20MM" class="stock-badge stock-in">Available</span>
+                </h3>
+                <div class="quick-add-container">
+                    <div id="quick-add-20MM" class="quick-add-panel">
+                        <input type="text" id="quick-input-20MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
+                        <button class="btn-primary action-btn" onclick="quickAddVehicle('20MM')">Add</button>
+                    </div>
+                </div>
+                <ul class="vehicle-list" id="list-20MM"></ul>
+            </div>
+
             <!-- 6MM Card -->
             <div class="product-card">
+                <div class="card-watermark">6MM</div>
                 <h3>
                     <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
                         6MM
@@ -712,6 +795,7 @@
 
             <!-- 12MM Card -->
             <div class="product-card">
+                <div class="card-watermark">12MM</div>
                 <h3>
                     <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
                         12MM
@@ -728,62 +812,9 @@
                 <ul class="vehicle-list" id="list-12MM"></ul>
             </div>
 
-            <!-- 20MM Card -->
-            <div class="product-card">
-                <h3>
-                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        20MM
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('20MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
-                    </div>
-                    <span id="badge-20MM" class="stock-badge stock-in">Available</span>
-                </h3>
-                <div class="quick-add-container">
-                    <div id="quick-add-20MM" class="quick-add-panel">
-                        <input type="text" id="quick-input-20MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
-                        <button class="btn-primary action-btn" onclick="quickAddVehicle('20MM')">Add</button>
-                    </div>
-                </div>
-                <ul class="vehicle-list" id="list-20MM"></ul>
-            </div>
-
-            <!-- 25MM Card -->
-            <div class="product-card">
-                <h3>
-                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        25MM
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('25MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
-                    </div>
-                    <span id="badge-25MM" class="stock-badge stock-in">Available</span>
-                </h3>
-                <div class="quick-add-container">
-                    <div id="quick-add-25MM" class="quick-add-panel">
-                        <input type="text" id="quick-input-25MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
-                        <button class="btn-primary action-btn" onclick="quickAddVehicle('25MM')">Add</button>
-                    </div>
-                </div>
-                <ul class="vehicle-list" id="list-25MM"></ul>
-            </div>
-
-            <!-- 40MM Card -->
-            <div class="product-card">
-                <h3>
-                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        40MM
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('40MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
-                    </div>
-                    <span id="badge-40MM" class="stock-badge stock-in">Available</span>
-                </h3>
-                <div class="quick-add-container">
-                    <div id="quick-add-40MM" class="quick-add-panel">
-                        <input type="text" id="quick-input-40MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
-                        <button class="btn-primary action-btn" onclick="quickAddVehicle('40MM')">Add</button>
-                    </div>
-                </div>
-                <ul class="vehicle-list" id="list-40MM"></ul>
-            </div>
-
             <!-- DUST Card -->
             <div class="product-card">
+                <div class="card-watermark">DUST</div>
                 <h3>
                     <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
                         DUST
@@ -800,22 +831,23 @@
                 <ul class="vehicle-list" id="list-DUST"></ul>
             </div>
 
-            <!-- M-SAND Card -->
+            <!-- MSAND Card -->
             <div class="product-card">
+                <div class="card-watermark">MSAND</div>
                 <h3>
                     <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        M-SAND
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('M-SAND')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
+                        MSAND
+                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('MSAND')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
                     </div>
-                    <span id="badge-M-SAND" class="stock-badge stock-in">Available</span>
+                    <span id="badge-MSAND" class="stock-badge stock-in">Available</span>
                 </h3>
                 <div class="quick-add-container">
-                    <div id="quick-add-M-SAND" class="quick-add-panel">
-                        <input type="text" id="quick-input-M-SAND" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
-                        <button class="btn-primary action-btn" onclick="quickAddVehicle('M-SAND')">Add</button>
+                    <div id="quick-add-MSAND" class="quick-add-panel">
+                        <input type="text" id="quick-input-MSAND" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
+                        <button class="btn-primary action-btn" onclick="quickAddVehicle('MSAND')">Add</button>
                     </div>
                 </div>
-                <ul class="vehicle-list" id="list-M-SAND"></ul>
+                <ul class="vehicle-list" id="list-MSAND"></ul>
             </div>
         </div>
     </div>
@@ -1033,7 +1065,7 @@
 
         let isMaintenance = false;
         let announcementsList = [];
-        let productStock = { '6MM': true, '12MM': true, '20MM': true, '25MM': true, '40MM': true, 'DUST': true, 'M-SAND': true };
+        let productStock = { '40MM': true, '25MM': true, '20MM': true, '6MM': true, '12MM': true, 'DUST': true, 'MSAND': true };
         
         let isFirstStatusLoad = true;
 
@@ -1388,10 +1420,10 @@
         const emptyStateHTML = `<div class="empty-msg"><svg fill="currentColor" viewBox="0 0 16 16"><path d="M14 9V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM4 6h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/><path d="M1.5 14.5a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-13z"/></svg>No vehicles currently waiting</div>`;
 
         onSnapshot(q, (snapshot) => {
-            const products = ['6MM', '12MM', '20MM', '25MM', '40MM', 'DUST', 'M-SAND'];
+            const products = ['40MM', '25MM', '20MM', '6MM', '12MM', 'DUST', 'MSAND'];
             products.forEach(p => { document.getElementById(`list-${p}`).innerHTML = ''; });
 
-            let productCounts = { '6MM': 0, '12MM': 0, '20MM': 0, '25MM': 0, '40MM': 0, 'DUST': 0, 'M-SAND': 0 };
+            let productCounts = { '40MM': 0, '25MM': 0, '20MM': 0, '6MM': 0, '12MM': 0, 'DUST': 0, 'MSAND': 0 };
 
             snapshot.forEach((documentSnapshot) => {
                 const data = documentSnapshot.data();
@@ -1548,7 +1580,7 @@
             let message = "*CURRENT VEHICLE QUEUE STATUS*\n\n";
             if (isMaintenance) message += "⚠️ *CRUSHER UNDER MAINTENANCE - EXPECT DELAYS* ⚠️\n\n";
 
-            const products = ['6MM', '12MM', '20MM', '25MM', '40MM', 'DUST', 'M-SAND'];
+            const products = ['40MM', '25MM', '20MM', '6MM', '12MM', 'DUST', 'MSAND'];
             let hasVehicles = false;
 
             products.forEach(prod => {
