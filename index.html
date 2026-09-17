@@ -54,9 +54,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        body.is-blocked:not(.admin-mode) {
-            overflow: hidden;
-        }
+        body.is-blocked:not(.admin-mode) { overflow: hidden; }
 
         .main-content {
             flex: 1 0 auto;
@@ -138,19 +136,8 @@
             margin: 0 auto 1.5rem auto;
             color: #f87171;
         }
-        .maintenance-card h1 { 
-            font-size: 1.5rem; 
-            font-weight: 700; 
-            color: #ffffff; 
-            margin: 0 0 0.75rem 0; 
-            letter-spacing: -0.5px;
-        } 
-        .maintenance-card p { 
-            font-size: 0.95rem; 
-            color: #94a3b8; 
-            line-height: 1.6; 
-            margin: 0 0 1.5rem 0; 
-        }
+        .maintenance-card h1 { font-size: 1.5rem; font-weight: 700; color: #ffffff; margin: 0 0 0.75rem 0; letter-spacing: -0.5px; } 
+        .maintenance-card p { font-size: 0.95rem; color: #94a3b8; line-height: 1.6; margin: 0 0 1.5rem 0; }
         .maintenance-badge {
             display: inline-block;
             background: rgba(59, 130, 246, 0.1);
@@ -164,7 +151,6 @@
             margin-bottom: 1.5rem;
             border: 1px solid rgba(59, 130, 246, 0.2);
         }
-        
         body.admin-mode #siteBlockOverlay { display: none !important; }
 
         /* Professional Notification Prompt Modal Overlay */
@@ -204,29 +190,10 @@
             margin: 0 auto 1.25rem auto;
             color: var(--primary);
         }
-        .notification-modal-card h2 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin: 0.5rem 0;
-            letter-spacing: -0.3px;
-        }
-        .notification-modal-card p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-            margin: 0 0 1.5rem 0;
-        }
-        .notification-modal-actions {
-            display: flex;
-            gap: 0.75rem;
-        }
-        .notification-modal-actions button {
-            flex: 1;
-            padding: 0.7rem 1rem;
-            font-size: 0.9rem;
-            border-radius: 8px;
-        }
+        .notification-modal-card h2 { font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin: 0.5rem 0; letter-spacing: -0.3px; }
+        .notification-modal-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 1.5rem 0; }
+        .notification-modal-actions { display: flex; gap: 0.75rem; }
+        .notification-modal-actions button { flex: 1; padding: 0.7rem 1rem; font-size: 0.9rem; border-radius: 8px; }
 
         /* App Header */
         .app-header {
@@ -241,18 +208,8 @@
             top: 0;
             z-index: 50;
         }
-        .header-title {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .header-title h2 { 
-            color: var(--text-main); 
-            letter-spacing: -0.5px; 
-            margin: 0; 
-            font-weight: 700; 
-            font-size: 1.5rem; 
-        } 
+        .header-title { display: flex; align-items: center; gap: 0.75rem; }
+        .header-title h2 { color: var(--text-main); letter-spacing: -0.5px; margin: 0; font-weight: 700; font-size: 1.5rem; } 
         .live-indicator {
             background-color: var(--success-light);
             color: var(--success);
@@ -311,11 +268,7 @@
             border-left: 4px solid #3b82f6;
             animation: fadeIn 0.4s ease;
         }
-        .announcement-text-content {
-            white-space: pre-wrap;
-            word-break: break-word;
-            flex: 1;
-        }
+        .announcement-text-content { white-space: pre-wrap; word-break: break-word; flex: 1; }
         .announcement-item .remove-ann-btn {
             background: rgba(255, 255, 255, 0.1); border: none; color: white; border-radius: 6px;
             width: 28px; height: 28px; cursor: pointer; transition: var(--transition);
@@ -353,7 +306,6 @@
         .btn-secondary { background-color: #f1f5f9; color: var(--text-main); border: 1px solid var(--border); }
         .btn-secondary:hover { background-color: #e2e8f0; }
 
-        /* Login button pokes through the site block overlay */
         #loginBtn { position: relative; z-index: 10000; }
 
         /* Control Panel */
@@ -383,7 +335,7 @@
         }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15); background-color: white; }
 
-        /* Responsive Product Grid (7 cols PC, 2 cols Mobile) */
+        /* Responsive Product Grid */
         .product-grid { 
             display: grid; 
             grid-template-columns: repeat(7, 1fr); 
@@ -405,11 +357,8 @@
             position: relative;
         }
         
-        /* Mobile View: 2 Columns Side-by-Side */
         @media (max-width: 768px) {
-            .product-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .product-grid { grid-template-columns: repeat(2, 1fr); }
         }
         
         .product-card h3 { 
@@ -422,7 +371,6 @@
         .stock-in { background-color: var(--success-light); color: var(--dark-green); border: 1px solid #bbf7d0;}
         .stock-out { background-color: var(--danger-light); color: var(--danger); border: 1px solid #fecaca;}
 
-        /* Quick Add Panel Styles */
         .quick-add-container { display: none; }
         body.admin-mode .quick-add-container { display: block; }
         .quick-add-panel { display: none; padding: 0.5rem; background-color: #f1f5f9; border-bottom: 1px solid var(--border); gap: 0.25rem; flex-wrap: wrap; justify-content: center; }
@@ -433,7 +381,6 @@
         .vehicle-list::-webkit-scrollbar { width: 4px; }
         .vehicle-list::-webkit-scrollbar-track { background: transparent; }
         .vehicle-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .vehicle-list::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
         .empty-msg { 
             text-align: center; padding: 2rem 0.5rem; color: var(--text-muted); 
@@ -468,107 +415,46 @@
         .mini-btn:hover { background-color: #e2e8f0; color: var(--text-main); }
         .action-btn { flex: 1; padding: 0.3rem; font-size: 0.7rem; min-width: 100%;}
 
-        /* Access Modifiers */
         .admin-only { display: none !important; }
         body.admin-mode .admin-only { display: flex !important; }
         .admin-only-inline { display: none !important; }
         body.admin-mode .admin-only-inline { display: inline-flex !important; }
         
         .print-footer { display: none; }
+        .card-watermark { display: none; }
 
-        /* Vertical Watermark Styles */
-        .card-watermark {
-            display: none;
-        }
-
-        /* PRINT STYLES - Updated for Times New Roman, Bigger & Bolder Heading & Watermark */
         @media print { 
             @page { size: A4 portrait; margin: 4mm; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .no-print, .vehicle-meta, .empty-msg { display: none !important; } 
             
-            html, body { 
-                background-color: white !important; 
-                height: 100% !important; 
-                min-height: 100vh !important; 
-                margin: 0 !important; 
-                padding: 0 !important;
-            }
-            body { 
-                display: flex !important; 
-                flex-direction: column !important; 
-            }
+            html, body { background-color: white !important; height: 100% !important; margin: 0 !important; padding: 0 !important; }
+            body { display: flex !important; flex-direction: column !important; }
             .app-header { border: none; padding: 0; margin-bottom: 10px; position: static; }
             
-            .main-content { 
-                padding: 0; 
-                max-width: 100%; 
-                display: flex !important; 
-                flex-direction: column !important; 
-                flex: 1 !important; 
-            }
+            .main-content { padding: 0; max-width: 100%; display: flex !important; flex-direction: column !important; flex: 1 !important; }
+            .product-grid { display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 2px !important; flex: 1 !important; } 
+            .product-card { box-shadow: none !important; border: 1px solid #000 !important; border-top: 2px solid #000 !important; border-radius: 0; display: flex !important; flex-direction: column !important; position: relative !important; } 
             
-            .product-grid { 
-                display: grid !important; 
-                grid-template-columns: repeat(7, 1fr) !important; 
-                gap: 2px !important; 
-                flex: 1 !important; 
-            } 
-            
-            .product-card { 
-                box-shadow: none !important; 
-                border: 1px solid #000 !important; 
-                border-top: 2px solid #000 !important; 
-                border-radius: 0; 
-                display: flex !important; 
-                flex-direction: column !important;
-                position: relative !important;
-            } 
-            
-            /* Times New Roman, Bigger & Bolder Heading */
             .product-card h3 { 
                 font-family: "Times New Roman", Times, serif !important;
-                font-size: 1.1rem !important; 
-                font-weight: 900 !important; 
-                padding: 5px 2px !important; 
-                border-bottom: 1px solid #000 !important; 
+                font-size: 1.1rem !important; font-weight: 900 !important; padding: 5px 2px !important; border-bottom: 1px solid #000 !important; 
             }
 
-            /* Times New Roman, Bigger & Bolder Vertical Watermark */
             .card-watermark {
-                display: block !important;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%) rotate(270deg);
-                font-family: "Times New Roman", Times, serif !important;
-                font-size: 1.6rem !important;
-                font-weight: 900 !important;
-                color: rgba(0, 0, 0, 0.08) !important;
-                white-space: nowrap;
-                pointer-events: none;
-                z-index: 1;
-                letter-spacing: 3px;
+                display: block !important; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(270deg);
+                font-family: "Times New Roman", Times, serif !important; font-size: 1.6rem !important; font-weight: 900 !important;
+                color: rgba(0, 0, 0, 0.08) !important; white-space: nowrap; pointer-events: none; z-index: 1; letter-spacing: 3px;
             }
             
-            .vehicle-list {
-                flex: 1 !important; 
-                max-height: none !important;
-                overflow: visible !important;
-            }
-            
+            .vehicle-list { flex: 1 !important; max-height: none !important; overflow: visible !important; }
             .stock-badge { font-size: 0.45rem !important; padding: 0 !important; border: none !important; }
             .vehicle-item { padding: 3px 2px !important; border-bottom: 1px solid #ccc !important; background: transparent !important; }
             .vehicle-no { font-size: 0.75rem !important; font-weight: 700 !important; text-align: center; }
             
             .print-footer { 
-                display: flex !important; 
-                margin-top: 5px !important; 
-                padding-top: 10px;
-                border-top: 1px solid #000;
-                align-items: center; 
-                justify-content: center; 
-                gap: 15px; 
+                display: flex !important; margin-top: 5px !important; padding-top: 10px; border-top: 1px solid #000;
+                align-items: center; justify-content: center; gap: 15px; 
             }
             .print-footer-text { font-size: 0.75rem !important; font-weight: 600 !important; text-align: right; }
             #qrcode img { width: 45px !important; height: 45px !important; }
@@ -588,8 +474,6 @@
             </div>
             <h1>Under Scheduled Maintenance</h1>
             <p>Our live vehicle queue dashboard is temporarily offline for system upgrades and optimizations. We will be back online shortly.</p>
-            
-            <!-- Emergency Admin Login Button -->
             <button onclick="document.getElementById('loginBtn').click()" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #e2e8f0; padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; width: 100%; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
                 <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5h1.232l.634.634a.5.5 0 0 0 .708 0l.633-.634H11.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1h-.732l-.634-.633a.5.5 0 0 0-.708 0l-.633.633H5.663A3.5 3.5 0 0 1 3.5 11.5zm0-5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg> Admin Sign In
             </button>
@@ -624,7 +508,7 @@
                 <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm1 3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2H6v-2z"/></svg>
             </button>
             <button class="icon-only-btn btn-success" id="shareStatusBtn" title="Share Status via WhatsApp">
-                <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
             </button>
             <button class="icon-only-btn btn-warning" id="loginBtn" title="Admin Login / Logout">
                 <svg id="loginIconSvg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5h1.232l.634.634a.5.5 0 0 0 .708 0l.633-.634H11.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1h-.732l-.634-.633a.5.5 0 0 0-.708 0l-.633.633H5.663A3.5 3.5 0 0 1 3.5 11.5zm0-5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>
@@ -633,8 +517,6 @@
     </header>
 
     <div class="main-content">
-        
-        <!-- Professional Maintenance Banner -->
         <div id="siteBlockedAdminBanner" style="display: none; background: var(--danger-light); border: 1px solid #fca5a5; color: var(--danger); padding: 0.85rem 1.25rem; border-radius: var(--radius); margin-bottom: 1.5rem; box-shadow: var(--shadow-sm); align-items: center; gap: 1rem;">
             <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
             <div style="flex: 1;">
@@ -657,13 +539,11 @@
         </div>
 
         <div class="controls-wrapper no-print">
-            <!-- Search Row -->
             <div class="controls-row">
                 <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> Search Queue</span>
                 <input type="text" id="searchInput" placeholder="Enter last 4 digits (e.g. 1670)" maxlength="4">
             </div>
 
-            <!-- Admin Vehicle Entry Row -->
             <div class="controls-row admin-only">
                 <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM1.5 14h13a.5.5 0 0 0 .5-.5V8.5a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5z"/><path d="M3.5 2.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2zM4 3v1h8V3H4z"/></svg> Add Vehicle</span>
                 <input type="text" id="vehicleNo" list="savedVehiclesList" placeholder="Vehicle No. (KL-26-H-1670)" oninput="this.value = formatVehicleNumber(this.value)">
@@ -681,23 +561,21 @@
                 <button class="btn-primary" id="addVehicleBtn">Add to Queue</button>
             </div>
 
-            <!-- Admin System Controls Row -->
             <div class="controls-row admin-only" style="border-bottom: none; padding-bottom: 0;">
                 <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/></svg> System Ops</span>
                 <div style="display: flex; gap: 0.5rem; flex: 1; min-width: 200px; flex-wrap: wrap;">
                     <button id="maintBtn" class="btn-warning" style="flex:1;">Toggle Banner</button>
                     <button id="blockSiteBtn" class="btn-danger" style="flex:1;">Block Site</button>
-                    <button id="toggleNotificationsBtn" class="btn-secondary" style="flex:1;" title="Pause/Resume Push Notifications">🔔 Notifications: On</button>
-                    <button class="btn-success icon-only-btn" id="shareMaintBtn" title="Broadcast Maintenance Alert"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592z"/></svg></button>
+                    <button id="toggleNotificationsBtn" class="btn-secondary" style="flex:1;">🔔 Notifications: On</button>
+                    <button class="btn-success icon-only-btn" id="shareMaintBtn" title="Broadcast Maintenance Alert"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592z"/></svg></button>
                 </div>
                 <div style="display: flex; gap: 0.5rem; flex: 1.5; min-width: 250px; flex-wrap: wrap;">
                     <select id="stockProductSelect" style="min-width: 100px;"><option value="40MM">40MM</option><option value="25MM">25MM</option><option value="20MM">20MM</option><option value="6MM">6MM</option><option value="12MM">12MM</option><option value="DUST">DUST</option><option value="MSAND">MSAND</option></select>
                     <button class="btn-warning" id="toggleStockBtn">Toggle Stock</button>
-                    <button class="btn-success icon-only-btn" id="shareStockBtn" title="Broadcast Stock Alert"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592z"/></svg></button>
+                    <button class="btn-success icon-only-btn" id="shareStockBtn" title="Broadcast Stock Alert"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592z"/></svg></button>
                 </div>
             </div>
 
-            <!-- Announcements Row (Multiline Textarea) -->
             <div class="controls-row admin-only" style="border-top: 1px solid var(--border); padding-top: 1.25rem;">
                 <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2.281 4.385A2.999 2.999 0 0 0 4 7v3.5a2.5 2.5 0 0 1-2.5 2.5H1v1h14v-1h-.5A2.5 2.5 0 0 1 12 10.5V7a3 3 0 0 0-1.719-2.615l-.838-.419a2.001 2.001 0 0 0-2.886 0l-.838.419zm1.751-2.072A4.002 4.002 0 0 1 8 1.001 4.002 4.002 0 0 1 11.968 2.313a3.001 3.001 0 0 1 2.21 2.766 4.003 4.003 0 0 1-3.14 3.902V10.5a3.5 3.5 0 0 0 3.5 3.5h.962V15H.5v-1h.962a3.5 3.5 0 0 0 3.5-3.5V8.98a4.002 4.002 0 0 1-3.14-3.902 3.001 3.001 0 0 1 2.21-2.765z"/></svg> Megaphone</span>
                 <select id="announcementPresetSelect" style="flex: 1;"><option value="" disabled selected>-- Select Saved Announcement --</option><option value="Crusher Maintenance in progress. Loading expects delay of 1-2 hours.">⚙️ Maintenance Delay</option><option value="Heavy rain in plant area. Loading operations paused temporarily.">🌧️ Heavy Rain Pause</option><option value="Grid power outage. Generator setup in progress.">⚡ Power Outage</option><option value="Crusher operations running normally. All materials available.">✅ Normal Operations</option></select>
@@ -705,150 +583,41 @@
                     <button id="editPresetBtn" class="icon-only-btn btn-secondary" title="Edit Selected Preset"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5z"/></svg></button>
                     <button id="deletePresetBtn" class="icon-only-btn btn-secondary" title="Delete Selected Preset"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></button>
                 </div>
-                <textarea id="announcementInput" placeholder="Enter custom message (supports line breaks & spacing)..." rows="3" style="flex: 2; resize: vertical;"></textarea>
+                <textarea id="announcementInput" placeholder="Enter custom message..." rows="3" style="flex: 2; resize: vertical;"></textarea>
                 <div class="btn-group" style="margin-top:0;">
                     <button class="btn-primary" id="updateAnnouncementBtn">Publish</button>
                     <button class="btn-secondary" id="saveAnnouncementBtn" title="Save as template">💾</button>
                     <button class="btn-secondary" id="clearAnnouncementBtn" title="Clear All">Clear</button>
-                    <button class="btn-success icon-only-btn" id="shareAnnouncementBtn" title="Share via WhatsApp"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592z"/></svg></button>
+                    <button class="btn-success icon-only-btn" id="shareAnnouncementBtn" title="Share via WhatsApp"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592z"/></svg></button>
                 </div>
             </div>
         </div>
 
         <!-- Product Grid -->
         <div class="product-grid" id="mainGrid">
-            <!-- 40MM Card -->
-            <div class="product-card">
-                <div class="card-watermark">40MM</div>
-                <h3>
-                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        40MM
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('40MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
+            <script>
+              const materials = ['40MM', '25MM', '20MM', '6MM', '12MM', 'DUST', 'MSAND'];
+              document.write(materials.map(m => `
+                <div class="product-card">
+                    <div class="card-watermark">${m}</div>
+                    <h3>
+                        <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
+                            ${m}
+                            <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('${m}')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
+                        </div>
+                        <span id="badge-${m}" class="stock-badge stock-in">Available</span>
+                        <span id="updated-${m}" style="font-size: 0.60rem; color: var(--text-muted); font-weight: normal; margin-top: 1px;">Updated: Never</span>
+                    </h3>
+                    <div class="quick-add-container">
+                        <div id="quick-add-${m}" class="quick-add-panel">
+                            <input type="text" id="quick-input-${m}" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
+                            <button class="btn-primary action-btn" onclick="quickAddVehicle('${m}')">Add</button>
+                        </div>
                     </div>
-                    <span id="badge-40MM" class="stock-badge stock-in">Available</span>
-                </h3>
-                <div class="quick-add-container">
-                    <div id="quick-add-40MM" class="quick-add-panel">
-                        <input type="text" id="quick-input-40MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
-                        <button class="btn-primary action-btn" onclick="quickAddVehicle('40MM')">Add</button>
-                    </div>
+                    <ul class="vehicle-list" id="list-${m}"></ul>
                 </div>
-                <ul class="vehicle-list" id="list-40MM"></ul>
-            </div>
-
-            <!-- 25MM Card -->
-            <div class="product-card">
-                <div class="card-watermark">25MM</div>
-                <h3>
-                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        25MM
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('25MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
-                    </div>
-                    <span id="badge-25MM" class="stock-badge stock-in">Available</span>
-                </h3>
-                <div class="quick-add-container">
-                    <div id="quick-add-25MM" class="quick-add-panel">
-                        <input type="text" id="quick-input-25MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
-                        <button class="btn-primary action-btn" onclick="quickAddVehicle('25MM')">Add</button>
-                    </div>
-                </div>
-                <ul class="vehicle-list" id="list-25MM"></ul>
-            </div>
-
-            <!-- 20MM Card -->
-            <div class="product-card">
-                <div class="card-watermark">20MM</div>
-                <h3>
-                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        20MM
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('20MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
-                    </div>
-                    <span id="badge-20MM" class="stock-badge stock-in">Available</span>
-                </h3>
-                <div class="quick-add-container">
-                    <div id="quick-add-20MM" class="quick-add-panel">
-                        <input type="text" id="quick-input-20MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
-                        <button class="btn-primary action-btn" onclick="quickAddVehicle('20MM')">Add</button>
-                    </div>
-                </div>
-                <ul class="vehicle-list" id="list-20MM"></ul>
-            </div>
-
-            <!-- 6MM Card -->
-            <div class="product-card">
-                <div class="card-watermark">6MM</div>
-                <h3>
-                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        6MM
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('6MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
-                    </div>
-                    <span id="badge-6MM" class="stock-badge stock-in">Available</span>
-                </h3>
-                <div class="quick-add-container">
-                    <div id="quick-add-6MM" class="quick-add-panel">
-                        <input type="text" id="quick-input-6MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
-                        <button class="btn-primary action-btn" onclick="quickAddVehicle('6MM')">Add</button>
-                    </div>
-                </div>
-                <ul class="vehicle-list" id="list-6MM"></ul>
-            </div>
-
-            <!-- 12MM Card -->
-            <div class="product-card">
-                <div class="card-watermark">12MM</div>
-                <h3>
-                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        12MM
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('12MM')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
-                    </div>
-                    <span id="badge-12MM" class="stock-badge stock-in">Available</span>
-                </h3>
-                <div class="quick-add-container">
-                    <div id="quick-add-12MM" class="quick-add-panel">
-                        <input type="text" id="quick-input-12MM" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
-                        <button class="btn-primary action-btn" onclick="quickAddVehicle('12MM')">Add</button>
-                    </div>
-                </div>
-                <ul class="vehicle-list" id="list-12MM"></ul>
-            </div>
-
-            <!-- DUST Card -->
-            <div class="product-card">
-                <div class="card-watermark">DUST</div>
-                <h3>
-                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        DUST
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('DUST')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
-                    </div>
-                    <span id="badge-DUST" class="stock-badge stock-in">Available</span>
-                </h3>
-                <div class="quick-add-container">
-                    <div id="quick-add-DUST" class="quick-add-panel">
-                        <input type="text" id="quick-input-DUST" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
-                        <button class="btn-primary action-btn" onclick="quickAddVehicle('DUST')">Add</button>
-                    </div>
-                </div>
-                <ul class="vehicle-list" id="list-DUST"></ul>
-            </div>
-
-            <!-- MSAND Card -->
-            <div class="product-card">
-                <div class="card-watermark">MSAND</div>
-                <h3>
-                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                        MSAND
-                        <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('MSAND')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
-                    </div>
-                    <span id="badge-MSAND" class="stock-badge stock-in">Available</span>
-                </h3>
-                <div class="quick-add-container">
-                    <div id="quick-add-MSAND" class="quick-add-panel">
-                        <input type="text" id="quick-input-MSAND" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
-                        <button class="btn-primary action-btn" onclick="quickAddVehicle('MSAND')">Add</button>
-                    </div>
-                </div>
-                <ul class="vehicle-list" id="list-MSAND"></ul>
-            </div>
+              `).join(''));
+            </script>
         </div>
     </div>
 
@@ -860,73 +629,51 @@
         <div id="qrcode"></div>
     </footer>
 
-    <!-- Dropdown List Data for Auto-Save -->
     <datalist id="savedVehiclesList"></datalist>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy, setDoc, getDoc } 
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy, setDoc, getDoc, getDocs } 
         from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } 
         from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
         import { getMessaging, getToken, onMessage } 
         from "https://www.gstatic.com/firebasejs/10.4.0/firebase-messaging.js";
 
-        // --- GLOBAL UI HELPERS ---
         window.showToast = function(message, type = "info") {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            
-            let icon = 'ℹ️';
-            if (type === 'success') icon = '✅';
-            if (type === 'error') icon = '⚠️';
-
+            let icon = type === 'success' ? '✅' : type === 'error' ? '⚠️' : 'ℹ️';
             toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
             container.appendChild(toast);
-
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.parentNode.removeChild(toast);
-                }
-            }, 3000);
+            setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 3000);
         };
 
-        // Auto Format Indian Vehicle Number Plate Logic
         window.formatVehicleNumber = function(val) {
             let s = val.replace(/\s+/g, '').toUpperCase();
             let clean = s.replace(/[^A-Z0-9]/g, ''); 
-            
             let p1 = clean.match(/^([A-Z]{1,2})/); 
             if (!p1) return s; 
-            
             let p2 = clean.substring(p1[0].length).match(/^(\d{1,2})/); 
             if (!p2) return p1[0]; 
-            
             let p3 = clean.substring(p1[0].length + p2[0].length).match(/^([A-Z]{1,3})/); 
             let remainingNumsIndex = p1[0].length + p2[0].length + (p3 ? p3[0].length : 0);
             let p4 = clean.substring(remainingNumsIndex).match(/^(\d{1,4})/); 
-            
             let formatted = p1[0] + '-' + p2[0];
             if (p3) formatted += '-' + p3[0];
             if (p4) formatted += '-' + p4[0];
-            
             let extra = clean.substring(remainingNumsIndex + (p4 ? p4[0].length : 0));
             if (extra) formatted += '-' + extra;
-            
             return formatted;
         };
 
-        // Quick Add Display Toggle
         window.toggleQuickAdd = (product) => {
             const div = document.getElementById(`quick-add-${product}`);
             div.classList.toggle('active');
-            if(div.classList.contains('active')) {
-                document.getElementById(`quick-input-${product}`).focus();
-            }
+            if(div.classList.contains('active')) document.getElementById(`quick-input-${product}`).focus();
         };
 
-        // Save vehicle to memory for dropdown auto-suggest
         window.saveVehicleToLocal = function(vNo) {
             let saved = JSON.parse(localStorage.getItem('savedVehicles') || '[]');
             if(!saved.includes(vNo)) {
@@ -936,7 +683,6 @@
             }
         };
 
-        // Populate dropdown suggestions
         window.updateDatalist = function() {
             let saved = JSON.parse(localStorage.getItem('savedVehicles') || '[]');
             let datalist = document.getElementById('savedVehiclesList');
@@ -948,7 +694,6 @@
                 datalist.appendChild(opt);
             });
         };
-        
         window.updateDatalist();
 
         new QRCode(document.getElementById("qrcode"), { text: "https://updatesat.github.io/queue/", width: 45, height: 45 });
@@ -973,21 +718,24 @@
 
         let notificationsPaused = false;
 
-        async function sendLocalNotification(title, body) {
-            if (notificationsPaused) return; 
-            if (!('Notification' in window) || Notification.permission !== 'granted') return;
-            const options = { 
-                body: body,
-                tag: 'crusher-queue-notification' 
-            };
+        // --- TRIGGER BACKEND PUSH NOTIFICATIONS (WINDOWS 7 LOCAL NODE SERVER) ---
+        async function broadcastBackendPush(title, body) {
+            if (notificationsPaused) return;
             try {
-                if ('serviceWorker' in navigator) {
-                    const registration = await navigator.serviceWorker.ready;
-                    await registration.showNotification(title, options);
-                    return;
-                }
-            } catch (err) {}
-            new Notification(title, options);
+                const querySnapshot = await getDocs(collection(db, "fcm_tokens"));
+                querySnapshot.forEach(async (documentSnapshot) => {
+                    const tokenData = documentSnapshot.data();
+                    if (tokenData && tokenData.token) {
+                        await fetch('http://localhost:3000/send-notification', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ fcmToken: tokenData.token, title, body })
+                        });
+                    }
+                });
+            } catch (err) {
+                console.error("Error dispatching backend notification:", err);
+            }
         }
 
         async function registerAndSaveToken(showSuccessToast = false) {
@@ -1000,7 +748,6 @@
                 if (currentToken) {
                     await setDoc(doc(db, "fcm_tokens", currentToken), { token: currentToken, timestamp: Date.now() });
                     if (showSuccessToast) {
-                        await sendLocalNotification("Notifications Activated", "You will now receive live updates.");
                         window.showToast("Notifications activated successfully!", "success");
                     }
                 }
@@ -1009,23 +756,16 @@
             }
         }
 
-        // --- AUTOMATIC POPUP NOTIFICATION PROMPT LOGIC ---
         window.addEventListener('load', () => {
             if (!('Notification' in window)) return;
-
             const modal = document.getElementById('notificationModal');
             const acceptBtn = document.getElementById('acceptNotificationBtn');
             const denyBtn = document.getElementById('denyNotificationBtn');
 
-            // If already granted, run token sync silently WITHOUT showing any success toast
             if (Notification.permission === 'granted') {
                 registerAndSaveToken(false);
-            } 
-            // If default or denied, show the neat custom prompt modal
-            else if (Notification.permission === 'default' || Notification.permission === 'denied') {
-                setTimeout(() => {
-                    modal.style.display = 'flex';
-                }, 800);
+            } else if (Notification.permission === 'default' || Notification.permission === 'denied') {
+                setTimeout(() => { modal.style.display = 'flex'; }, 800);
             }
 
             acceptBtn.onclick = async () => {
@@ -1033,7 +773,6 @@
                 try {
                     const permission = await Notification.requestPermission();
                     if (permission === 'granted') {
-                        // Show success toast only when they explicitly click Accept
                         registerAndSaveToken(true);
                     } else {
                         window.showToast("Notification permission denied.", "error");
@@ -1049,25 +788,19 @@
             };
         });
 
-        onMessage(messaging, (payload) => {
-            if (!notificationsPaused) {
-                sendLocalNotification(payload.notification.title, payload.notification.body);
-            }
-        });
-
         setPersistence(auth, browserLocalPersistence).catch(console.error);
 
         const queueRef = collection(db, "vehicles");
         const statusRef = doc(db, "system_status", "main"); 
         const savedAnnouncementsRef = collection(db, "saved_announcements");
-        
         const linkFooter = "\n\n🌐 Live updates: https://updatesat.github.io/queue/";
 
         let isMaintenance = false;
         let announcementsList = [];
         let productStock = { '40MM': true, '25MM': true, '20MM': true, '6MM': true, '12MM': true, 'DUST': true, 'MSAND': true };
-        
         let isFirstStatusLoad = true;
+        let queueLastUpdated = { '40MM': null, '25MM': null, '20MM': null, '6MM': null, '12MM': null, 'DUST': null, 'MSAND': null };
+        let previousSnapshotData = {};
 
         getDoc(statusRef).then(docSnap => {
             if (!docSnap.exists()) {
@@ -1080,12 +813,10 @@
                 window.showToast("Enter vehicle number and select product.", "error");
                 return false;
             }
-            
             if (!productStock[product]) {
                 const proceed = confirm(`Warning: ${product} is currently OUT OF STOCK. Add anyway?`);
                 if (!proceed) return false;
             }
-
             window.saveVehicleToLocal(vehicleNo); 
 
             const now = new Date();
@@ -1098,6 +829,7 @@
                     dateAdded: dateString, timeAdded: timeString, status: "Waiting", timestamp: Date.now() 
                 });
                 window.showToast(`Added ${vehicleNo} to ${product}`, "success");
+                broadcastBackendPush("New Vehicle in Queue", `Vehicle ${vehicleNo} has been added to ${product} queue.`);
                 return true;
             } catch (error) {
                 window.showToast("Error adding vehicle: " + error.message, "error");
@@ -1109,23 +841,15 @@
             const vehicleInput = document.getElementById('vehicleNo');
             const productInput = document.getElementById('productType');
             const narrationInput = document.getElementById('vehicleNarration'); 
-            
             const success = await window.processAddVehicle(vehicleInput.value.trim().toUpperCase(), productInput.value, narrationInput.value.trim());
-
-            if(success) {
-                vehicleInput.value = ''; productInput.value = ''; narrationInput.value = ''; 
-            }
+            if(success) { vehicleInput.value = ''; productInput.value = ''; narrationInput.value = ''; }
         });
 
         window.quickAddVehicle = async (product) => {
             const input = document.getElementById(`quick-input-${product}`);
             const vNo = input.value.trim().toUpperCase();
-            
             const success = await window.processAddVehicle(vNo, product, "");
-            if (success) {
-                input.value = '';
-                window.toggleQuickAdd(product);
-            }
+            if (success) { input.value = ''; window.toggleQuickAdd(product); }
         };
 
         const presetSelect = document.getElementById('announcementPresetSelect');
@@ -1148,10 +872,8 @@
         document.getElementById('saveAnnouncementBtn').addEventListener('click', async () => {
             const text = annInput.value.trim();
             if (!text) return window.showToast("Please enter a message to save first.", "error");
-
             const title = prompt("Enter a brief title for this saved announcement template:", text.slice(0, 20) + "...");
             if (!title) return;
-
             try {
                 await addDoc(savedAnnouncementsRef, { title: title.trim(), text: text, timestamp: Date.now() });
                 window.showToast("Announcement saved as template!", "success");
@@ -1161,14 +883,11 @@
         document.getElementById('editPresetBtn').addEventListener('click', async () => {
             const select = document.getElementById('announcementPresetSelect');
             const selected = select.options[select.selectedIndex];
-            
             if (select.selectedIndex <= 4 || !selected.dataset.id) return window.showToast("Please select a custom saved announcement to edit.", "error");
-
             const newTitle = prompt("Update Announcement Title:", selected.dataset.title);
             if (newTitle === null) return;
             const newText = prompt("Update Announcement Message:", selected.value);
             if (newText === null || newText.trim() === '') return;
-
             try {
                 await updateDoc(doc(db, "saved_announcements", selected.dataset.id), { title: newTitle.trim(), text: newText.trim() });
                 window.showToast("Updated successfully", "success");
@@ -1178,9 +897,7 @@
         document.getElementById('deletePresetBtn').addEventListener('click', async () => {
             const select = document.getElementById('announcementPresetSelect');
             const selected = select.options[select.selectedIndex];
-            
             if (select.selectedIndex <= 4 || !selected.dataset.id) return window.showToast("Please select a custom saved announcement to delete.", "error");
-
             if (confirm(`Delete the preset: "${selected.dataset.title}"?`)) {
                 try {
                     await deleteDoc(doc(db, "saved_announcements", selected.dataset.id));
@@ -1190,39 +907,27 @@
             }
         });
 
-        // --- EDIT PUBLISHED ANNOUNCEMENT TEXT ON THE FLY ---
         window.editActiveAnnouncement = async (id, currentText) => {
             const newText = prompt("Edit the published announcement:", currentText);
             if (newText !== null && newText.trim() !== '') {
-                const updatedList = announcementsList.map(item => 
-                    item.id === id ? { id: item.id, text: newText.trim() } : item
-                );
+                const updatedList = announcementsList.map(item => item.id === id ? { id: item.id, text: newText.trim() } : item);
                 try { 
                     await setDoc(statusRef, { announcements: updatedList }, { merge: true }); 
                     window.showToast("Announcement updated!", "success");
-                } catch (error) {
-                    window.showToast("Error updating: " + error.message, "error");
-                }
+                } catch (error) { window.showToast("Error updating: " + error.message, "error"); }
             }
         };
 
         onSnapshot(statusRef, (docSnap) => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
-
                 notificationsPaused = data.notificationsPaused || false;
                 const toggleNotifBtn = document.getElementById('toggleNotificationsBtn');
                 if (toggleNotifBtn) {
-                    if (notificationsPaused) {
-                        toggleNotifBtn.textContent = "🔕 Notifications: Off";
-                        toggleNotifBtn.className = "btn-danger";
-                    } else {
-                        toggleNotifBtn.textContent = "🔔 Notifications: On";
-                        toggleNotifBtn.className = "btn-secondary";
-                    }
+                    toggleNotifBtn.textContent = notificationsPaused ? "🔕 Notifications: Off" : "🔔 Notifications: On";
+                    toggleNotifBtn.className = notificationsPaused ? "btn-danger" : "btn-secondary";
                 }
 
-                // Site Block Status Check
                 const isBlocked = data.siteBlocked || false;
                 const overlay = document.getElementById('siteBlockOverlay');
                 const adminBanner = document.getElementById('siteBlockedAdminBanner');
@@ -1232,18 +937,12 @@
                     overlay.style.display = 'flex';
                     adminBanner.style.display = 'flex'; 
                     document.body.classList.add('is-blocked');
-                    if(blockSiteBtn) {
-                        blockSiteBtn.textContent = "Unblock Site";
-                        blockSiteBtn.className = "btn-success";
-                    }
+                    if(blockSiteBtn) { blockSiteBtn.textContent = "Unblock Site"; blockSiteBtn.className = "btn-success"; }
                 } else {
                     overlay.style.display = 'none';
                     adminBanner.style.display = 'none';
                     document.body.classList.remove('is-blocked');
-                    if(blockSiteBtn) {
-                        blockSiteBtn.textContent = "Block Site";
-                        blockSiteBtn.className = "btn-danger";
-                    }
+                    if(blockSiteBtn) { blockSiteBtn.textContent = "Block Site"; blockSiteBtn.className = "btn-danger"; }
                 }
 
                 isMaintenance = data.maintenance || false;
@@ -1252,16 +951,11 @@
                 const annContainer = document.getElementById('announcementContainer');
                 announcementsList = data.announcements || [];
                 
-                if (typeof data.announcement === 'string' && data.announcement.trim() !== '') {
-                    announcementsList = [{ id: Date.now().toString(), text: data.announcement }];
-                }
-
                 annContainer.innerHTML = '';
                 if (announcementsList.length > 0) {
                     announcementsList.forEach(item => {
                         const itemDiv = document.createElement('div');
                         itemDiv.className = 'announcement-item';
-                        
                         const textSpan = document.createElement('div');
                         textSpan.className = 'announcement-text-content';
                         textSpan.textContent = "📢 " + item.text;
@@ -1269,23 +963,14 @@
 
                         if (document.body.classList.contains('admin-mode')) {
                             const actDiv = document.createElement('div');
-                            actDiv.style.display = 'flex';
-                            actDiv.style.gap = '0.5rem';
-
+                            actDiv.style.display = 'flex'; actDiv.style.gap = '0.5rem';
                             const editBtn = document.createElement('button');
-                            editBtn.className = 'remove-ann-btn no-print';
-                            editBtn.innerHTML = '✏️';
-                            editBtn.title = 'Edit announcement';
+                            editBtn.className = 'remove-ann-btn no-print'; editBtn.innerHTML = '✏️';
                             editBtn.onclick = () => window.editActiveAnnouncement(item.id, item.text);
-
                             const removeBtn = document.createElement('button');
-                            removeBtn.className = 'remove-ann-btn no-print';
-                            removeBtn.innerHTML = '✕';
-                            removeBtn.title = 'Remove announcement';
+                            removeBtn.className = 'remove-ann-btn no-print'; removeBtn.innerHTML = '✕';
                             removeBtn.onclick = () => window.removeAnnouncement(item.id);
-
-                            actDiv.appendChild(editBtn);
-                            actDiv.appendChild(removeBtn);
+                            actDiv.appendChild(editBtn); actDiv.appendChild(removeBtn);
                             itemDiv.appendChild(actDiv);
                         }
                         annContainer.appendChild(itemDiv);
@@ -1300,13 +985,8 @@
                     for (const [prod, inStock] of Object.entries(productStock)) {
                         const badge = document.getElementById(`badge-${prod}`);
                         if (badge) {
-                            if (inStock) {
-                                badge.className = "stock-badge stock-in";
-                                badge.innerText = "Available";
-                            } else {
-                                badge.className = "stock-badge stock-out";
-                                badge.innerText = "Out of Stock";
-                            }
+                            badge.className = inStock ? "stock-badge stock-in" : "stock-badge stock-out";
+                            badge.innerText = inStock ? "Available" : "Out of Stock";
                         }
                     }
                 }
@@ -1339,7 +1019,6 @@
                 if (!email) return;
                 const password = prompt("Enter Admin Password:");
                 if (!password) return;
-
                 try {
                     await signInWithEmailAndPassword(auth, email.trim(), password);
                     localStorage.setItem('adminEmail', email.trim());
@@ -1348,7 +1027,6 @@
             }
         });
 
-        // Toggle notifications pause logic
         document.getElementById('toggleNotificationsBtn').addEventListener('click', async () => {
             const docSnap = await getDoc(statusRef);
             const currentPaused = docSnap.exists() ? (docSnap.data().notificationsPaused || false) : false;
@@ -1356,40 +1034,35 @@
             window.showToast(currentPaused ? "Notifications resumed." : "Notifications paused.", "info");
         });
 
-        // Toggle maintenance block overlay logic
         document.getElementById('blockSiteBtn').addEventListener('click', async () => {
             const docSnap = await getDoc(statusRef);
             const currentBlocked = docSnap.exists() ? docSnap.data().siteBlocked : false;
-            
-            if (!currentBlocked) {
-                if (!confirm("WARNING: This will completely block the site for all public users. Continue?")) return;
-            }
-            
+            if (!currentBlocked && !confirm("WARNING: This will completely block the site for all public users. Continue?")) return;
             await setDoc(statusRef, { siteBlocked: !currentBlocked }, { merge: true });
         });
 
         document.getElementById('maintBtn').addEventListener('click', async () => {
             await setDoc(statusRef, { maintenance: !isMaintenance }, { merge: true });
+            broadcastBackendPush("Crusher Status Update", isMaintenance ? "Crusher is now operational." : "Crusher is undergoing maintenance.");
         });
 
         document.getElementById('toggleStockBtn').addEventListener('click', async () => {
             const prod = document.getElementById('stockProductSelect').value;
             const currentStatus = productStock[prod];
             await setDoc(statusRef, { stock: { [prod]: !currentStatus } }, { merge: true });
+            broadcastBackendPush("Stock Update", `${prod} is now ${!currentStatus ? 'Available' : 'Out of Stock'}.`);
         });
 
         document.getElementById('updateAnnouncementBtn').addEventListener('click', async () => {
             const text = annInput.value.trim();
             if (!text) return window.showToast("Please enter a message to publish.", "error");
-            
             const newAnn = { id: Date.now().toString(), text: text };
             const updatedList = [...announcementsList, newAnn];
-
             try {
                 await setDoc(statusRef, { announcements: updatedList, announcement: "" }, { merge: true });
-                annInput.value = '';
-                presetSelect.selectedIndex = 0;
+                annInput.value = ''; presetSelect.selectedIndex = 0;
                 window.showToast("Published!", "success");
+                broadcastBackendPush("Official Announcement", text);
             } catch (error) { window.showToast("Error publishing: " + error.message, "error"); }
         });
 
@@ -1409,10 +1082,8 @@
 
         document.getElementById('shareAnnouncementBtn').addEventListener('click', () => {
             const inputText = annInput.value.trim();
-            if (!inputText) return window.showToast("Please select an announcement from the dropdown or type one first to share.", "error");
-
-            let message = `📢 *OFFICIAL ANNOUNCEMENT*\n\n• ${inputText}\n`;
-            message += linkFooter;
+            if (!inputText) return window.showToast("Please select an announcement or type one first.", "error");
+            let message = `📢 *OFFICIAL ANNOUNCEMENT*\n\n• ${inputText}\n` + linkFooter;
             window.open(`https://wa.me/?text=${encodeURIComponent(message.trim())}`, '_blank', 'noopener,noreferrer');
         });
 
@@ -1422,19 +1093,22 @@
         onSnapshot(q, (snapshot) => {
             const products = ['40MM', '25MM', '20MM', '6MM', '12MM', 'DUST', 'MSAND'];
             products.forEach(p => { document.getElementById(`list-${p}`).innerHTML = ''; });
-
             let productCounts = { '40MM': 0, '25MM': 0, '20MM': 0, '6MM': 0, '12MM': 0, 'DUST': 0, 'MSAND': 0 };
+            let currentSnapshotData = {};
+            products.forEach(p => { currentSnapshotData[p] = []; });
 
             snapshot.forEach((documentSnapshot) => {
                 const data = documentSnapshot.data();
                 const id = documentSnapshot.id; 
-                const targetList = document.getElementById(`list-${data.product}`);
-                
+                const prod = data.product;
+
+                if (currentSnapshotData[prod]) currentSnapshotData[prod].push({ id, ...data });
+
+                const targetList = document.getElementById(`list-${prod}`);
                 if (targetList) {
-                    productCounts[data.product]++;
+                    productCounts[prod]++;
                     const isLoaded = data.status === "Loaded";
                     const isLoading = data.status === "Loading";
-                    
                     let timeDisplay = data.timeAdded || "N/A";
 
                     const li = document.createElement('li');
@@ -1442,7 +1116,6 @@
 
                     const infoDiv = document.createElement('div');
                     infoDiv.className = 'vehicle-info';
-
                     const vNoSpan = document.createElement('span');
                     vNoSpan.className = 'vehicle-no';
                     vNoSpan.textContent = data.vehicleNo;
@@ -1465,7 +1138,6 @@
                         narrationDiv.textContent = `📝 ${data.narration}`;
                         infoDiv.appendChild(narrationDiv);
                     }
-
                     li.appendChild(infoDiv);
 
                     const btnGroup = document.createElement('div');
@@ -1477,11 +1149,11 @@
                     
                     if (data.status === "Waiting") {
                         actionBtn.textContent = 'Load';
-                        actionBtn.onclick = () => updateVehicleStatus(id, "Loading");
+                        actionBtn.onclick = () => updateVehicleStatus(id, "Loading", data.vehicleNo);
                     } else if (data.status === "Loading") {
                         actionBtn.className = 'btn-success action-btn';
                         actionBtn.textContent = 'Finish';
-                        actionBtn.onclick = () => updateVehicleStatus(id, "Loaded");
+                        actionBtn.onclick = () => updateVehicleStatus(id, "Loaded", data.vehicleNo);
                     } else {
                         actionBtn.className = 'btn-secondary action-btn';
                         actionBtn.textContent = 'Done';
@@ -1514,16 +1186,22 @@
                 }
             });
 
+            const nowString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
             products.forEach(p => {
                 if (productCounts[p] === 0) document.getElementById(`list-${p}`).innerHTML = emptyStateHTML;
+                const prevJSON = JSON.stringify(previousSnapshotData[p] || []);
+                const currJSON = JSON.stringify(currentSnapshotData[p] || []);
+                if (isFirstStatusLoad || prevJSON !== currJSON) queueLastUpdated[p] = nowString;
+
+                const updateLabel = document.getElementById(`updated-${p}`);
+                if (updateLabel) updateLabel.innerText = queueLastUpdated[p] ? `Updated: ${queueLastUpdated[p]}` : `Updated: Never`;
             });
+            previousSnapshotData = currentSnapshotData;
         });
 
         window.editNarration = async (id, currentNarration) => {
             const newNarration = prompt("Enter or update narration/remarks:", currentNarration);
-            if (newNarration !== null) { 
-                await updateDoc(doc(db, "vehicles", id), { narration: newNarration.trim() });
-            }
+            if (newNarration !== null) await updateDoc(doc(db, "vehicles", id), { narration: newNarration.trim() });
         };
 
         window.editVehicle = async (id, currentNo) => {
@@ -1535,13 +1213,12 @@
         };
 
         window.deleteVehicle = async (id) => {
-            if (confirm("Remove this vehicle from the database?")) {
-                await deleteDoc(doc(db, "vehicles", id));
-            }
+            if (confirm("Remove this vehicle from the database?")) await deleteDoc(doc(db, "vehicles", id));
         };
 
-        window.updateVehicleStatus = async (id, newStatus) => {
+        window.updateVehicleStatus = async (id, newStatus, vehicleNo) => {
             await updateDoc(doc(db, "vehicles", id), { status: newStatus });
+            broadcastBackendPush("Queue Status Update", `Vehicle ${vehicleNo} status updated to: ${newStatus}`);
         };
 
         document.getElementById('searchInput').addEventListener('keyup', () => {
@@ -1553,8 +1230,7 @@
         });
 
         window.notifyOwner = (vehicleNo) => {
-            let message = `*NOTIFICATION: Vehicle ${vehicleNo} is ready for loading. Please report to the billing point immediately within 5 minutes.*`;
-            message += linkFooter;
+            let message = `*NOTIFICATION: Vehicle ${vehicleNo} is ready for loading. Please report to the billing point immediately within 5 minutes.*` + linkFooter;
             window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
         };
 
@@ -1569,9 +1245,7 @@
         document.getElementById('shareStockBtn').addEventListener('click', () => {
             const prod = document.getElementById('stockProductSelect').value;
             const inStock = productStock[prod];
-            let message = inStock
-                ? `✅ *STOCK UPDATE:*\n\n${prod} is now *AVAILABLE* for loading.`
-                : `🔴 *STOCK ALERT:*\n\n${prod} is currently *OUT OF STOCK*. Please check back later.`;
+            let message = inStock ? `✅ *STOCK UPDATE:*\n\n${prod} is now *AVAILABLE* for loading.` : `🔴 *STOCK ALERT:*\n\n${prod} is currently *OUT OF STOCK*.`;
             message += linkFooter;
             window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
         });
@@ -1593,11 +1267,7 @@
                     vehicles.forEach(v => {
                         const vNo = v.querySelector('.vehicle-no').innerText;
                         const status = v.querySelector('.status-text').innerText;
-                        
-                        let icon = '⏳';
-                        if (status === 'Loaded') icon = '✅';
-                        else if (status === 'Loading') icon = '🔄';
-                        
+                        let icon = status === 'Loaded' ? '✅' : status === 'Loading' ? '🔄' : '⏳';
                         message += `${icon} ${vNo} (${status})\n`;
                     });
                     message += `\n`; 
