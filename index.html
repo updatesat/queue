@@ -12,6 +12,17 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#4338ca">
 
+    <!-- OneSignal SDK Integration -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "0a2693de-0d93-4795-9e94-e9c094689f29",
+        });
+      });
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" 
             integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" 
@@ -637,8 +648,6 @@
         from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } 
         from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-        import { getMessaging, getToken, onMessage } 
-        from "https://www.gstatic.com/firebasejs/10.4.0/firebase-messaging.js";
 
         window.showToast = function(message, type = "info") {
             const container = document.getElementById('toast-container');
@@ -710,15 +719,10 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        const messaging = getMessaging(app);
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./firebase-messaging-sw.js').catch((err) => console.error(err));
-        }
 
         let notificationsPaused = false;
 
-        // --- TRIGGER BACKEND PUSH NOTIFICATIONS (WINDOWS 7 LOCAL NODE SERVER) ---
+        // --- TRIGGER BACKEND PUSH NOTIFICATIONS (WINDOWS 7 LOCAL NODE SERVER / ONESIGNAL) ---
         async function broadcastBackendPush(title, body) {
             if (notificationsPaused) return;
             try {
@@ -738,48 +742,24 @@
             }
         }
 
-        async function registerAndSaveToken(showSuccessToast = false) {
-            try {
-                const swRegistration = await navigator.serviceWorker.ready;
-                const currentToken = await getToken(messaging, { 
-                    vapidKey: 'BPPFCDrHVbVyYPgJB9NGrag4kuB7GxqZHTx1pRT46VkgSzb7pM1dXZ7ZV1oYHLfNLB645XIRauSrwXcTmCyXcCU',
-                    serviceWorkerRegistration: swRegistration
-                });
-                if (currentToken) {
-                    await setDoc(doc(db, "fcm_tokens", currentToken), { token: currentToken, timestamp: Date.now() });
-                    if (showSuccessToast) {
-                        window.showToast("Notifications activated successfully!", "success");
-                    }
-                }
-            } catch (err) { 
-                if (showSuccessToast) window.showToast("Error: " + err.message, "error"); 
-            }
-        }
-
         window.addEventListener('load', () => {
-            if (!('Notification' in window)) return;
             const modal = document.getElementById('notificationModal');
             const acceptBtn = document.getElementById('acceptNotificationBtn');
             const denyBtn = document.getElementById('denyNotificationBtn');
 
-            if (Notification.permission === 'granted') {
-                registerAndSaveToken(false);
-            } else if (Notification.permission === 'default' || Notification.permission === 'denied') {
-                setTimeout(() => { modal.style.display = 'flex'; }, 800);
-            }
+            // Hook up OneSignal Prompt Flow
+            setTimeout(() => { modal.style.display = 'flex'; }, 800);
 
             acceptBtn.onclick = async () => {
                 modal.style.display = 'none';
-                try {
-                    const permission = await Notification.requestPermission();
-                    if (permission === 'granted') {
-                        registerAndSaveToken(true);
-                    } else {
-                        window.showToast("Notification permission denied.", "error");
+                window.OneSignalDeferred.push(async function(OneSignal) {
+                    try {
+                        await OneSignal.Notifications.requestPermission();
+                        window.showToast("Notifications activated successfully!", "success");
+                    } catch (err) {
+                        window.showToast("Error requesting notification permission.", "error");
                     }
-                } catch (err) {
-                    window.showToast("Error requesting permission.", "error");
-                }
+                });
             };
 
             denyBtn.onclick = () => {
