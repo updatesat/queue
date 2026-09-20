@@ -6,7 +6,7 @@
     <meta name="google" content="notranslate">
     <title>Live Vehicle Queue Dashboard</title>
     
-    <!-- Resource Preconnects for Faster Asset Delivery -->
+    <!-- Resource Preconnects -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
@@ -106,7 +106,6 @@
 
         body.is-blocked:not(.admin-mode) { overflow: hidden; }
 
-        /* Focus Ring Standardization for WCAG 2.1 AA */
         :focus-visible {
             outline: 2px solid var(--primary);
             outline-offset: 2px;
@@ -120,7 +119,6 @@
             width: 100%;
         }
 
-        /* Toast Notifications */
         #toast-container {
             position: fixed;
             bottom: 20px;
@@ -155,7 +153,6 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulseWarning { 0% { background-position: 0 0; } 100% { background-position: 40px 0; } }
 
-        /* Offline Bar */
         #offlineBanner {
             display: none;
             background: #ef4444;
@@ -169,7 +166,6 @@
             z-index: 9999;
         }
 
-        /* Maintenance Overlay */
         #siteBlockOverlay {
             display: none;
             position: fixed;
@@ -223,7 +219,6 @@
         }
         body.admin-mode #siteBlockOverlay { display: none !important; }
 
-        /* Modal Overlay */
         #notificationModal {
             display: none;
             position: fixed;
@@ -264,7 +259,6 @@
         .notification-modal-actions { display: flex; gap: 0.75rem; }
         .notification-modal-actions button { flex: 1; padding: 0.7rem 1rem; font-size: 0.9rem; border-radius: 8px; }
 
-        /* App Header */
         .app-header {
             background: var(--header-bg);
             backdrop-filter: blur(12px);
@@ -317,7 +311,6 @@
 
         @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(21, 128, 61, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(21, 128, 61, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(21, 128, 61, 0); } }
 
-        /* Spotpinned Driver Status Banner */
         #spotlightBanner {
             display: none;
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
@@ -335,7 +328,6 @@
         .spotlight-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .spotlight-badge { background: #4338ca; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; }
 
-        /* Disclaimer Banner */
         .disclaimer-box {
             display: flex;
             align-items: flex-start;
@@ -363,7 +355,6 @@
         }
         .disclaimer-text strong { font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Announcements & Maintenance */
         #announcementContainer { display: none; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem; }
         .announcement-item {
             background: linear-gradient(to right, #0f172a, #1e293b);
@@ -397,7 +388,6 @@
             animation: pulseWarning 2s linear infinite; 
         }
 
-        /* Buttons & Actions */
         .top-actions { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; }
         button { 
             padding: 0.5rem 0.8rem; border: none; border-radius: 6px; font-size: 0.875rem; 
@@ -420,7 +410,6 @@
 
         #loginBtn { position: relative; z-index: 10000; }
 
-        /* Control Panel */
         .controls-wrapper {
             background: var(--card-bg);
             border-radius: var(--radius);
@@ -447,11 +436,13 @@
         }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15); background-color: var(--card-bg); }
 
-        /* Grid Layout */
+        /* ========================================================
+           2 COLUMNS SIDE-BY-SIDE FIXED LAYOUT
+        ======================================================== */
         .product-grid { 
             display: grid; 
-            grid-template-columns: repeat(7, 1fr); 
-            gap: 0.5rem; 
+            grid-template-columns: repeat(2, minmax(0, 1fr)); 
+            gap: 0.75rem; 
             width: 100%;
         }
 
@@ -469,14 +460,22 @@
             position: relative;
         }
         
-        @media (max-width: 1100px) {
-            .product-grid { grid-template-columns: repeat(4, 1fr); }
-        }
-        @media (max-width: 768px) {
-            .product-grid { grid-template-columns: repeat(2, 1fr); }
-        }
         @media (max-width: 480px) {
-            .product-grid { grid-template-columns: 1fr; }
+            .product-grid { 
+                grid-template-columns: repeat(2, minmax(0, 1fr)); 
+                gap: 0.4rem; 
+            }
+            .product-card h2 {
+                font-size: 0.8rem !important;
+                padding: 0.5rem 0.2rem !important;
+            }
+            .vehicle-no {
+                font-size: 0.75rem !important;
+            }
+            .action-btn {
+                font-size: 0.65rem !important;
+                padding: 0.25rem !important;
+            }
         }
         
         .product-card h2 { 
@@ -496,7 +495,7 @@
         body.admin-mode .quick-add-container { display: block; }
         .quick-add-panel { display: none; padding: 0.5rem; background-color: var(--sub-card-bg); border-bottom: 1px solid var(--border); gap: 0.25rem; flex-wrap: wrap; justify-content: center; }
         .quick-add-panel.active { display: flex; animation: fadeIn 0.2s ease; }
-        .quick-add-panel input { min-width: 100px; padding: 0.4rem; font-size: 0.8rem; }
+        .quick-add-panel input { min-width: 80px; padding: 0.4rem; font-size: 0.8rem; }
         
         .vehicle-list { 
             list-style: none; 
@@ -576,7 +575,7 @@
             .app-header { border: none; padding: 0; margin-bottom: 10px; position: static; background: transparent !important; }
             
             .main-content { padding: 0; max-width: 100%; display: flex !important; flex-direction: column !important; flex: 1 !important; }
-            .product-grid { display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 2px !important; flex: 1 !important; } 
+            .product-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 4px !important; flex: 1 !important; } 
             .product-card { box-shadow: none !important; border: 1px solid #000 !important; border-top: 2px solid #000 !important; border-radius: 0; display: flex !important; flex-direction: column !important; position: relative !important; background: white !important; } 
             
             .product-card h2 { 
@@ -638,7 +637,6 @@
         </div>
     </div>
 
-    <!-- Live Toast Container -->
     <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <header class="app-header no-print">
@@ -683,7 +681,6 @@
             </div>
         </div>
 
-        <!-- Disclaimer Banner -->
         <aside class="disclaimer-box no-print" aria-label="Legal Disclaimer">
             <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             <div class="disclaimer-text" id="disclaimerContent">
@@ -774,7 +771,7 @@
             </div>
         </section>
 
-        <!-- Product Grid (Hydrated cleanly via JavaScript without document.write anti-pattern) -->
+        <!-- Product Grid -->
         <section class="product-grid" id="mainGrid" aria-label="Material Queue Columns"></section>
     </main>
 
@@ -797,7 +794,7 @@
 
         const MATERIALS = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
 
-        // Build Product Columns Safely into the DOM
+        // Build 2-column structure
         const grid = document.getElementById('mainGrid');
         const fragment = document.createDocumentFragment();
         MATERIALS.forEach(m => {
@@ -898,7 +895,6 @@
             refreshSpotlightDisplay();
         });
 
-        // Network Monitor
         const offlineBanner = document.getElementById('offlineBanner');
         window.addEventListener('online', () => { offlineBanner.style.display = 'none'; });
         window.addEventListener('offline', () => { offlineBanner.style.display = 'block'; });
@@ -933,7 +929,6 @@
             setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 3000);
         };
 
-        // Dark Theme
         const darkModeBtn = document.getElementById('darkModeBtn');
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
@@ -946,7 +941,6 @@
             darkModeBtn.textContent = isDark ? '☀️' : '🌙';
         });
 
-        // Audio Alerts
         let audioBellEnabled = localStorage.getItem('audioBell') !== 'false';
         const audioToggleBtn = document.getElementById('audioToggleBtn');
         function updateAudioBtnUI() {
@@ -983,7 +977,6 @@
             } catch(e) { console.warn("Audio play blocked", e); }
         }
 
-        // Spotlight (Pin Vehicle)
         let pinnedVehicleNo = localStorage.getItem('pinnedVehicle') || '';
         window.toggleSpotlight = function(vNo) {
             if (pinnedVehicleNo === vNo) {
@@ -1089,7 +1082,6 @@
         };
         window.updateDatalist();
 
-        // Safe QR generation on page load
         window.addEventListener('load', () => {
             if (typeof QRCode !== 'undefined') {
                 new QRCode(document.getElementById("qrcode"), { text: "https://updatesat.github.io/queue/", width: 45, height: 45 });
@@ -1675,11 +1667,11 @@
 
                     const upBtn = document.createElement('button');
                     upBtn.className = 'mini-btn'; upBtn.title = "Move Up"; upBtn.setAttribute('aria-label', 'Move Vehicle Up'); upBtn.innerHTML = "▲";
-                    upBtn.onclick = () => window.moveVehicle(id, 'up', prod);
+                    upBtn.onclick = () => moveVehicle(id, 'up', prod);
 
                     const downBtn = document.createElement('button');
                     downBtn.className = 'mini-btn'; downBtn.title = "Move Down"; downBtn.setAttribute('aria-label', 'Move Vehicle Down'); downBtn.innerHTML = "▼";
-                    downBtn.onclick = () => window.moveVehicle(id, 'down', prod);
+                    downBtn.onclick = () => moveVehicle(id, 'down', prod);
 
                     const actionBtn = document.createElement('button');
                     actionBtn.className = 'btn-primary action-btn';
@@ -1687,11 +1679,11 @@
                     
                     if (data.status === "Waiting") {
                         actionBtn.textContent = 'Load';
-                        actionBtn.onclick = () => window.updateVehicleStatus(id, "Loading", data.vehicleNo);
+                        actionBtn.onclick = () => updateVehicleStatus(id, "Loading", data.vehicleNo);
                     } else if (data.status === "Loading") {
                         actionBtn.className = 'btn-success action-btn';
                         actionBtn.textContent = 'Finish';
-                        actionBtn.onclick = () => window.updateVehicleStatus(id, "Loaded", data.vehicleNo);
+                        actionBtn.onclick = () => updateVehicleStatus(id, "Loaded", data.vehicleNo);
                     } else {
                         actionBtn.className = 'btn-secondary action-btn';
                         actionBtn.textContent = 'Done';
@@ -1699,19 +1691,19 @@
                     
                     const notifyBtn = document.createElement('button');
                     notifyBtn.className = 'mini-btn'; notifyBtn.title = "Notify Owner via WhatsApp"; notifyBtn.setAttribute('aria-label', 'Notify Driver'); notifyBtn.innerHTML = "💬";
-                    notifyBtn.onclick = () => window.notifyOwner(data.vehicleNo, data.driverPhone);
+                    notifyBtn.onclick = () => notifyOwner(data.vehicleNo, data.driverPhone);
 
                     const noteBtn = document.createElement('button');
                     noteBtn.className = 'mini-btn'; noteBtn.title = "Add Note"; noteBtn.setAttribute('aria-label', 'Add Note'); noteBtn.innerHTML = "✏️";
-                    noteBtn.onclick = () => window.editNarration(id, data.narration || "");
+                    noteBtn.onclick = () => editNarration(id, data.narration || "");
 
                     const editBtn = document.createElement('button');
                     editBtn.className = 'mini-btn'; editBtn.title = "Edit Vehicle"; editBtn.setAttribute('aria-label', 'Edit Vehicle'); editBtn.innerHTML = "⚙️";
-                    editBtn.onclick = () => window.editVehicle(id, data.vehicleNo);
+                    editBtn.onclick = () => editVehicle(id, data.vehicleNo);
 
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'mini-btn'; deleteBtn.title = "Delete"; deleteBtn.setAttribute('aria-label', 'Delete Vehicle'); deleteBtn.innerHTML = "🗑️";
-                    deleteBtn.onclick = () => window.deleteVehicle(id);
+                    deleteBtn.onclick = () => deleteVehicle(id);
 
                     btnGroup.appendChild(upBtn);
                     btnGroup.appendChild(downBtn);
