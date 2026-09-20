@@ -19,9 +19,6 @@
       OneSignalDeferred.push(async function(OneSignal) {
         await OneSignal.init({
           appId: "0a2693de-0d93-4795-9e94-e9c094689f29",
-          serviceWorkerParam: { scope: "./" },
-          serviceWorkerPath: "./OneSignalSDKWorker.js",
-          allowLocalhostAsSecureOrigin: true
         });
       });
     </script>
@@ -98,6 +95,7 @@
             box-sizing: border-box;
         }
 
+        /* Toast Notifications */
         #toast-container {
             position: fixed;
             bottom: 20px;
@@ -130,6 +128,7 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulseWarning { 0% { background-position: 0 0; } 100% { background-position: 40px 0; } }
 
+        /* Offline Bar */
         #offlineBanner {
             display: none;
             background: #ef4444;
@@ -143,6 +142,7 @@
             z-index: 9999;
         }
 
+        /* Modern Site Block Overlay */
         #siteBlockOverlay {
             display: none;
             position: fixed;
@@ -197,6 +197,7 @@
         }
         body.admin-mode #siteBlockOverlay { display: none !important; }
 
+        /* Notification Prompt Modal Overlay */
         #notificationModal {
             display: none;
             position: fixed;
@@ -238,6 +239,7 @@
         .notification-modal-actions { display: flex; gap: 0.75rem; }
         .notification-modal-actions button { flex: 1; padding: 0.7rem 1rem; font-size: 0.9rem; border-radius: 8px; }
 
+        /* App Header */
         .app-header {
             background: var(--header-bg);
             backdrop-filter: blur(12px);
@@ -289,6 +291,7 @@
 
         @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(21, 128, 61, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(21, 128, 61, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(21, 128, 61, 0); } }
 
+        /* Spotpinned Driver Status Banner */
         #spotlightBanner {
             display: none;
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
@@ -306,6 +309,7 @@
         .spotlight-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .spotlight-badge { background: #4338ca; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; }
 
+        /* Professional Disclaimer Banner */
         .disclaimer-box {
             display: flex;
             align-items: flex-start;
@@ -334,6 +338,7 @@
         }
         .disclaimer-text strong { font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
 
+        /* Announcements & Maintenance */
         #announcementContainer { display: none; flex-direction: column; gap: 0.8rem; margin-bottom: 1.5rem; }
         .announcement-item {
             background: linear-gradient(to right, #0f172a, #1e293b);
@@ -367,6 +372,7 @@
             animation: pulseWarning 2s linear infinite; 
         }
 
+        /* Buttons & Actions */
         .top-actions { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; }
         button { 
             padding: 0.5rem 0.8rem; border: none; border-radius: 6px; font-size: 0.875rem; 
@@ -389,6 +395,7 @@
 
         #loginBtn { position: relative; z-index: 10000; }
 
+        /* Control Panel */
         .controls-wrapper {
             background: var(--card-bg);
             border-radius: var(--radius);
@@ -415,6 +422,7 @@
         }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15); background-color: var(--card-bg); }
 
+        /* Responsive Product Grid */
         .product-grid { 
             display: grid; 
             grid-template-columns: repeat(7, 1fr); 
@@ -442,7 +450,7 @@
         
         .product-card h3 { 
             margin: 0; padding: 0.75rem 0.25rem; background-color: var(--sub-card-bg); border-bottom: 1px solid var(--border); 
-            text-align: center; display: flex; flex-direction: column; gap: 0.25rem; font-weight: 700; font-size: 0.9rem;
+            text-align: center; display: flex; flex-direction: column; gap: 0.35rem; font-weight: 700; font-size: 0.9rem;
             color: var(--text-main); position: sticky; top: 0; z-index: 10; word-wrap: break-word;
         }
         
@@ -452,9 +460,6 @@
 
         .total-wait-badge { font-size: 0.62rem; color: #4338ca; font-weight: 600; background: rgba(67, 56, 202, 0.08); padding: 1px 6px; border-radius: 99px; width: fit-content; margin: 0 auto; }
         body.dark-mode .total-wait-badge { color: #a5b4fc; background: rgba(165, 180, 252, 0.12); }
-
-        .mat-cleared-badge { font-size: 0.60rem; color: #059669; font-weight: 700; background: rgba(16, 185, 129, 0.12); padding: 1px 6px; border-radius: 99px; width: fit-content; margin: 0 auto; }
-        body.dark-mode .mat-cleared-badge { color: #34d399; background: rgba(52, 211, 153, 0.15); }
 
         .quick-add-container { display: none; }
         body.admin-mode .quick-add-container { display: block; }
@@ -491,27 +496,6 @@
         .status-Waiting { background-color: var(--warning-light); color: var(--warning); }
         .status-Loading { background-color: #dbeafe; color: #2563eb; }
         .status-Loaded { background-color: var(--success-light); color: var(--success); }
-        .status-Hold { background-color: #fef3c7; color: #d97706; border: 1px dashed #f59e0b; }
-
-        .vehicle-item.is-stale {
-            border: 2px solid #ef4444 !important;
-            background-color: rgba(239, 68, 68, 0.05) !important;
-            animation: pulseStale 1.8s infinite;
-        }
-        @keyframes pulseStale {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-            70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-        }
-        .stale-badge {
-            background-color: #fee2e2;
-            color: #dc2626;
-            font-size: 0.62rem;
-            font-weight: 700;
-            padding: 1px 4px;
-            border-radius: 4px;
-            border: 1px solid #fca5a5;
-        }
 
         .driver-contact-bar { display: flex; gap: 4px; justify-content: center; margin-top: 3px; }
         .comm-link { text-decoration: none; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
@@ -521,7 +505,6 @@
         .narration-text { font-size: 0.7rem; color: var(--text-muted); background: var(--sub-card-bg); padding: 4px; border-radius: 4px; border-left: 2px solid #94a3b8; margin-top: 4px; text-align: center;}
         
         .vehicle-item.is-loading { border-left: 3px solid #3b82f6; background-color: var(--item-hover); }
-        .vehicle-item.is-hold { border-left: 3px solid #f59e0b; opacity: 0.85; }
         .vehicle-item.is-loaded { opacity: 0.6; filter: grayscale(50%); }
         .vehicle-item.is-loaded .vehicle-no { text-decoration: line-through; }
         
@@ -530,7 +513,7 @@
         .mini-btn:hover { background-color: var(--border); color: var(--text-main); }
         .pin-btn { position: absolute; top: 4px; left: 4px; cursor: pointer; border: none; background: transparent; font-size: 0.75rem; padding: 2px; color: var(--text-muted); }
         .pin-btn.active { color: #f59e0b; }
-        .action-btn { flex: 1; padding: 0.3rem; font-size: 0.7rem; }
+        .action-btn { flex: 1; padding: 0.3rem; font-size: 0.7rem; min-width: 100%;}
 
         .admin-only { display: none !important; }
         body.admin-mode .admin-only { display: flex !important; }
@@ -543,7 +526,8 @@
         @media print { 
             @page { size: A4 portrait; margin: 4mm; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .no-print, .vehicle-meta, .empty-msg, .driver-contact-bar, .pin-btn, [id^="updated-"], .total-wait-badge, .mat-cleared-badge { display: none !important; } 
+            /* Explicitly hides timestamps, wait badges, and metadata from print output */
+            .no-print, .vehicle-meta, .empty-msg, .driver-contact-bar, .pin-btn, [id^="updated-"], .total-wait-badge { display: none !important; } 
             
             html, body { background-color: white !important; color: black !important; height: 100% !important; margin: 0 !important; padding: 0 !important; }
             body { display: flex !important; flex-direction: column !important; }
@@ -580,8 +564,10 @@
 </head>
 <body>
 
+    <!-- Offline Network Banner -->
     <div id="offlineBanner" class="no-print">⚠️ Network disconnected. Reconnecting to live queue...</div>
 
+    <!-- Site Blocking Overlay -->
     <div id="siteBlockOverlay">
         <div class="maintenance-card">
             <div class="maintenance-badge" data-i18n="system_notice">System Notice</div>
@@ -598,6 +584,7 @@
         </div>
     </div>
 
+    <!-- Notification Prompt Modal -->
     <div id="notificationModal">
         <div class="notification-modal-card">
             <div class="notification-icon-box">
@@ -612,12 +599,14 @@
         </div>
     </div>
 
+    <!-- Toast Notification Container -->
     <div id="toast-container"></div>
 
     <header class="app-header no-print">
         <div class="header-title">
             <h2 data-i18n="header_title">Live Queue</h2>
             <div class="live-indicator" data-i18n="live_updates">Live Updates</div>
+            <!-- Admin only counter pill -->
             <div class="load-counter-pill admin-only-inline" id="dailyClearedPill">🚛 Loaded Today: 0</div>
         </div>
         <div class="top-actions">
@@ -637,6 +626,7 @@
     </header>
 
     <div class="main-content">
+        <!-- Find My Position Banner -->
         <div id="spotlightBanner" class="no-print">
             <div class="spotlight-info">
                 <span style="font-size: 1.25rem;">⭐</span>
@@ -656,10 +646,11 @@
             </div>
         </div>
 
+        <!-- Disclaimer Banner: Permanently Malayalam -->
         <div class="disclaimer-box no-print">
             <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             <div class="disclaimer-text" id="disclaimerContent">
-                <strong>അറിയിപ്പ്:</strong> ഈ വെബ് സൈറ്റിൽ കാണുന്ന വിവരങ്ങളും ക്രഷറിലെ ക്യു ലിസ്റ്റും തമ്മിൽ ചിലപ്പോൾ മാറ്റങ്ങൾ ഉണ്ടാവാം. ആയതുകൊണ്ടുതന്നെ ഉപയോക്താക്കൾ ഏകദേശ വിവരങ്ങൾ ലഭിക്കാൻ മാത്രം ഈ ലിങ്ക് ഉപയോഗപ്പെടുത്തുക. ഇവിടെ പ്രദർശിപ്പിച്ചിട്ടുള്ള വിവരങ്ങളിൽ ഓഫീസ് ഉത്തരവാദിയല്ല. ഡ്രൈവേഴ്‌സിൻ്റെ സൗകര്യം മാത്രം ഉദ്ദേശിച്ചിട്ടുള്ളതാണ്.[span_1](start_span)[span_1](end_span)
+                <strong>അറിയിപ്പ്:</strong> ഈ വെബ് സൈറ്റിൽ കാണുന്ന വിവരങ്ങളും ക്രഷറിലെ ക്യു ലിസ്റ്റും തമ്മിൽ ചിലപ്പോൾ മാറ്റങ്ങൾ ഉണ്ടാവാം. ആയതുകൊണ്ടുതന്നെ ഉപയോക്താക്കൾ ഏകദേശ വിവരങ്ങൾ ലഭിക്കാൻ മാത്രം ഈ ലിങ്ക് ഉപയോഗപ്പെടുത്തുക. ഇവിടെ പ്രദർശിപ്പിച്ചിട്ടുള്ള വിവരങ്ങളിൽ ഓഫീസ് ഉത്തരവാദിയല്ല. ഡ്രൈവേഴ്‌സിൻ്റെ സൗകര്യം മാത്രം ഉദ്ദേശിച്ചിട്ടുള്ളതാണ്.
             </div>
         </div>
 
@@ -727,6 +718,7 @@
             </div>
         </div>
 
+        <!-- Product Grid -->
         <div class="product-grid" id="mainGrid">
             <script>
               const materials = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
@@ -739,7 +731,6 @@
                             <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('${m}')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
                         </div>
                         <span id="badge-${m}" class="stock-badge stock-in" data-i18n="available">Available</span>
-                        <span id="mat-cleared-${m}" class="mat-cleared-badge">✔ 0 Loaded Today</span>
                         <span id="total-wait-${m}" class="total-wait-badge">0 trucks (0m delay)</span>
                         <span id="updated-${m}" style="font-size: 0.60rem; color: var(--text-muted); font-weight: normal; margin-top: 1px;">Updated: Never</span>
                     </h3>
@@ -768,21 +759,23 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, where, orderBy, setDoc, getDoc, getDocs, writeBatch } 
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy, setDoc, getDoc, getDocs, writeBatch } 
         from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } 
         from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
+        // Material Rates for dynamic ETA (in minutes per truck)
         const MATERIAL_LOAD_TIMES = {
-            '6MM': 75,
-            '12MM': 90,
-            '20MM': 20,
-            'DUST': 30,
-            '25MM': 15,
-            '40MM': 15,
-            'MSAND': 10
+            '6MM': 75,   // 1.25 hours = 75 mins
+            '12MM': 90,  // 1.5 hours  = 90 mins
+            '20MM': 20,  // 20 mins
+            'DUST': 30,  // 30 mins
+            '25MM': 15,  // 15 mins
+            '40MM': 15,  // 15 mins
+            'MSAND': 10  // ~10 mins
         };
 
+        // Multi-Language Dictionary
         const I18N = {
             en: {
                 header_title: "Live Queue",
@@ -796,7 +789,6 @@
                 waiting: "Waiting",
                 loading: "Loading",
                 loaded: "Loaded",
-                hold: "Hold",
                 maint_banner: "⚠️ CRUSHER UNDER MAINTENANCE - LOADING PAUSED / EXPECT DELAYS ⚠️",
                 system_notice: "System Notice",
                 maint_title: "Under Scheduled Maintenance",
@@ -818,7 +810,6 @@
                 waiting: "വെയ്റ്റിംഗ്",
                 loading: "ലോഡിംഗ്",
                 loaded: "പൂർത്തിയായി",
-                hold: "മാറ്റിനിർത്തുക",
                 maint_banner: "⚠️ ക്രഷർ അറ്റകുറ്റപ്പണിയിലാണ് - ലോഡിംഗ് താൽക്കാലികമായി നിർത്തിവെച്ചിരിക്കുന്നു ⚠️",
                 system_notice: "സിസ്റ്റം അറിയിപ്പ്",
                 maint_title: "അറ്റകുറ്റപ്പണി പുരോഗമിക്കുന്നു",
@@ -847,6 +838,7 @@
             refreshSpotlightDisplay();
         });
 
+        // Network Offline Monitor
         const offlineBanner = document.getElementById('offlineBanner');
         window.addEventListener('online', () => { offlineBanner.style.display = 'none'; });
         window.addEventListener('offline', () => { offlineBanner.style.display = 'block'; });
@@ -870,6 +862,7 @@
             setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 3000);
         };
 
+        // Dark Theme
         const darkModeBtn = document.getElementById('darkModeBtn');
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
@@ -882,6 +875,7 @@
             darkModeBtn.textContent = isDark ? '☀️' : '🌙';
         });
 
+        // Bell Audio
         let audioBellEnabled = localStorage.getItem('audioBell') !== 'false';
         const audioToggleBtn = document.getElementById('audioToggleBtn');
         function updateAudioBtnUI() {
@@ -914,6 +908,7 @@
             } catch(e) { console.log("Audio play blocked", e); }
         }
 
+        // Spotlight (Pin Vehicle)
         let pinnedVehicleNo = localStorage.getItem('pinnedVehicle') || '';
         window.toggleSpotlight = function(vNo) {
             if (pinnedVehicleNo === vNo) {
@@ -958,8 +953,6 @@
                     const status = item.querySelector('.status-text')?.innerText || 'Waiting';
                     if (status.includes('Loading') || status.includes('ലോഡിംഗ്')) {
                         textSpan.innerHTML = `<span class="spotlight-badge" style="background:#2563eb;">NOW LOADING</span> inside ${prod} bay! Report immediately.`;
-                    } else if (status.includes('Hold') || status.includes('മാറ്റിനിർത്തുക')) {
-                        textSpan.innerHTML = `<span class="spotlight-badge" style="background:#d97706;">ON HOLD</span> Contact office counter to resume.`;
                     } else if (status.includes('Loaded') || status.includes('പൂർത്തിയായി')) {
                         textSpan.innerHTML = `<span class="spotlight-badge" style="background:#16a34a;">LOADED COMPLETED</span> Bill ready for exit.`;
                     } else {
@@ -1039,39 +1032,12 @@
 
         let notificationsPaused = false;
 
-        const ONESIGNAL_APP_ID = "0a2693de-0d93-4795-9e94-e9c094689f29";[span_2](start_span)[span_2](end_span)
-        const ONESIGNAL_REST_KEY = "os_v2_app_YOUR_REST_API_KEY"; // <-- Replace with your OneSignal REST API Key
-
-        async function broadcastOneSignalPush(title, message) {
+        function triggerWebNotification(title, body) {
             if (notificationsPaused) return;
-
             if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
                 try {
-                    new Notification(title, { body: message, icon: './favicon.ico' });
+                    new Notification(title, { body, icon: './favicon.ico' });
                 } catch(e) { console.log(e); }
-            }
-
-            if (!ONESIGNAL_REST_KEY || ONESIGNAL_REST_KEY.includes("YOUR_REST_API_KEY")) {
-                return;
-            }
-
-            try {
-                await fetch("https://onesignal.com/api/v1/notifications", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json; charset=utf-8",
-                        "Authorization": `Basic ${ONESIGNAL_REST_KEY}`
-                    },
-                    body: JSON.stringify({
-                        app_id: ONESIGNAL_APP_ID,
-                        included_segments: ["Subscribed Users"],
-                        headings: { en: title },
-                        contents: { en: message },
-                        url: "https://updatesat.github.io/queue/"
-                    })
-                });
-            } catch (err) {
-                console.warn("OneSignal Web Push broadcast failed:", err);
             }
         }
 
@@ -1132,44 +1098,6 @@
             }
         });
 
-        // Shift Archive: Archives prior date or completed trucks past 6:00 PM
-        async function runShiftArchive() {
-            try {
-                const now = new Date();
-                const currentHour = now.getHours();
-                const todayStr = now.toLocaleDateString('en-GB');
-
-                const loadedQuery = query(queueRef, where("status", "==", "Loaded"));
-                const snap = await getDocs(loadedQuery);
-                if (snap.empty) return;
-
-                const batch = writeBatch(db);
-                let archivedCount = 0;
-
-                snap.forEach(docSnap => {
-                    const data = docSnap.data();
-                    const isPriorDate = data.dateAdded && data.dateAdded !== todayStr;
-                    const isAfterShiftEnd = data.dateAdded === todayStr && currentHour >= 18;
-
-                    if (isPriorDate || isAfterShiftEnd) {
-                        batch.update(docSnap.ref, { 
-                            status: "Archived",
-                            archivedAt: Date.now()
-                        });
-                        archivedCount++;
-                    }
-                });
-
-                if (archivedCount > 0) {
-                    await batch.commit();
-                }
-            } catch (err) {
-                console.warn("Shift archive error:", err);
-            }
-        }
-        runShiftArchive();
-        setInterval(runShiftArchive, 5 * 60 * 1000);
-
         window.processAddVehicle = async function(vehicleNo, product, narration = "", phone = "") {
             if (!vehicleNo || !product) {
                 window.showToast("Enter vehicle number and select product.", "error");
@@ -1196,11 +1124,10 @@
                     timeAdded: timeString, 
                     status: "Waiting", 
                     timestamp: nowTimestamp,
-                    orderIndex: nowTimestamp,
-                    loadingStartedAt: null
+                    orderIndex: nowTimestamp
                 });
                 window.showToast(`Added ${vehicleNo} to ${product}`, "success");
-                broadcastOneSignalPush("New Vehicle in Queue", `Vehicle ${vehicleNo} added to ${product}.`);
+                triggerWebNotification("New Vehicle in Queue", `Vehicle ${vehicleNo} added to ${product}.`);
                 return true;
             } catch (error) {
                 window.showToast("Error adding vehicle: " + error.message, "error");
@@ -1234,6 +1161,7 @@
             if (success) { input.value = ''; window.toggleQuickAdd(product); }
         };
 
+        // Queue Sequence Swapping (Move Up / Down)
         window.moveVehicle = async function(id, direction, product) {
             const sameProductQueue = currentVehicleList
                 .filter(v => v.product === product && v.status !== 'Loaded')
@@ -1260,6 +1188,7 @@
             }
         };
 
+        // CSV Export Feature
         document.getElementById('exportCsvBtn').addEventListener('click', () => {
             if (currentVehicleList.length === 0) return window.showToast("No queue data to export.", "info");
 
@@ -1278,6 +1207,7 @@
             window.showToast("CSV report generated!", "success");
         });
 
+        // Clear Loaded Vehicles
         document.getElementById('clearLoadedBtn').addEventListener('click', async () => {
             const loadedCards = document.querySelectorAll('.vehicle-item.is-loaded');
             if (loadedCards.length === 0) {
@@ -1286,17 +1216,19 @@
             if (!confirm(`Are you sure you want to clear all ${loadedCards.length} completed/loaded vehicles from the dashboard?`)) return;
 
             try {
-                const qLoaded = query(queueRef, where("status", "==", "Loaded"));
+                const qLoaded = query(queueRef);
                 const snap = await getDocs(qLoaded);
                 const batch = writeBatch(db);
                 let count = 0;
                 snap.forEach(docSnap => {
-                    batch.update(docSnap.ref, { status: "Archived" });
-                    count++;
+                    if (docSnap.data().status === 'Loaded') {
+                        batch.delete(docSnap.ref);
+                        count++;
+                    }
                 });
                 if (count > 0) {
                     await batch.commit();
-                    window.showToast(`Successfully cleared and archived ${count} loaded vehicles!`, "success");
+                    window.showToast(`Successfully cleared ${count} loaded vehicles!`, "success");
                 }
             } catch(err) {
                 window.showToast("Error clearing loaded vehicles: " + err.message, "error");
@@ -1496,14 +1428,14 @@
 
         document.getElementById('maintBtn').addEventListener('click', async () => {
             await setDoc(statusRef, { maintenance: !isMaintenance }, { merge: true });
-            broadcastOneSignalPush("Crusher Status Update", isMaintenance ? "Crusher is now operational." : "Crusher is undergoing maintenance.");
+            triggerWebNotification("Crusher Status Update", isMaintenance ? "Crusher is now operational." : "Crusher is undergoing maintenance.");
         });
 
         document.getElementById('toggleStockBtn').addEventListener('click', async () => {
             const prod = document.getElementById('stockProductSelect').value;
             const currentStatus = productStock[prod] !== false;
             await setDoc(statusRef, { stock: { [prod]: !currentStatus } }, { merge: true });
-            broadcastOneSignalPush("Stock Update", `${prod} is now ${!currentStatus ? 'Available' : 'Out of Stock'}.`);
+            triggerWebNotification("Stock Update", `${prod} is now ${!currentStatus ? 'Available' : 'Out of Stock'}.`);
         });
 
         document.getElementById('updateAnnouncementBtn').addEventListener('click', async () => {
@@ -1515,7 +1447,7 @@
                 await setDoc(statusRef, { announcements: updatedList, announcement: "" }, { merge: true });
                 annInput.value = ''; presetSelect.selectedIndex = 0;
                 window.showToast("Published!", "success");
-                broadcastOneSignalPush("Official Announcement", text);
+                triggerWebNotification("Official Announcement", text);
             } catch (error) { window.showToast("Error publishing: " + error.message, "error"); }
         });
 
@@ -1548,49 +1480,33 @@
             window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
         });
 
-        // Query all vehicles ordered by timestamp, filter in memory to avoid Firestore index limitations
         const q = query(queueRef, orderBy("timestamp", "asc"));
         const emptyStateHTML = `<div class="empty-msg"><svg fill="currentColor" viewBox="0 0 16 16"><path d="M14 9V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM4 6h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/><path d="M1.5 14.5a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-13z"/></svg>No vehicles currently waiting</div>`;
 
         onSnapshot(q, (snapshot) => {
             const products = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
-            products.forEach(p => { 
-                const el = document.getElementById(`list-${p}`);
-                if (el) el.innerHTML = ''; 
-            });
-
+            products.forEach(p => { document.getElementById(`list-${p}`).innerHTML = ''; });
             let productCounts = { '40MM': 0, '25MM': 0, '20MM': 0, '12MM': 0, '6MM': 0, 'DUST': 0, 'MSAND': 0 };
-            let materialLoadedToday = { '40MM': 0, '25MM': 0, '20MM': 0, '12MM': 0, '6MM': 0, 'DUST': 0, 'MSAND': 0 };
             let currentSnapshotData = {};
             products.forEach(p => { currentSnapshotData[p] = []; });
 
             let totalLoadedToday = 0;
-            const now = new Date();
-            const currentHour = now.getHours();
-            const todayStr = now.toLocaleDateString('en-GB');
-
-            // Shift active from 6:00 AM (06:00) to 5:59 PM (17:59)
-            const isWithinShiftHours = currentHour >= 6 && currentHour < 18;
+            const todayStr = new Date().toLocaleDateString('en-GB');
 
             currentVehicleList = [];
             snapshot.forEach(docSnap => {
-                const item = { id: docSnap.id, ...docSnap.data() };
-                if (item.status !== "Archived") {
-                    currentVehicleList.push(item);
-                }
+                currentVehicleList.push({ id: docSnap.id, ...docSnap.data() });
             });
 
+            // Sort vehicles with custom orderIndex
             currentVehicleList.sort((a,b) => (a.orderIndex || a.timestamp) - (b.orderIndex || b.timestamp));
 
             currentVehicleList.forEach((data) => {
                 const id = data.id; 
                 const prod = data.product;
 
-                if (data.status === "Loaded" && data.dateAdded === todayStr && isWithinShiftHours) {
+                if (data.status === "Loaded" && data.dateAdded === todayStr) {
                     totalLoadedToday++;
-                    if (materialLoadedToday[prod] !== undefined) {
-                        materialLoadedToday[prod]++;
-                    }
                 }
 
                 if (knownStatuses[id] && knownStatuses[id] !== "Loading" && data.status === "Loading") {
@@ -1606,18 +1522,8 @@
                     productCounts[prod]++;
                     const isLoaded = data.status === "Loaded";
                     const isLoading = data.status === "Loading";
-                    const isHold = data.status === "Hold";
                     let timeDisplay = data.timeAdded || "N/A";
                     const isPinned = (pinnedVehicleNo && pinnedVehicleNo === data.vehicleNo);
-
-                    let isStale = false;
-                    let staleMinutes = 0;
-                    if (isLoading && data.loadingStartedAt) {
-                        const elapsedMs = Date.now() - data.loadingStartedAt;
-                        staleMinutes = Math.floor(elapsedMs / (1000 * 60));
-                        const maxAllowed = (MATERIAL_LOAD_TIMES[prod] || 20) + 20; 
-                        if (staleMinutes >= maxAllowed) isStale = true;
-                    }
 
                     const queuePosition = productCounts[prod];
                     let etaText = "";
@@ -1626,14 +1532,12 @@
                         etaText = formatWaitDuration(queuePosition * unitRate);
                     } else if (data.status === "Loading") {
                         etaText = `Loading now`;
-                    } else if (data.status === "Hold") {
-                        etaText = `On Hold`;
                     } else {
                         etaText = `Finished`;
                     }
 
                     const li = document.createElement('li');
-                    li.className = `vehicle-item ${isLoaded ? 'is-loaded' : ''} ${isLoading ? 'is-loading' : ''} ${isHold ? 'is-hold' : ''} ${isPinned ? 'is-pinned' : ''} ${isStale ? 'is-stale' : ''}`;
+                    li.className = `vehicle-item ${isLoaded ? 'is-loaded' : ''} ${isLoading ? 'is-loading' : ''} ${isPinned ? 'is-pinned' : ''}`;
 
                     const pinBtn = document.createElement('button');
                     pinBtn.className = `pin-btn ${isPinned ? 'active' : ''} no-print`;
@@ -1654,16 +1558,9 @@
                     
                     const statusSpan = document.createElement('span');
                     statusSpan.className = `status-text status-${data.status}`;
-                    const statusDictKey = (data.status || 'waiting').toLowerCase();
-                    statusSpan.textContent = (I18N[currentLang] && I18N[currentLang][statusDictKey]) || data.status;
+                    const statusDictKey = data.status.toLowerCase();
+                    statusSpan.textContent = I18N[currentLang][statusDictKey] || data.status;
                     metaSpan.appendChild(statusSpan);
-
-                    if (isStale) {
-                        const staleBadge = document.createElement('span');
-                        staleBadge.className = 'stale-badge';
-                        staleBadge.textContent = `⚠️ OVERDUE (${staleMinutes}m)`;
-                        metaSpan.appendChild(staleBadge);
-                    }
 
                     const etaSpan = document.createElement('span');
                     etaSpan.className = 'eta-badge';
@@ -1694,6 +1591,7 @@
                     const btnGroup = document.createElement('div');
                     btnGroup.className = 'btn-group admin-only no-print';
 
+                    // Sequence Adjusters (Move Up / Down)
                     const upBtn = document.createElement('button');
                     upBtn.className = 'mini-btn'; upBtn.title = "Move Up"; upBtn.innerHTML = "▲";
                     upBtn.onclick = () => moveVehicle(id, 'up', prod);
@@ -1706,7 +1604,7 @@
                     actionBtn.className = 'btn-primary action-btn';
                     actionBtn.disabled = isLoaded;
                     
-                    if (data.status === "Waiting" || data.status === "Hold") {
+                    if (data.status === "Waiting") {
                         actionBtn.textContent = 'Load';
                         actionBtn.onclick = () => updateVehicleStatus(id, "Loading", data.vehicleNo);
                     } else if (data.status === "Loading") {
@@ -1717,15 +1615,9 @@
                         actionBtn.className = 'btn-secondary action-btn';
                         actionBtn.textContent = 'Done';
                     }
-
-                    const holdBtn = document.createElement('button');
-                    holdBtn.className = 'mini-btn';
-                    holdBtn.title = data.status === 'Hold' ? "Unhold" : "Hold";
-                    holdBtn.innerHTML = data.status === 'Hold' ? "▶️" : "⏸️";
-                    holdBtn.onclick = () => toggleHoldVehicle(id, data.status, data.vehicleNo);
                     
                     const notifyBtn = document.createElement('button');
-                    notifyBtn.className = 'mini-btn'; notifyBtn.title = "Notify via WhatsApp"; notifyBtn.innerHTML = "💬";
+                    notifyBtn.className = 'mini-btn'; notifyBtn.title = "Notify Owner via WhatsApp"; notifyBtn.innerHTML = "💬";
                     notifyBtn.onclick = () => notifyOwner(data.vehicleNo, data.driverPhone);
 
                     const noteBtn = document.createElement('button');
@@ -1743,7 +1635,6 @@
                     btnGroup.appendChild(upBtn);
                     btnGroup.appendChild(downBtn);
                     btnGroup.appendChild(actionBtn);
-                    btnGroup.appendChild(holdBtn);
                     btnGroup.appendChild(notifyBtn);
                     btnGroup.appendChild(noteBtn);
                     btnGroup.appendChild(editBtn);
@@ -1754,25 +1645,17 @@
                 }
             });
 
-            const pill = document.getElementById('dailyClearedPill');
-            if (pill) pill.textContent = `🚛 Loaded Today: ${totalLoadedToday}`;
+            document.getElementById('dailyClearedPill').textContent = `🚛 Loaded Today: ${totalLoadedToday}`;
 
             const nowString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
             products.forEach(p => {
-                const list = document.getElementById(`list-${p}`);
-                if (list && productCounts[p] === 0) list.innerHTML = emptyStateHTML;
-                
+                if (productCounts[p] === 0) document.getElementById(`list-${p}`).innerHTML = emptyStateHTML;
                 const prevJSON = JSON.stringify(previousSnapshotData[p] || []);
                 const currJSON = JSON.stringify(currentSnapshotData[p] || []);
                 if (isFirstStatusLoad || prevJSON !== currJSON) queueLastUpdated[p] = nowString;
 
                 const updateLabel = document.getElementById(`updated-${p}`);
                 if (updateLabel) updateLabel.innerText = queueLastUpdated[p] ? `Updated: ${queueLastUpdated[p]}` : `Updated: Never`;
-
-                const matBadge = document.getElementById(`mat-cleared-${p}`);
-                if (matBadge) {
-                    matBadge.textContent = `✔ ${materialLoadedToday[p] || 0} Loaded Today`;
-                }
 
                 const waitingTrucks = (currentSnapshotData[p] || []).filter(v => v.status === 'Waiting').length;
                 const totalMins = waitingTrucks * (MATERIAL_LOAD_TIMES[p] || 15);
@@ -1784,12 +1667,6 @@
             previousSnapshotData = currentSnapshotData;
             refreshSpotlightDisplay();
         });
-
-        window.toggleHoldVehicle = async (id, currentStatus, vehicleNo) => {
-            const nextStatus = currentStatus === "Hold" ? "Waiting" : "Hold";
-            await updateDoc(doc(db, "vehicles", id), { status: nextStatus });
-            window.showToast(`${vehicleNo} is now ${nextStatus === 'Hold' ? 'ON HOLD' : 'RESUMED'}.`, 'info');
-        };
 
         window.editNarration = async (id, currentNarration) => {
             const newNarration = prompt("Enter or update narration/remarks:", currentNarration);
@@ -1809,12 +1686,8 @@
         };
 
         window.updateVehicleStatus = async (id, newStatus, vehicleNo) => {
-            let updatePayload = { status: newStatus };
-            if (newStatus === "Loading") {
-                updatePayload.loadingStartedAt = Date.now();
-            }
-            await updateDoc(doc(db, "vehicles", id), updatePayload);
-            broadcastOneSignalPush("Queue Status Update", `Vehicle ${vehicleNo} is now: ${newStatus}`);
+            await updateDoc(doc(db, "vehicles", id), { status: newStatus });
+            triggerWebNotification("Queue Status Update", `Vehicle ${vehicleNo} is now: ${newStatus}`);
         };
 
         document.getElementById('searchInput').addEventListener('keyup', () => {
@@ -1871,7 +1744,6 @@
                         let shortNo = cleanDigits.length >= 4 ? cleanDigits.slice(-4) : cleanDigits;
                         
                         if (status.includes('Loading') || status.includes('ലോഡിംഗ്')) shortNo = `*${shortNo}`;
-                        if (status.includes('Hold') || status.includes('മാറ്റിനിർത്തുക')) shortNo = `!${shortNo}`;
 
                         queueData[prod].push(shortNo);
                     });
@@ -1897,7 +1769,7 @@
                     message += row + "\n";
                 }
                 message += "```\n";
-                message += "*(Legend: `*XXXX` = Loading, `!XXXX` = Hold, `OOS` = Out of Stock)*\n";
+                message += "*(Legend: `*XXXX` = Loading, `OOS` = Out of Stock)*\n";
             }
 
             message += linkFooter;
