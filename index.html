@@ -128,7 +128,21 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulseWarning { 0% { background-position: 0 0; } 100% { background-position: 40px 0; } }
 
-        /* Professional Modern Site Block Overlay */
+        /* Offline Bar */
+        #offlineBanner {
+            display: none;
+            background: #ef4444;
+            color: white;
+            padding: 0.4rem 1rem;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+        }
+
+        /* Modern Site Block Overlay */
         #siteBlockOverlay {
             display: none;
             position: fixed;
@@ -183,7 +197,7 @@
         }
         body.admin-mode #siteBlockOverlay { display: none !important; }
 
-        /* Professional Notification Prompt Modal Overlay */
+        /* Notification Prompt Modal Overlay */
         #notificationModal {
             display: none;
             position: fixed;
@@ -230,7 +244,7 @@
             background: var(--header-bg);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
-            padding: 1rem 1.5rem;
+            padding: 0.75rem 1.25rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -239,7 +253,7 @@
             z-index: 50;
         }
         .header-title { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-        .header-title h2 { color: var(--text-main); letter-spacing: -0.5px; margin: 0; font-weight: 700; font-size: 1.5rem; } 
+        .header-title h2 { color: var(--text-main); letter-spacing: -0.5px; margin: 0; font-weight: 700; font-size: 1.4rem; } 
         .live-indicator {
             background-color: var(--success-light);
             color: var(--success);
@@ -359,9 +373,9 @@
         }
 
         /* Buttons & Actions */
-        .top-actions { display: flex; gap: 0.5rem; align-items: center; }
+        .top-actions { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; }
         button { 
-            padding: 0.5rem 1rem; border: none; border-radius: 6px; font-size: 0.875rem; 
+            padding: 0.5rem 0.8rem; border: none; border-radius: 6px; font-size: 0.875rem; 
             cursor: pointer; font-weight: 600; font-family: inherit; transition: var(--transition); 
             display: inline-flex; align-items: center; justify-content: center; gap: 6px;
         }
@@ -387,14 +401,14 @@
             border-radius: var(--radius);
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
-            padding: 1.5rem;
+            padding: 1.25rem;
             margin-bottom: 1rem;
             display: flex;
             flex-direction: column;
             gap: 1.25rem;
         }
         .controls-row {
-            display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;
+            display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;
             padding-bottom: 1.25rem;
             border-bottom: 1px solid var(--border);
         }
@@ -403,7 +417,7 @@
 
         input, select, textarea { 
             padding: 0.6rem 0.8rem; border: 1px solid var(--border); border-radius: 6px; 
-            font-size: 0.9rem; font-family: inherit; flex: 1; min-width: 170px; 
+            font-size: 0.9rem; font-family: inherit; flex: 1; min-width: 150px; 
             background-color: var(--bg); transition: var(--transition); color: var(--text-main);
         }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15); background-color: var(--card-bg); }
@@ -436,7 +450,7 @@
         
         .product-card h3 { 
             margin: 0; padding: 0.75rem 0.25rem; background-color: var(--sub-card-bg); border-bottom: 1px solid var(--border); 
-            text-align: center; display: flex; flex-direction: column; gap: 0.4rem; font-weight: 700; font-size: 0.9rem;
+            text-align: center; display: flex; flex-direction: column; gap: 0.35rem; font-weight: 700; font-size: 0.9rem;
             color: var(--text-main); position: sticky; top: 0; z-index: 10; word-wrap: break-word;
         }
         
@@ -444,13 +458,16 @@
         .stock-in { background-color: var(--success-light); color: var(--dark-green); border: 1px solid #bbf7d0;}
         .stock-out { background-color: var(--danger-light); color: var(--danger); border: 1px solid #fecaca;}
 
+        .total-wait-badge { font-size: 0.62rem; color: #4338ca; font-weight: 600; background: rgba(67, 56, 202, 0.08); padding: 1px 6px; border-radius: 99px; width: fit-content; margin: 0 auto; }
+        body.dark-mode .total-wait-badge { color: #a5b4fc; background: rgba(165, 180, 252, 0.12); }
+
         .quick-add-container { display: none; }
         body.admin-mode .quick-add-container { display: block; }
         .quick-add-panel { display: none; padding: 0.5rem; background-color: var(--sub-card-bg); border-bottom: 1px solid var(--border); gap: 0.25rem; flex-wrap: wrap; justify-content: center; }
         .quick-add-panel.active { display: flex; animation: fadeIn 0.2s ease; }
         .quick-add-panel input { min-width: 100px; padding: 0.4rem; font-size: 0.8rem; }
         
-        .vehicle-list { list-style: none; padding: 0; margin: 0; min-height: 150px; max-height: 400px; overflow-y: auto; overflow-x: hidden; position: relative; z-index: 2; }
+        .vehicle-list { list-style: none; padding: 0; margin: 0; min-height: 150px; max-height: 460px; overflow-y: auto; overflow-x: hidden; position: relative; z-index: 2; }
         .vehicle-list::-webkit-scrollbar { width: 4px; }
         .vehicle-list::-webkit-scrollbar-track { background: transparent; }
         .vehicle-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -463,7 +480,7 @@
         
         .vehicle-item { 
             display: flex; flex-direction: column; padding: 0.6rem; border-bottom: 1px solid var(--border); 
-            gap: 0.4rem; animation: fadeIn 0.3s ease; background: var(--card-bg); word-wrap: break-word;
+            gap: 0.35rem; animation: fadeIn 0.3s ease; background: var(--card-bg); word-wrap: break-word;
             position: relative;
         }
         .vehicle-item:last-child { border-bottom: none; }
@@ -546,34 +563,37 @@
 </head>
 <body>
 
-    <!-- Professional Modern Site Blocking Overlay -->
+    <!-- Offline Network Banner -->
+    <div id="offlineBanner" class="no-print">⚠️ Network disconnected. Reconnecting to live queue...</div>
+
+    <!-- Site Blocking Overlay -->
     <div id="siteBlockOverlay">
         <div class="maintenance-card">
-            <div class="maintenance-badge">System Notice</div>
+            <div class="maintenance-badge" data-i18n="system_notice">System Notice</div>
             <div class="maintenance-icon-box">
                 <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                 </svg>
             </div>
-            <h1>Under Scheduled Maintenance</h1>
-            <p>Our live vehicle queue dashboard is temporarily offline for system upgrades and optimizations. We will be back online shortly.</p>
+            <h1 data-i18n="maint_title">Under Scheduled Maintenance</h1>
+            <p data-i18n="maint_desc">Our live vehicle queue dashboard is temporarily offline for system upgrades and optimizations. We will be back online shortly.</p>
             <button onclick="document.getElementById('loginBtn').click()" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #e2e8f0; padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; width: 100%; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
                 <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5h1.232l.634.634a.5.5 0 0 0 .708 0l.633-.634H11.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1h-.732l-.634-.633a.5.5 0 0 0-.708 0l-.633.633H5.663A3.5 3.5 0 0 1 3.5 11.5zm0-5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg> Admin Sign In
             </button>
         </div>
     </div>
 
-    <!-- Professional Notification Prompt Modal -->
+    <!-- Notification Prompt Modal -->
     <div id="notificationModal">
         <div class="notification-modal-card">
             <div class="notification-icon-box">
                 <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/></svg>
             </div>
-            <h2>Enable Live Updates</h2>
-            <p>Stay informed with real-time notifications for your vehicle status changes and queue updates.</p>
+            <h2 data-i18n="notif_title">Enable Live Updates</h2>
+            <p data-i18n="notif_desc">Stay informed with real-time notifications for your vehicle status changes and queue updates.</p>
             <div class="notification-modal-actions">
-                <button class="btn-secondary" id="denyNotificationBtn">Deny</button>
-                <button class="btn-primary" id="acceptNotificationBtn">Accept</button>
+                <button class="btn-secondary" id="denyNotificationBtn" data-i18n="deny">Deny</button>
+                <button class="btn-primary" id="acceptNotificationBtn" data-i18n="accept">Accept</button>
             </div>
         </div>
     </div>
@@ -583,11 +603,13 @@
 
     <header class="app-header no-print">
         <div class="header-title">
-            <h2>Live Queue</h2>
-            <div class="live-indicator">Live Updates</div>
-            <div class="load-counter-pill" id="dailyClearedPill">🚛 Loaded Today: 0</div>
+            <h2 data-i18n="header_title">Live Queue</h2>
+            <div class="live-indicator" data-i18n="live_updates">Live Updates</div>
+            <!-- Admin only counter pill -->
+            <div class="load-counter-pill admin-only-inline" id="dailyClearedPill">🚛 Loaded Today: 0</div>
         </div>
         <div class="top-actions">
+            <button class="btn-secondary" id="langToggleBtn" style="padding: 0.4rem 0.6rem; font-size: 0.8rem;" title="Change Language">🌐 EN</button>
             <button class="icon-only-btn btn-secondary" id="darkModeBtn" title="Toggle Dark / Light Theme">🌙</button>
             <button class="icon-only-btn btn-secondary" id="audioToggleBtn" title="Toggle Bell Sound on Load">🔔</button>
             <button class="icon-only-btn btn-secondary" onclick="window.print()" title="Print Queue">
@@ -625,25 +647,25 @@
 
         <div class="disclaimer-box no-print">
             <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            <div class="disclaimer-text">
+            <div class="disclaimer-text" id="disclaimerContent">
                 <strong>അറിയിപ്പ്:</strong> ഈ വെബ് സൈറ്റിൽ കാണുന്ന വിവരങ്ങളും ക്രഷറിലെ ക്യു ലിസ്റ്റും തമ്മിൽ ചിലപ്പോൾ മാറ്റങ്ങൾ ഉണ്ടാവാം. ആയതുകൊണ്ടുതന്നെ ഉപയോക്താക്കൾ ഏകദേശ വിവരങ്ങൾ ലഭിക്കാൻ മാത്രം ഈ ലിങ്ക് ഉപയോഗപ്പെടുത്തുക. ഇവിടെ പ്രദർശിപ്പിച്ചിട്ടുള്ള വിവരങ്ങളിൽ ഓഫീസ് ഉത്തരവാദിയല്ല. ഡ്രൈവേഴ്‌സിൻ്റെ സൗകര്യം മാത്രം ഉദ്ദേശിച്ചിട്ടുള്ളതാണ്.
             </div>
         </div>
 
         <div id="announcementContainer" class="no-print"></div>
 
-        <div id="maintenanceBanner" class="no-print">
+        <div id="maintenanceBanner" class="no-print" data-i18n="maint_banner">
             ⚠️ CRUSHER UNDER MAINTENANCE - LOADING PAUSED / EXPECT DELAYS ⚠️
         </div>
 
         <div class="controls-wrapper no-print">
             <div class="controls-row">
-                <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> Search Queue</span>
+                <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span data-i18n="search_label">Search Queue</span></span>
                 <input type="text" id="searchInput" placeholder="Enter last 4 digits (e.g. 1670)" maxlength="4">
             </div>
 
             <div class="controls-row admin-only">
-                <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM1.5 14h13a.5.5 0 0 0 .5-.5V8.5a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5z"/><path d="M3.5 2.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2zM4 3v1h8V3H4z"/></svg> Add Vehicle</span>
+                <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM1.5 14h13a.5.5 0 0 0 .5-.5V8.5a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5z"/><path d="M3.5 2.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2zM4 3v1h8V3H4z"/></svg> <span data-i18n="add_label">Add Vehicle</span></span>
                 <input type="text" id="vehicleNo" list="savedVehiclesList" placeholder="Vehicle No. (KL-26-H-1670)" oninput="this.value = formatVehicleNumber(this.value)">
                 <input type="tel" id="driverPhone" placeholder="Phone (e.g. 9847000000)" maxlength="10">
                 <select id="productType">
@@ -657,16 +679,19 @@
                     <option value="MSAND">MSAND</option>
                 </select>
                 <input type="text" id="vehicleNarration" placeholder="Remarks (Optional)">
-                <button class="btn-primary" id="addVehicleBtn">Add to Queue</button>
+                <button class="btn-primary" id="addVehicleBtn" data-i18n="add_btn">Add to Queue</button>
             </div>
 
             <div class="controls-row admin-only" style="border-bottom: none; padding-bottom: 0;">
-                <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/></svg> System Ops</span>
+                <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/></svg> <span data-i18n="system_ops">System Ops</span></span>
                 <div style="display: flex; gap: 0.5rem; flex: 1; min-width: 200px; flex-wrap: wrap;">
                     <button id="maintBtn" class="btn-warning" style="flex:1;">Toggle Banner</button>
+                    <!-- Dedicated WhatsApp Maintenance share button to address broken handler -->
+                    <button id="shareMaintBtn" class="btn-success icon-only-btn" title="Broadcast Maintenance Alert"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg></button>
                     <button id="blockSiteBtn" class="btn-danger" style="flex:1;">Block Site</button>
                     <button id="toggleNotificationsBtn" class="btn-secondary" style="flex:1;">🔔 Notifications: On</button>
                     <button id="clearLoadedBtn" class="btn-danger" style="flex:1.2;" title="Remove all completed trucks">🧹 Clear Loaded</button>
+                    <button id="exportCsvBtn" class="btn-secondary" style="flex:1.2;" title="Download Daily Audit CSV">📊 Export CSV</button>
                 </div>
                 <div style="display: flex; gap: 0.5rem; flex: 1.5; min-width: 250px; flex-wrap: wrap;">
                     <select id="stockProductSelect" style="min-width: 100px;"><option value="40MM">40MM</option><option value="25MM">25MM</option><option value="20MM">20MM</option><option value="12MM">12MM</option><option value="6MM">6MM</option><option value="DUST">DUST</option><option value="MSAND">MSAND</option></select>
@@ -704,7 +729,8 @@
                             ${m}
                             <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('${m}')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
                         </div>
-                        <span id="badge-${m}" class="stock-badge stock-in">Available</span>
+                        <span id="badge-${m}" class="stock-badge stock-in" data-i18n="available">Available</span>
+                        <span id="total-wait-${m}" class="total-wait-badge">0 trucks (0m delay)</span>
                         <span id="updated-${m}" style="font-size: 0.60rem; color: var(--text-muted); font-weight: normal; margin-top: 1px;">Updated: Never</span>
                     </h3>
                     <div class="quick-add-container">
@@ -745,8 +771,81 @@
             'DUST': 30,  // 30 mins
             '25MM': 15,  // 15 mins
             '40MM': 15,  // 15 mins
-            'MSAND': 10  // less than 10 mins (~10 mins)
+            'MSAND': 10  // ~10 mins
         };
+
+        // Multi-Language Dictionary
+        const I18N = {
+            en: {
+                header_title: "Live Queue",
+                live_updates: "Live Updates",
+                search_label: "Search Queue",
+                add_label: "Add Vehicle",
+                add_btn: "Add to Queue",
+                system_ops: "System Ops",
+                available: "Available",
+                out_of_stock: "Out of Stock",
+                waiting: "Waiting",
+                loading: "Loading",
+                loaded: "Loaded",
+                maint_banner: "⚠️ CRUSHER UNDER MAINTENANCE - LOADING PAUSED / EXPECT DELAYS ⚠️",
+                system_notice: "System Notice",
+                maint_title: "Under Scheduled Maintenance",
+                maint_desc: "Our live vehicle queue dashboard is temporarily offline for system upgrades and optimizations. We will be back online shortly.",
+                notif_title: "Enable Live Updates",
+                notif_desc: "Stay informed with real-time notifications for your vehicle status changes and queue updates.",
+                accept: "Accept",
+                deny: "Deny",
+                disclaimer: "<strong>Notice:</strong> Information displayed on this portal may occasionally vary from ground physical crusher queues. Please utilize this dashboard solely for reference. The office carries no liability; this service is maintained strictly for driver scheduling convenience."
+            },
+            ml: {
+                header_title: "ലൈവ് ക്യൂ",
+                live_updates: "ലൈവ് അപ്ഡേറ്റ്",
+                search_label: "ക്യൂ തിരയുക",
+                add_label: "വാഹനം ചേർക്കുക",
+                add_btn: "ക്യൂവിലേക്ക് ചേർക്കുക",
+                system_ops: "സിസ്റ്റം നിയന്ത്രണം",
+                available: "ലഭ്യമാണ്",
+                out_of_stock: "സ്റ്റോക്കില്ല",
+                waiting: "വെയ്റ്റിംഗ്",
+                loading: "ലോഡിംഗ്",
+                loaded: "പൂർത്തിയായി",
+                maint_banner: "⚠️ ക്രഷർ അറ്റകുറ്റപ്പണിയിലാണ് - ലോഡിംഗ് താൽക്കാലികമായി നിർത്തിവെച്ചിരിക്കുന്നു ⚠️",
+                system_notice: "സിസ്റ്റം അറിയിപ്പ്",
+                maint_title: "അറ്റകുറ്റപ്പണി പുരോഗമിക്കുന്നു",
+                maint_desc: "സിസ്റ്റം മെച്ചപ്പെടുത്തലുകൾക്കായി ലൈവ് ക്യൂ ഡാഷ്‌ബോർഡ് താൽക്കാലികമായി ലഭ്യമല്ല. ഉടൻ പുനഃസ്ഥാപിക്കും.",
+                notif_title: "തത്സമയ വിവരങ്ങൾ അറിയാം",
+                notif_desc: "വാഹനത്തിന്റെ ലോഡിംഗ് നിലയും മാറ്റങ്ങളും തത്സമയം അറിയാൻ നോട്ടിഫിക്കേഷൻ അനുവദിക്കുക.",
+                accept: "അനുവദിക്കുക",
+                deny: "വേണ്ട",
+                disclaimer: "<strong>അറിയിപ്പ്:</strong> ഈ വെബ് സൈറ്റിൽ കാണുന്ന വിവരങ്ങളും ക്രഷറിലെ ക്യു ലിസ്റ്റും തമ്മിൽ ചിലപ്പോൾ മാറ്റങ്ങൾ ഉണ്ടാവാം. ആയതുകൊണ്ടുതന്നെ ഉപയോക്താക്കൾ ഏകദേശ വിവരങ്ങൾ ലഭിക്കാൻ മാത്രം ഈ ലിങ്ക് ഉപയോഗപ്പെടുത്തുക. ഇവിടെ പ്രദർശിപ്പിച്ചിട്ടുള്ള വിവരങ്ങളിൽ ഓഫീസ് ഉത്തരവാദിയല്ല. ഡ്രൈവേഴ്‌സിൻ്റെ സൗകര്യം മാത്രം ഉദ്ദേശിച്ചിട്ടുള്ളതാണ്."
+            }
+        };
+
+        let currentLang = localStorage.getItem('appLang') || 'en';
+        function applyTranslations() {
+            const dict = I18N[currentLang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) el.textContent = dict[key];
+            });
+            const disc = document.getElementById('disclaimerContent');
+            if (disc) disc.innerHTML = dict.disclaimer;
+            document.getElementById('langToggleBtn').textContent = currentLang === 'en' ? '🌐 EN' : '🌐 ML';
+        }
+
+        document.getElementById('langToggleBtn').addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'ml' : 'en';
+            localStorage.setItem('appLang', currentLang);
+            applyTranslations();
+            refreshSpotlightDisplay();
+        });
+
+        // Network Offline Monitor
+        const offlineBanner = document.getElementById('offlineBanner');
+        window.addEventListener('online', () => { offlineBanner.style.display = 'none'; });
+        window.addEventListener('offline', () => { offlineBanner.style.display = 'block'; });
+        if (!navigator.onLine) offlineBanner.style.display = 'block';
 
         function formatWaitDuration(totalMinutes) {
             if (totalMinutes < 10) return "< 10 mins";
@@ -766,7 +865,7 @@
             setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 3000);
         };
 
-        // --- THEME / DARK MODE ---
+        // Dark Theme
         const darkModeBtn = document.getElementById('darkModeBtn');
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
@@ -779,7 +878,7 @@
             darkModeBtn.textContent = isDark ? '☀️' : '🌙';
         });
 
-        // --- AUDIO BELL ALERT SYSTEM ---
+        // Bell Audio
         let audioBellEnabled = localStorage.getItem('audioBell') !== 'false';
         const audioToggleBtn = document.getElementById('audioToggleBtn');
         function updateAudioBtnUI() {
@@ -812,7 +911,7 @@
             } catch(e) { console.log("Audio play blocked", e); }
         }
 
-        // --- FIND MY POSITION (SPOTLIGHT) ---
+        // Spotlight (Pin Vehicle)
         let pinnedVehicleNo = localStorage.getItem('pinnedVehicle') || '';
         window.toggleSpotlight = function(vNo) {
             if (pinnedVehicleNo === vNo) {
@@ -855,9 +954,9 @@
                     found = true;
                     const item = items[idx];
                     const status = item.querySelector('.status-text')?.innerText || 'Waiting';
-                    if (status === 'Loading') {
+                    if (status.includes('Loading') || status.includes('ലോഡിംഗ്')) {
                         textSpan.innerHTML = `<span class="spotlight-badge" style="background:#2563eb;">NOW LOADING</span> inside ${prod} bay! Report immediately.`;
-                    } else if (status === 'Loaded') {
+                    } else if (status.includes('Loaded') || status.includes('പൂർത്തിയായി')) {
                         textSpan.innerHTML = `<span class="spotlight-badge" style="background:#16a34a;">LOADED COMPLETED</span> Bill ready for exit.`;
                     } else {
                         const unitMins = MATERIAL_LOAD_TIMES[prod] || 15;
@@ -936,26 +1035,18 @@
 
         let notificationsPaused = false;
 
-        async function broadcastBackendPush(title, body) {
+        // Reliable in-browser Web Notification fallback
+        function triggerWebNotification(title, body) {
             if (notificationsPaused) return;
-            try {
-                const querySnapshot = await getDocs(collection(db, "fcm_tokens"));
-                querySnapshot.forEach(async (documentSnapshot) => {
-                    const tokenData = documentSnapshot.data();
-                    if (tokenData && tokenData.token) {
-                        await fetch('http://localhost:3000/send-notification', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ fcmToken: tokenData.token, title, body })
-                        });
-                    }
-                });
-            } catch (err) {
-                console.error("Error dispatching backend notification:", err);
+            if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+                try {
+                    new Notification(title, { body, icon: './favicon.ico' });
+                } catch(e) { console.log(e); }
             }
         }
 
         window.addEventListener('load', () => {
+            applyTranslations();
             const modal = document.getElementById('notificationModal');
             const acceptBtn = document.getElementById('acceptNotificationBtn');
             const denyBtn = document.getElementById('denyNotificationBtn');
@@ -1003,6 +1094,7 @@
         let queueLastUpdated = { '40MM': null, '25MM': null, '20MM': null, '12MM': null, '6MM': null, 'DUST': null, 'MSAND': null };
         let previousSnapshotData = {};
         let knownStatuses = {};
+        let currentVehicleList = [];
 
         getDoc(statusRef).then(docSnap => {
             if (!docSnap.exists()) {
@@ -1026,6 +1118,7 @@
             const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
 
             try {
+                const nowTimestamp = Date.now();
                 await addDoc(queueRef, {
                     vehicleNo: vehicleNo, 
                     product: product, 
@@ -1034,10 +1127,11 @@
                     dateAdded: dateString, 
                     timeAdded: timeString, 
                     status: "Waiting", 
-                    timestamp: Date.now() 
+                    timestamp: nowTimestamp,
+                    orderIndex: nowTimestamp
                 });
                 window.showToast(`Added ${vehicleNo} to ${product}`, "success");
-                broadcastBackendPush("New Vehicle in Queue", `Vehicle ${vehicleNo} has been added to ${product} queue.`);
+                triggerWebNotification("New Vehicle in Queue", `Vehicle ${vehicleNo} added to ${product}.`);
                 return true;
             } catch (error) {
                 window.showToast("Error adding vehicle: " + error.message, "error");
@@ -1071,7 +1165,53 @@
             if (success) { input.value = ''; window.toggleQuickAdd(product); }
         };
 
-        // --- CLEAR ALL LOADED VEHICLES (BATCH DELETE) ---
+        // Queue Sequence Swapping (Move Up / Down)
+        window.moveVehicle = async function(id, direction, product) {
+            const sameProductQueue = currentVehicleList
+                .filter(v => v.product === product && v.status !== 'Loaded')
+                .sort((a,b) => (a.orderIndex || a.timestamp) - (b.orderIndex || b.timestamp));
+
+            const currentIndex = sameProductQueue.findIndex(v => v.id === id);
+            if (currentIndex === -1) return;
+
+            const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+            if (targetIndex < 0 || targetIndex >= sameProductQueue.length) return;
+
+            const currentDoc = sameProductQueue[currentIndex];
+            const targetDoc = sameProductQueue[targetIndex];
+
+            const tempOrder = currentDoc.orderIndex || currentDoc.timestamp;
+            const targetOrder = targetDoc.orderIndex || targetDoc.timestamp;
+
+            try {
+                await updateDoc(doc(db, "vehicles", currentDoc.id), { orderIndex: targetOrder });
+                await updateDoc(doc(db, "vehicles", targetDoc.id), { orderIndex: tempOrder });
+                window.showToast("Queue priority updated.", "success");
+            } catch (e) {
+                window.showToast("Error moving vehicle: " + e.message, "error");
+            }
+        };
+
+        // CSV Export Feature
+        document.getElementById('exportCsvBtn').addEventListener('click', () => {
+            if (currentVehicleList.length === 0) return window.showToast("No queue data to export.", "info");
+
+            let csv = "Vehicle No,Product,Status,Time Added,Date,Phone,Remarks\n";
+            currentVehicleList.forEach(v => {
+                csv += `"${v.vehicleNo || ''}","${v.product || ''}","${v.status || ''}","${v.timeAdded || ''}","${v.dateAdded || ''}","${v.driverPhone || ''}","${(v.narration || '').replace(/"/g, '""')}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Queue_Report_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            window.showToast("CSV report generated!", "success");
+        });
+
+        // Clear Loaded Vehicles
         document.getElementById('clearLoadedBtn').addEventListener('click', async () => {
             const loadedCards = document.querySelectorAll('.vehicle-item.is-loaded');
             if (loadedCards.length === 0) {
@@ -1234,7 +1374,8 @@
                         const badge = document.getElementById(`badge-${prod}`);
                         if (badge) {
                             badge.className = inStock ? "stock-badge stock-in" : "stock-badge stock-out";
-                            badge.innerText = inStock ? "Available" : "Out of Stock";
+                            const langKey = inStock ? "available" : "out_of_stock";
+                            badge.innerText = I18N[currentLang][langKey] || (inStock ? "Available" : "Out of Stock");
                         }
                     }
                 }
@@ -1251,7 +1392,7 @@
                 loginIconSvg.innerHTML = `<path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2zM3 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H3z"/>`; 
             } else {
                 document.body.classList.remove('admin-mode');
-                loginIconSvg.innerHTML = `<path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5h1.232l.634.634a.5.5 0 0 0 .708 0l.633-.634H11.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1h-.732l-.634-.633a.5.5 0 0 0-.708 0l-.633.633H5.663A3.5 3.5 0 0 1 3.5 11.5zm0-5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3 z"/>`; 
+                loginIconSvg.innerHTML = `<path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5h1.232l.634.634a.5.5 0 0 0 .708 0l.633-.634H11.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1h-.732l-.634-.633a.5.5 0 0 0-.708 0l-.633.633H5.663A3.5 3.5 0 0 1 3.5 11.5zm0-5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>`; 
             }
         });
 
@@ -1291,14 +1432,14 @@
 
         document.getElementById('maintBtn').addEventListener('click', async () => {
             await setDoc(statusRef, { maintenance: !isMaintenance }, { merge: true });
-            broadcastBackendPush("Crusher Status Update", isMaintenance ? "Crusher is now operational." : "Crusher is undergoing maintenance.");
+            triggerWebNotification("Crusher Status Update", isMaintenance ? "Crusher is now operational." : "Crusher is undergoing maintenance.");
         });
 
         document.getElementById('toggleStockBtn').addEventListener('click', async () => {
             const prod = document.getElementById('stockProductSelect').value;
             const currentStatus = productStock[prod] !== false;
             await setDoc(statusRef, { stock: { [prod]: !currentStatus } }, { merge: true });
-            broadcastBackendPush("Stock Update", `${prod} is now ${!currentStatus ? 'Available' : 'Out of Stock'}.`);
+            triggerWebNotification("Stock Update", `${prod} is now ${!currentStatus ? 'Available' : 'Out of Stock'}.`);
         });
 
         document.getElementById('updateAnnouncementBtn').addEventListener('click', async () => {
@@ -1310,7 +1451,7 @@
                 await setDoc(statusRef, { announcements: updatedList, announcement: "" }, { merge: true });
                 annInput.value = ''; presetSelect.selectedIndex = 0;
                 window.showToast("Published!", "success");
-                broadcastBackendPush("Official Announcement", text);
+                triggerWebNotification("Official Announcement", text);
             } catch (error) { window.showToast("Error publishing: " + error.message, "error"); }
         });
 
@@ -1335,6 +1476,16 @@
             window.open(`https://wa.me/?text=${encodeURIComponent(message.trim())}`, '_blank', 'noopener,noreferrer');
         });
 
+        // Fixed maintenance broadcast handler
+        document.getElementById('shareMaintBtn').addEventListener('click', () => {
+            let message = isMaintenance 
+                ? "⚠️ *ALERT: CRUSHER UNDER MAINTENANCE* ⚠️\n\nLoading is currently paused. Please expect delays."
+                : "✅ *ALERT: MAINTENANCE COMPLETE* ✅\n\nThe crusher is now operational and loading has resumed normally.";
+            message += linkFooter;
+            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+        });
+
+        // Order by orderIndex (fallback to timestamp)
         const q = query(queueRef, orderBy("timestamp", "asc"));
         const emptyStateHTML = `<div class="empty-msg"><svg fill="currentColor" viewBox="0 0 16 16"><path d="M14 9V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM4 6h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/><path d="M1.5 14.5a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-13z"/></svg>No vehicles currently waiting</div>`;
 
@@ -1348,9 +1499,16 @@
             let totalLoadedToday = 0;
             const todayStr = new Date().toLocaleDateString('en-GB');
 
-            snapshot.forEach((documentSnapshot) => {
-                const data = documentSnapshot.data();
-                const id = documentSnapshot.id; 
+            currentVehicleList = [];
+            snapshot.forEach(docSnap => {
+                currentVehicleList.push({ id: docSnap.id, ...docSnap.data() });
+            });
+
+            // Sort vehicles with custom orderIndex
+            currentVehicleList.sort((a,b) => (a.orderIndex || a.timestamp) - (b.orderIndex || b.timestamp));
+
+            currentVehicleList.forEach((data) => {
+                const id = data.id; 
                 const prod = data.product;
 
                 if (data.status === "Loaded" && data.dateAdded === todayStr) {
@@ -1373,7 +1531,6 @@
                     let timeDisplay = data.timeAdded || "N/A";
                     const isPinned = (pinnedVehicleNo && pinnedVehicleNo === data.vehicleNo);
 
-                    // Accurate dynamic ETA calculation based on material type
                     const queuePosition = productCounts[prod];
                     let etaText = "";
                     const unitRate = MATERIAL_LOAD_TIMES[prod] || 15;
@@ -1407,7 +1564,8 @@
                     
                     const statusSpan = document.createElement('span');
                     statusSpan.className = `status-text status-${data.status}`;
-                    statusSpan.textContent = data.status;
+                    const statusDictKey = data.status.toLowerCase();
+                    statusSpan.textContent = I18N[currentLang][statusDictKey] || data.status;
                     metaSpan.appendChild(statusSpan);
 
                     const etaSpan = document.createElement('span');
@@ -1438,6 +1596,15 @@
 
                     const btnGroup = document.createElement('div');
                     btnGroup.className = 'btn-group admin-only no-print';
+
+                    // Sequence Adjusters (Move Up / Down)
+                    const upBtn = document.createElement('button');
+                    upBtn.className = 'mini-btn'; upBtn.title = "Move Up"; upBtn.innerHTML = "▲";
+                    upBtn.onclick = () => moveVehicle(id, 'up', prod);
+
+                    const downBtn = document.createElement('button');
+                    downBtn.className = 'mini-btn'; downBtn.title = "Move Down"; downBtn.innerHTML = "▼";
+                    downBtn.onclick = () => moveVehicle(id, 'down', prod);
 
                     const actionBtn = document.createElement('button');
                     actionBtn.className = 'btn-primary action-btn';
@@ -1471,6 +1638,8 @@
                     deleteBtn.className = 'mini-btn'; deleteBtn.title = "Delete"; deleteBtn.innerHTML = "🗑️";
                     deleteBtn.onclick = () => deleteVehicle(id);
 
+                    btnGroup.appendChild(upBtn);
+                    btnGroup.appendChild(downBtn);
                     btnGroup.appendChild(actionBtn);
                     btnGroup.appendChild(notifyBtn);
                     btnGroup.appendChild(noteBtn);
@@ -1493,6 +1662,14 @@
 
                 const updateLabel = document.getElementById(`updated-${p}`);
                 if (updateLabel) updateLabel.innerText = queueLastUpdated[p] ? `Updated: ${queueLastUpdated[p]}` : `Updated: Never`;
+
+                // Update aggregate bay queue times
+                const waitingTrucks = (currentSnapshotData[p] || []).filter(v => v.status === 'Waiting').length;
+                const totalMins = waitingTrucks * (MATERIAL_LOAD_TIMES[p] || 15);
+                const waitBadge = document.getElementById(`total-wait-${p}`);
+                if (waitBadge) {
+                    waitBadge.textContent = `${waitingTrucks} waiting (${formatWaitDuration(totalMins)})`;
+                }
             });
             previousSnapshotData = currentSnapshotData;
             refreshSpotlightDisplay();
@@ -1517,7 +1694,7 @@
 
         window.updateVehicleStatus = async (id, newStatus, vehicleNo) => {
             await updateDoc(doc(db, "vehicles", id), { status: newStatus });
-            broadcastBackendPush("Queue Status Update", `Vehicle ${vehicleNo} status updated to: ${newStatus}`);
+            triggerWebNotification("Queue Status Update", `Vehicle ${vehicleNo} is now: ${newStatus}`);
         };
 
         document.getElementById('searchInput').addEventListener('keyup', () => {
@@ -1533,14 +1710,6 @@
             const target = phone ? `https://wa.me/91${phone}?text=${encodeURIComponent(message)}` : `https://wa.me/?text=${encodeURIComponent(message)}`;
             window.open(target, '_blank', 'noopener,noreferrer');
         };
-
-        document.getElementById('shareMaintBtn').addEventListener('click', () => {
-            let message = isMaintenance 
-                ? "⚠️ *ALERT: CRUSHER UNDER MAINTENANCE* ⚠️\n\nLoading is currently paused. Please expect delays."
-                : "✅ *ALERT: MAINTENANCE COMPLETE* ✅\n\nThe crusher is now operational and loading has resumed normally.";
-            message += linkFooter;
-            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
-        });
 
         document.getElementById('shareStockBtn').addEventListener('click', () => {
             const prod = document.getElementById('stockProductSelect').value;
@@ -1581,7 +1750,7 @@
                         const cleanDigits = fullNo.replace(/[^0-9]/g, '');
                         let shortNo = cleanDigits.length >= 4 ? cleanDigits.slice(-4) : cleanDigits;
                         
-                        if (status === 'Loading') shortNo = `*${shortNo}`;
+                        if (status.includes('Loading') || status.includes('ലോഡിംഗ്')) shortNo = `*${shortNo}`;
 
                         queueData[prod].push(shortNo);
                     });
