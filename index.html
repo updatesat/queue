@@ -44,11 +44,29 @@
             --text-muted: #64748b; 
             --border: #e2e8f0; 
             --card-bg: #ffffff;
+            --header-bg: rgba(255, 255, 255, 0.85);
+            --item-hover: #f8fafc;
+            --sub-card-bg: #f1f5f9;
             --radius: 10px;
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
             --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode {
+            --bg: #0b0f19;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+            --card-bg: #111827;
+            --header-bg: rgba(17, 24, 39, 0.88);
+            --item-hover: #1e293b;
+            --sub-card-bg: #1f2937;
+            --danger-light: #450a0a;
+            --warning-light: #451a03;
+            --success-light: #052e16;
+            --dark-green: #4ade80;
         }
 
         html, body { height: 100%; margin: 0; }
@@ -63,6 +81,7 @@
             flex-direction: column;
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         body.is-blocked:not(.admin-mode) { overflow: hidden; }
@@ -208,7 +227,7 @@
 
         /* App Header */
         .app-header {
-            background: rgba(255, 255, 255, 0.85);
+            background: var(--header-bg);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             padding: 1rem 1.5rem;
@@ -219,7 +238,7 @@
             top: 0;
             z-index: 50;
         }
-        .header-title { display: flex; align-items: center; gap: 0.75rem; }
+        .header-title { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
         .header-title h2 { color: var(--text-main); letter-spacing: -0.5px; margin: 0; font-weight: 700; font-size: 1.5rem; } 
         .live-indicator {
             background-color: var(--success-light);
@@ -242,7 +261,39 @@
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
+        .load-counter-pill {
+            background-color: rgba(67, 56, 202, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(67, 56, 202, 0.3);
+            padding: 4px 10px;
+            border-radius: 99px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        body.dark-mode .load-counter-pill { color: #818cf8; border-color: rgba(129, 140, 248, 0.3); }
+
         @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(21, 128, 61, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(21, 128, 61, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(21, 128, 61, 0); } }
+
+        /* Spotpinned Driver Status Banner */
+        #spotlightBanner {
+            display: none;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            color: #ffffff;
+            border-radius: var(--radius);
+            padding: 0.9rem 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid #818cf8;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+        .spotlight-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .spotlight-badge { background: #4338ca; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; }
 
         /* Professional Disclaimer Banner */
         .disclaimer-box {
@@ -260,6 +311,7 @@
             box-sizing: border-box;
             width: 100%;
         }
+        body.dark-mode .disclaimer-box { border-color: rgba(239, 68, 68, 0.3); color: #f87171; }
         .disclaimer-box svg { flex-shrink: 0; margin-top: 3px; }
         .disclaimer-text { 
             font-weight: 700; 
@@ -324,8 +376,8 @@
         .btn-warning:hover { background-color: #92400e; }
         .btn-danger { background-color: var(--danger); color: white; }
         .btn-danger:hover { background-color: #991b1b; }
-        .btn-secondary { background-color: #f1f5f9; color: var(--text-main); border: 1px solid var(--border); }
-        .btn-secondary:hover { background-color: #e2e8f0; }
+        .btn-secondary { background-color: var(--sub-card-bg); color: var(--text-main); border: 1px solid var(--border); }
+        .btn-secondary:hover { opacity: 0.85; }
 
         #loginBtn { position: relative; z-index: 10000; }
 
@@ -351,10 +403,10 @@
 
         input, select, textarea { 
             padding: 0.6rem 0.8rem; border: 1px solid var(--border); border-radius: 6px; 
-            font-size: 0.9rem; font-family: inherit; flex: 1; min-width: 180px; 
+            font-size: 0.9rem; font-family: inherit; flex: 1; min-width: 170px; 
             background-color: var(--bg); transition: var(--transition); color: var(--text-main);
         }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15); background-color: white; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15); background-color: var(--card-bg); }
 
         /* Responsive Product Grid */
         .product-grid { 
@@ -383,8 +435,8 @@
         }
         
         .product-card h3 { 
-            margin: 0; padding: 0.75rem 0.25rem; background-color: #f8fafc; border-bottom: 1px solid var(--border); 
-            text-align: center; display: flex; flex-direction: column; gap: 0.5rem; font-weight: 700; font-size: 0.9rem;
+            margin: 0; padding: 0.75rem 0.25rem; background-color: var(--sub-card-bg); border-bottom: 1px solid var(--border); 
+            text-align: center; display: flex; flex-direction: column; gap: 0.4rem; font-weight: 700; font-size: 0.9rem;
             color: var(--text-main); position: sticky; top: 0; z-index: 10; word-wrap: break-word;
         }
         
@@ -394,7 +446,7 @@
 
         .quick-add-container { display: none; }
         body.admin-mode .quick-add-container { display: block; }
-        .quick-add-panel { display: none; padding: 0.5rem; background-color: #f1f5f9; border-bottom: 1px solid var(--border); gap: 0.25rem; flex-wrap: wrap; justify-content: center; }
+        .quick-add-panel { display: none; padding: 0.5rem; background-color: var(--sub-card-bg); border-bottom: 1px solid var(--border); gap: 0.25rem; flex-wrap: wrap; justify-content: center; }
         .quick-add-panel.active { display: flex; animation: fadeIn 0.2s ease; }
         .quick-add-panel input { min-width: 100px; padding: 0.4rem; font-size: 0.8rem; }
         
@@ -411,29 +463,39 @@
         
         .vehicle-item { 
             display: flex; flex-direction: column; padding: 0.6rem; border-bottom: 1px solid var(--border); 
-            gap: 0.4rem; animation: fadeIn 0.3s ease; background: white; word-wrap: break-word;
+            gap: 0.4rem; animation: fadeIn 0.3s ease; background: var(--card-bg); word-wrap: break-word;
+            position: relative;
         }
         .vehicle-item:last-child { border-bottom: none; }
-        .vehicle-item:hover { background-color: #f8fafc; }
+        .vehicle-item:hover { background-color: var(--item-hover); }
+        .vehicle-item.is-pinned { outline: 2px solid var(--primary); background-color: rgba(67, 56, 202, 0.05); }
         
         .vehicle-info { display: flex; flex-direction: column; gap: 0.2rem; }
         .vehicle-no { font-weight: 700; font-size: 0.85rem; color: var(--text-main); letter-spacing: 0.5px; text-align: center; }
         .vehicle-meta { font-size: 0.7rem; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 2px;}
         .status-text { font-weight: 600; padding: 2px 4px; border-radius: 4px; font-size: 0.65rem; text-transform: uppercase; }
+        .eta-badge { font-size: 0.65rem; color: #3b82f6; font-weight: 600; background: rgba(59, 130, 246, 0.1); padding: 1px 6px; border-radius: 4px; }
         
         .status-Waiting { background-color: var(--warning-light); color: var(--warning); }
         .status-Loading { background-color: #dbeafe; color: #2563eb; }
         .status-Loaded { background-color: var(--success-light); color: var(--success); }
 
-        .narration-text { font-size: 0.7rem; color: var(--text-muted); background: #f1f5f9; padding: 4px; border-radius: 4px; border-left: 2px solid #94a3b8; margin-top: 4px; text-align: center;}
+        .driver-contact-bar { display: flex; gap: 4px; justify-content: center; margin-top: 3px; }
+        .comm-link { text-decoration: none; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
+        .comm-call { background: rgba(34, 197, 94, 0.15); color: #16a34a; }
+        .comm-sms { background: rgba(59, 130, 246, 0.15); color: #2563eb; }
+
+        .narration-text { font-size: 0.7rem; color: var(--text-muted); background: var(--sub-card-bg); padding: 4px; border-radius: 4px; border-left: 2px solid #94a3b8; margin-top: 4px; text-align: center;}
         
-        .vehicle-item.is-loading { border-left: 3px solid #3b82f6; background-color: #f8fafc;}
+        .vehicle-item.is-loading { border-left: 3px solid #3b82f6; background-color: var(--item-hover); }
         .vehicle-item.is-loaded { opacity: 0.6; filter: grayscale(50%); }
         .vehicle-item.is-loaded .vehicle-no { text-decoration: line-through; }
         
         .btn-group { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-top: 0.2rem; justify-content: center; }
         .mini-btn { padding: 2px; border-radius: 4px; background: transparent; color: var(--text-muted); border: 1px solid transparent; width: 22px; height: 22px; font-size: 0.8rem;}
-        .mini-btn:hover { background-color: #e2e8f0; color: var(--text-main); }
+        .mini-btn:hover { background-color: var(--border); color: var(--text-main); }
+        .pin-btn { position: absolute; top: 4px; left: 4px; cursor: pointer; border: none; background: transparent; font-size: 0.75rem; padding: 2px; color: var(--text-muted); }
+        .pin-btn.active { color: #f59e0b; }
         .action-btn { flex: 1; padding: 0.3rem; font-size: 0.7rem; min-width: 100%;}
 
         .admin-only { display: none !important; }
@@ -447,19 +509,19 @@
         @media print { 
             @page { size: A4 portrait; margin: 4mm; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .no-print, .vehicle-meta, .empty-msg { display: none !important; } 
+            .no-print, .vehicle-meta, .empty-msg, .driver-contact-bar, .pin-btn { display: none !important; } 
             
-            html, body { background-color: white !important; height: 100% !important; margin: 0 !important; padding: 0 !important; }
+            html, body { background-color: white !important; color: black !important; height: 100% !important; margin: 0 !important; padding: 0 !important; }
             body { display: flex !important; flex-direction: column !important; }
-            .app-header { border: none; padding: 0; margin-bottom: 10px; position: static; }
+            .app-header { border: none; padding: 0; margin-bottom: 10px; position: static; background: transparent !important; }
             
             .main-content { padding: 0; max-width: 100%; display: flex !important; flex-direction: column !important; flex: 1 !important; }
             .product-grid { display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 2px !important; flex: 1 !important; } 
-            .product-card { box-shadow: none !important; border: 1px solid #000 !important; border-top: 2px solid #000 !important; border-radius: 0; display: flex !important; flex-direction: column !important; position: relative !important; } 
+            .product-card { box-shadow: none !important; border: 1px solid #000 !important; border-top: 2px solid #000 !important; border-radius: 0; display: flex !important; flex-direction: column !important; position: relative !important; background: white !important; } 
             
             .product-card h3 { 
                 font-family: "Times New Roman", Times, serif !important;
-                font-size: 1.1rem !important; font-weight: 900 !important; padding: 5px 2px !important; border-bottom: 1px solid #000 !important; 
+                font-size: 1.1rem !important; font-weight: 900 !important; padding: 5px 2px !important; border-bottom: 1px solid #000 !important; background: white !important; color: black !important;
             }
 
             .card-watermark {
@@ -469,9 +531,9 @@
             }
             
             .vehicle-list { flex: 1 !important; max-height: none !important; overflow: visible !important; }
-            .stock-badge { font-size: 0.45rem !important; padding: 0 !important; border: none !important; }
+            .stock-badge { font-size: 0.45rem !important; padding: 0 !important; border: none !important; color: black !important; background: transparent !important; }
             .vehicle-item { padding: 3px 2px !important; border-bottom: 1px solid #ccc !important; background: transparent !important; }
-            .vehicle-no { font-size: 0.75rem !important; font-weight: 700 !important; text-align: center; }
+            .vehicle-no { font-size: 0.75rem !important; font-weight: 700 !important; text-align: center; color: black !important; }
             
             .print-footer { 
                 display: flex !important; margin-top: 5px !important; padding-top: 10px; border-top: 1px solid #000;
@@ -523,8 +585,11 @@
         <div class="header-title">
             <h2>Live Queue</h2>
             <div class="live-indicator">Live Updates</div>
+            <div class="load-counter-pill" id="dailyClearedPill">🚛 Loaded Today: 0</div>
         </div>
         <div class="top-actions">
+            <button class="icon-only-btn btn-secondary" id="darkModeBtn" title="Toggle Dark / Light Theme">🌙</button>
+            <button class="icon-only-btn btn-secondary" id="audioToggleBtn" title="Toggle Bell Sound on Load">🔔</button>
             <button class="icon-only-btn btn-secondary" onclick="window.print()" title="Print Queue">
                 <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm1 3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2H6v-2z"/></svg>
             </button>
@@ -538,6 +603,18 @@
     </header>
 
     <div class="main-content">
+        <!-- Find My Position Banner -->
+        <div id="spotlightBanner" class="no-print">
+            <div class="spotlight-info">
+                <span style="font-size: 1.25rem;">⭐</span>
+                <div>
+                    <strong id="spotlightVehicle">Vehicle Pinned</strong>
+                    <div id="spotlightText" style="font-size: 0.85rem; color: #c7d2fe;">Checking position in queue...</div>
+                </div>
+            </div>
+            <button class="mini-btn" onclick="clearSpotlight()" style="color: white; border: 1px solid rgba(255,255,255,0.3);" title="Unpin vehicle">✕</button>
+        </div>
+
         <div id="siteBlockedAdminBanner" style="display: none; background: var(--danger-light); border: 1px solid #fca5a5; color: var(--danger); padding: 0.85rem 1.25rem; border-radius: var(--radius); margin-bottom: 1.5rem; box-shadow: var(--shadow-sm); align-items: center; gap: 1rem;">
             <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
             <div style="flex: 1;">
@@ -568,6 +645,7 @@
             <div class="controls-row admin-only">
                 <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM1.5 14h13a.5.5 0 0 0 .5-.5V8.5a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5z"/><path d="M3.5 2.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2zM4 3v1h8V3H4z"/></svg> Add Vehicle</span>
                 <input type="text" id="vehicleNo" list="savedVehiclesList" placeholder="Vehicle No. (KL-26-H-1670)" oninput="this.value = formatVehicleNumber(this.value)">
+                <input type="tel" id="driverPhone" placeholder="Phone (e.g. 9847000000)" maxlength="10">
                 <select id="productType">
                     <option value="" disabled selected>Select Material</option>
                     <option value="40MM">40MM</option>
@@ -588,7 +666,7 @@
                     <button id="maintBtn" class="btn-warning" style="flex:1;">Toggle Banner</button>
                     <button id="blockSiteBtn" class="btn-danger" style="flex:1;">Block Site</button>
                     <button id="toggleNotificationsBtn" class="btn-secondary" style="flex:1;">🔔 Notifications: On</button>
-                    <button class="btn-success icon-only-btn" id="shareMaintBtn" title="Broadcast Maintenance Alert"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg></button>
+                    <button id="clearLoadedBtn" class="btn-danger" style="flex:1.2;" title="Remove all completed trucks">🧹 Clear Loaded</button>
                 </div>
                 <div style="display: flex; gap: 0.5rem; flex: 1.5; min-width: 250px; flex-wrap: wrap;">
                     <select id="stockProductSelect" style="min-width: 100px;"><option value="40MM">40MM</option><option value="25MM">25MM</option><option value="20MM">20MM</option><option value="12MM">12MM</option><option value="6MM">6MM</option><option value="DUST">DUST</option><option value="MSAND">MSAND</option></select>
@@ -654,7 +732,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy, setDoc, getDoc, getDocs } 
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy, setDoc, getDoc, getDocs, writeBatch } 
         from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } 
         from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
@@ -668,6 +746,111 @@
             container.appendChild(toast);
             setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 3000);
         };
+
+        // --- THEME / DARK MODE ---
+        const darkModeBtn = document.getElementById('darkModeBtn');
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            darkModeBtn.textContent = '☀️';
+        }
+        darkModeBtn.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            darkModeBtn.textContent = isDark ? '☀️' : '🌙';
+        });
+
+        // --- AUDIO BELL ALERT SYSTEM ---
+        let audioBellEnabled = localStorage.getItem('audioBell') !== 'false';
+        const audioToggleBtn = document.getElementById('audioToggleBtn');
+        function updateAudioBtnUI() {
+            audioToggleBtn.textContent = audioBellEnabled ? '🔔' : '🔕';
+            audioToggleBtn.title = audioBellEnabled ? 'Sound notifications: On' : 'Sound notifications: Muted';
+        }
+        updateAudioBtnUI();
+        audioToggleBtn.addEventListener('click', () => {
+            audioBellEnabled = !audioBellEnabled;
+            localStorage.setItem('audioBell', audioBellEnabled);
+            updateAudioBtnUI();
+            if (audioBellEnabled) playQueueBell();
+        });
+
+        function playQueueBell() {
+            if (!audioBellEnabled) return;
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, ctx.currentTime); // A5 note
+                osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.8);
+                gain.gain.setValueAtTime(0.5, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.8);
+            } catch(e) { console.log("Audio play blocked", e); }
+        }
+
+        // --- FIND MY POSITION (SPOTLIGHT) ---
+        let pinnedVehicleNo = localStorage.getItem('pinnedVehicle') || '';
+        window.toggleSpotlight = function(vNo) {
+            if (pinnedVehicleNo === vNo) {
+                clearSpotlight();
+            } else {
+                pinnedVehicleNo = vNo;
+                localStorage.setItem('pinnedVehicle', vNo);
+                window.showToast(`Pinned ${vNo} to top position tracking.`, 'info');
+                refreshSpotlightDisplay();
+            }
+        };
+
+        window.clearSpotlight = function() {
+            pinnedVehicleNo = '';
+            localStorage.removeItem('pinnedVehicle');
+            document.getElementById('spotlightBanner').style.display = 'none';
+            document.querySelectorAll('.vehicle-item').forEach(el => el.classList.remove('is-pinned'));
+            document.querySelectorAll('.pin-btn').forEach(el => el.classList.remove('active'));
+        };
+
+        function refreshSpotlightDisplay() {
+            if (!pinnedVehicleNo) {
+                document.getElementById('spotlightBanner').style.display = 'none';
+                return;
+            }
+            const banner = document.getElementById('spotlightBanner');
+            const vehicleTitle = document.getElementById('spotlightVehicle');
+            const textSpan = document.getElementById('spotlightText');
+            
+            vehicleTitle.textContent = `⭐ Vehicle: ${pinnedVehicleNo}`;
+            let found = false;
+
+            const products = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
+            for (let prod of products) {
+                const list = document.getElementById(`list-${prod}`);
+                if (!list) continue;
+                const items = Array.from(list.querySelectorAll('.vehicle-item'));
+                const idx = items.findIndex(el => el.querySelector('.vehicle-no')?.innerText === pinnedVehicleNo);
+                if (idx !== -1) {
+                    found = true;
+                    const item = items[idx];
+                    const status = item.querySelector('.status-text')?.innerText || 'Waiting';
+                    if (status === 'Loading') {
+                        textSpan.innerHTML = `<span class="spotlight-badge" style="background:#2563eb;">NOW LOADING</span> inside ${prod} bay! Report immediately.`;
+                    } else if (status === 'Loaded') {
+                        textSpan.innerHTML = `<span class="spotlight-badge" style="background:#16a34a;">LOADED COMPLETED</span> Bill ready for exit.`;
+                    } else {
+                        textSpan.innerHTML = `Position <strong>#${idx + 1}</strong> in <strong>${prod}</strong> queue (~${(idx + 1) * 15} mins ETA)`;
+                    }
+                    break;
+                }
+            }
+            if (!found) {
+                textSpan.textContent = "Vehicle not found in active queues or was cleared.";
+            }
+            banner.style.display = 'flex';
+        }
 
         window.formatVehicleNumber = function(val) {
             let s = val.replace(/\s+/g, '').toUpperCase();
@@ -732,7 +915,6 @@
 
         let notificationsPaused = false;
 
-        // --- TRIGGER BACKEND PUSH NOTIFICATIONS (WINDOWS 7 LOCAL NODE SERVER / ONESIGNAL) ---
         async function broadcastBackendPush(title, body) {
             if (notificationsPaused) return;
             try {
@@ -758,16 +940,11 @@
             const denyBtn = document.getElementById('denyNotificationBtn');
 
             window.OneSignalDeferred.push(async function(OneSignal) {
-                // Check if user is already opted in via OneSignal or browser permission is already granted
                 const isPushEnabled = await OneSignal.User.PushSubscription.optedIn;
                 const isPermissionGranted = (typeof Notification !== 'undefined' && Notification.permission === 'granted');
 
-                // Don't show the modal if notifications are enabled
-                if (isPushEnabled || isPermissionGranted) {
-                    return;
-                }
+                if (isPushEnabled || isPermissionGranted) return;
 
-                // Show modal only if not enabled
                 setTimeout(() => { modal.style.display = 'flex'; }, 800);
 
                 acceptBtn.onclick = async () => {
@@ -786,9 +963,7 @@
                 };
 
                 OneSignal.User.PushSubscription.addEventListener("change", (event) => {
-                    if (event.current.optedIn) {
-                        modal.style.display = 'none';
-                    }
+                    if (event.current.optedIn) modal.style.display = 'none';
                 });
             });
         });
@@ -806,6 +981,7 @@
         let isFirstStatusLoad = true;
         let queueLastUpdated = { '40MM': null, '25MM': null, '20MM': null, '12MM': null, '6MM': null, 'DUST': null, 'MSAND': null };
         let previousSnapshotData = {};
+        let knownStatuses = {}; // Tracks status changes to fire bell
 
         getDoc(statusRef).then(docSnap => {
             if (!docSnap.exists()) {
@@ -813,7 +989,7 @@
             }
         });
 
-        window.processAddVehicle = async function(vehicleNo, product, narration = "") {
+        window.processAddVehicle = async function(vehicleNo, product, narration = "", phone = "") {
             if (!vehicleNo || !product) {
                 window.showToast("Enter vehicle number and select product.", "error");
                 return false;
@@ -830,8 +1006,14 @@
 
             try {
                 await addDoc(queueRef, {
-                    vehicleNo: vehicleNo, product: product, narration: narration, 
-                    dateAdded: dateString, timeAdded: timeString, status: "Waiting", timestamp: Date.now() 
+                    vehicleNo: vehicleNo, 
+                    product: product, 
+                    narration: narration, 
+                    driverPhone: phone,
+                    dateAdded: dateString, 
+                    timeAdded: timeString, 
+                    status: "Waiting", 
+                    timestamp: Date.now() 
                 });
                 window.showToast(`Added ${vehicleNo} to ${product}`, "success");
                 broadcastBackendPush("New Vehicle in Queue", `Vehicle ${vehicleNo} has been added to ${product} queue.`);
@@ -844,18 +1026,57 @@
 
         document.getElementById('addVehicleBtn').addEventListener('click', async () => {
             const vehicleInput = document.getElementById('vehicleNo');
+            const phoneInput = document.getElementById('driverPhone');
             const productInput = document.getElementById('productType');
             const narrationInput = document.getElementById('vehicleNarration'); 
-            const success = await window.processAddVehicle(vehicleInput.value.trim().toUpperCase(), productInput.value, narrationInput.value.trim());
-            if(success) { vehicleInput.value = ''; productInput.value = ''; narrationInput.value = ''; }
+            const success = await window.processAddVehicle(
+                vehicleInput.value.trim().toUpperCase(), 
+                productInput.value, 
+                narrationInput.value.trim(), 
+                phoneInput.value.trim()
+            );
+            if(success) { 
+                vehicleInput.value = ''; 
+                phoneInput.value = '';
+                productInput.value = ''; 
+                narrationInput.value = ''; 
+            }
         });
 
         window.quickAddVehicle = async (product) => {
             const input = document.getElementById(`quick-input-${product}`);
             const vNo = input.value.trim().toUpperCase();
-            const success = await window.processAddVehicle(vNo, product, "");
+            const success = await window.processAddVehicle(vNo, product, "", "");
             if (success) { input.value = ''; window.toggleQuickAdd(product); }
         };
+
+        // --- CLEAR ALL LOADED VEHICLES (BATCH DELETE) ---
+        document.getElementById('clearLoadedBtn').addEventListener('click', async () => {
+            const loadedCards = document.querySelectorAll('.vehicle-item.is-loaded');
+            if (loadedCards.length === 0) {
+                return window.showToast("No loaded vehicles found to clear.", "info");
+            }
+            if (!confirm(`Are you sure you want to clear all ${loadedCards.length} completed/loaded vehicles from the dashboard?`)) return;
+
+            try {
+                const qLoaded = query(queueRef);
+                const snap = await getDocs(qLoaded);
+                const batch = writeBatch(db);
+                let count = 0;
+                snap.forEach(docSnap => {
+                    if (docSnap.data().status === 'Loaded') {
+                        batch.delete(docSnap.ref);
+                        count++;
+                    }
+                });
+                if (count > 0) {
+                    await batch.commit();
+                    window.showToast(`Successfully cleared ${count} loaded vehicles!`, "success");
+                }
+            } catch(err) {
+                window.showToast("Error clearing loaded vehicles: " + err.message, "error");
+            }
+        });
 
         const presetSelect = document.getElementById('announcementPresetSelect');
         const annInput = document.getElementById('announcementInput');
@@ -1103,10 +1324,25 @@
             let currentSnapshotData = {};
             products.forEach(p => { currentSnapshotData[p] = []; });
 
+            let totalLoadedToday = 0;
+            const todayStr = new Date().toLocaleDateString('en-GB');
+
             snapshot.forEach((documentSnapshot) => {
                 const data = documentSnapshot.data();
                 const id = documentSnapshot.id; 
                 const prod = data.product;
+
+                // Track daily loaded counter
+                if (data.status === "Loaded" && data.dateAdded === todayStr) {
+                    totalLoadedToday++;
+                }
+
+                // Audio bell trigger when status transitions to Loading
+                if (knownStatuses[id] && knownStatuses[id] !== "Loading" && data.status === "Loading") {
+                    playQueueBell();
+                    window.showToast(`🔔 ${data.vehicleNo} is now LOADING!`, 'success');
+                }
+                knownStatuses[id] = data.status;
 
                 if (currentSnapshotData[prod]) currentSnapshotData[prod].push({ id, ...data });
 
@@ -1116,9 +1352,30 @@
                     const isLoaded = data.status === "Loaded";
                     const isLoading = data.status === "Loading";
                     let timeDisplay = data.timeAdded || "N/A";
+                    const isPinned = (pinnedVehicleNo && pinnedVehicleNo === data.vehicleNo);
+
+                    // Compute Estimated Wait Time (ETA) assuming ~15 mins per vehicle ahead
+                    const queuePosition = productCounts[prod];
+                    let etaText = "";
+                    if (data.status === "Waiting") {
+                        const estimatedMinutes = queuePosition * 15;
+                        etaText = `~${estimatedMinutes} mins`;
+                    } else if (data.status === "Loading") {
+                        etaText = `Loading now`;
+                    } else {
+                        etaText = `Finished`;
+                    }
 
                     const li = document.createElement('li');
-                    li.className = `vehicle-item ${isLoaded ? 'is-loaded' : ''} ${isLoading ? 'is-loading' : ''}`;
+                    li.className = `vehicle-item ${isLoaded ? 'is-loaded' : ''} ${isLoading ? 'is-loading' : ''} ${isPinned ? 'is-pinned' : ''}`;
+
+                    // Pin / Star Button for Drivers
+                    const pinBtn = document.createElement('button');
+                    pinBtn.className = `pin-btn ${isPinned ? 'active' : ''} no-print`;
+                    pinBtn.innerHTML = isPinned ? '⭐' : '☆';
+                    pinBtn.title = isPinned ? 'Unpin this vehicle' : 'Track / Pin my vehicle position';
+                    pinBtn.onclick = () => window.toggleSpotlight(data.vehicleNo);
+                    li.appendChild(pinBtn);
 
                     const infoDiv = document.createElement('div');
                     infoDiv.className = 'vehicle-info';
@@ -1135,8 +1392,24 @@
                     statusSpan.textContent = data.status;
                     metaSpan.appendChild(statusSpan);
 
+                    const etaSpan = document.createElement('span');
+                    etaSpan.className = 'eta-badge';
+                    etaSpan.textContent = `⏱️ ${etaText}`;
+                    metaSpan.appendChild(etaSpan);
+
                     infoDiv.appendChild(vNoSpan);
                     infoDiv.appendChild(metaSpan);
+
+                    // Direct Phone / SMS bar if driver phone exists
+                    if (data.driverPhone) {
+                        const contactBar = document.createElement('div');
+                        contactBar.className = 'driver-contact-bar admin-only no-print';
+                        contactBar.innerHTML = `
+                            <a href="tel:${data.driverPhone}" class="comm-link comm-call">📞 Call</a>
+                            <a href="sms:${data.driverPhone}?body=${encodeURIComponent(`Notice for Vehicle ${data.vehicleNo}: Your turn for${prod} is ready.`)}" class="comm-link comm-sms">💬 SMS</a>
+                        `;
+                        infoDiv.appendChild(contactBar);
+                    }
 
                     if (data.narration) {
                         const narrationDiv = document.createElement('div');
@@ -1166,8 +1439,8 @@
                     }
                     
                     const notifyBtn = document.createElement('button');
-                    notifyBtn.className = 'mini-btn'; notifyBtn.title = "Notify Owner"; notifyBtn.innerHTML = "💬";
-                    notifyBtn.onclick = () => notifyOwner(data.vehicleNo);
+                    notifyBtn.className = 'mini-btn'; notifyBtn.title = "Notify Owner via WhatsApp"; notifyBtn.innerHTML = "💬";
+                    notifyBtn.onclick = () => notifyOwner(data.vehicleNo, data.driverPhone);
 
                     const noteBtn = document.createElement('button');
                     noteBtn.className = 'mini-btn'; noteBtn.title = "Add Note"; noteBtn.innerHTML = "✏️";
@@ -1192,6 +1465,9 @@
                 }
             });
 
+            // Update Loaded Today counter pill
+            document.getElementById('dailyClearedPill').textContent = `🚛 Loaded Today: ${totalLoadedToday}`;
+
             const nowString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
             products.forEach(p => {
                 if (productCounts[p] === 0) document.getElementById(`list-${p}`).innerHTML = emptyStateHTML;
@@ -1203,6 +1479,7 @@
                 if (updateLabel) updateLabel.innerText = queueLastUpdated[p] ? `Updated: ${queueLastUpdated[p]}` : `Updated: Never`;
             });
             previousSnapshotData = currentSnapshotData;
+            refreshSpotlightDisplay();
         });
 
         window.editNarration = async (id, currentNarration) => {
@@ -1235,9 +1512,10 @@
             });
         });
 
-        window.notifyOwner = (vehicleNo) => {
+        window.notifyOwner = (vehicleNo, phone = "") => {
             let message = `*NOTIFICATION: Vehicle ${vehicleNo} is ready for loading. Please report to the billing point immediately within 5 minutes.*` + linkFooter;
-            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+            const target = phone ? `https://wa.me/91${phone}?text=${encodeURIComponent(message)}` : `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(target, '_blank', 'noopener,noreferrer');
         };
 
         document.getElementById('shareMaintBtn').addEventListener('click', () => {
