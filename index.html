@@ -773,7 +773,6 @@
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } 
         from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
-        // Material Rates for dynamic ETA (in minutes per truck)
         const MATERIAL_LOAD_TIMES = {
             '6MM': 75,
             '12MM': 90,
@@ -784,7 +783,6 @@
             'MSAND': 10
         };
 
-        // Multi-Language Dictionary
         const I18N = {
             en: {
                 header_title: "Live Queue",
@@ -872,7 +870,6 @@
             setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 3000);
         };
 
-        // Dark Theme
         const darkModeBtn = document.getElementById('darkModeBtn');
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
@@ -885,7 +882,6 @@
             darkModeBtn.textContent = isDark ? '☀️' : '🌙';
         });
 
-        // Bell Audio
         let audioBellEnabled = localStorage.getItem('audioBell') !== 'false';
         const audioToggleBtn = document.getElementById('audioToggleBtn');
         function updateAudioBtnUI() {
@@ -918,7 +914,6 @@
             } catch(e) { console.log("Audio play blocked", e); }
         }
 
-        // Spotlight
         let pinnedVehicleNo = localStorage.getItem('pinnedVehicle') || '';
         window.toggleSpotlight = function(vNo) {
             if (pinnedVehicleNo === vNo) {
@@ -1044,24 +1039,20 @@
 
         let notificationsPaused = false;
 
-        // OneSignal Production API Credentials[span_2](start_span)[span_2](end_span)
-        const ONESIGNAL_APP_ID = "0a2693de-0d93-4795-9e94-e9c094689f29";[span_3](start_span)[span_3](end_span)
-        const ONESIGNAL_REST_KEY = "os_v2_app_YOUR_REST_API_KEY"; // <-- Place your OneSignal REST API Key here
+        const ONESIGNAL_APP_ID = "0a2693de-0d93-4795-9e94-e9c094689f29";[span_2](start_span)[span_2](end_span)
+        const ONESIGNAL_REST_KEY = "os_v2_app_YOUR_REST_API_KEY"; // <-- Replace with your OneSignal REST API Key
 
-        // Direct OneSignal Web Push Broadcast
         async function broadcastOneSignalPush(title, message) {
             if (notificationsPaused) return;
 
-            // 1. Direct browser fallback for the local viewer
             if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
                 try {
                     new Notification(title, { body: message, icon: './favicon.ico' });
                 } catch(e) { console.log(e); }
             }
 
-            // 2. Broadcast through OneSignal Web Push REST API to all subscribed drivers
             if (!ONESIGNAL_REST_KEY || ONESIGNAL_REST_KEY.includes("YOUR_REST_API_KEY")) {
-                return; // REST API Key placeholder not yet filled
+                return;
             }
 
             try {
@@ -1141,11 +1132,11 @@
             }
         });
 
-        // Shift-Aligned Auto-Archival: 6:00 AM to 6:00 PM shift
+        // Shift Archive: Archives prior date or completed trucks past 6:00 PM
         async function runShiftArchive() {
             try {
                 const now = new Date();
-                const currentHour = now.getHours(); // 0 to 23
+                const currentHour = now.getHours();
                 const todayStr = now.toLocaleDateString('en-GB');
 
                 const loadedQuery = query(queueRef, where("status", "==", "Loaded"));
@@ -1158,10 +1149,9 @@
                 snap.forEach(docSnap => {
                     const data = docSnap.data();
                     const isPriorDate = data.dateAdded && data.dateAdded !== todayStr;
-                    const isAfterShiftEnd = data.dateAdded === todayStr && currentHour >= 18; // Post 6:00 PM
-                    const isBeforeShiftStart = data.dateAdded === todayStr && currentHour < 6;   // Pre 6:00 AM
+                    const isAfterShiftEnd = data.dateAdded === todayStr && currentHour >= 18;
 
-                    if (isPriorDate || isAfterShiftEnd || isBeforeShiftStart) {
+                    if (isPriorDate || isAfterShiftEnd) {
                         batch.update(docSnap.ref, { 
                             status: "Archived",
                             archivedAt: Date.now()
@@ -1172,7 +1162,6 @@
 
                 if (archivedCount > 0) {
                     await batch.commit();
-                    console.log(`Auto-archived ${archivedCount} trucks outside active 6 AM - 6 PM shift.`);
                 }
             } catch (err) {
                 console.warn("Shift archive error:", err);
@@ -1211,7 +1200,7 @@
                     loadingStartedAt: null
                 });
                 window.showToast(`Added ${vehicleNo} to ${product}`, "success");
-                broadcastOneSignalPush("New Vehicle in Queue", `Vehicle ${vehicleNo} has joined the ${product} queue.`);
+                broadcastOneSignalPush("New Vehicle in Queue", `Vehicle ${vehicleNo} added to ${product}.`);
                 return true;
             } catch (error) {
                 window.showToast("Error adding vehicle: " + error.message, "error");
@@ -1245,7 +1234,6 @@
             if (success) { input.value = ''; window.toggleQuickAdd(product); }
         };
 
-        // Sequence Moving
         window.moveVehicle = async function(id, direction, product) {
             const sameProductQueue = currentVehicleList
                 .filter(v => v.product === product && v.status !== 'Loaded')
@@ -1272,7 +1260,6 @@
             }
         };
 
-        // CSV Export
         document.getElementById('exportCsvBtn').addEventListener('click', () => {
             if (currentVehicleList.length === 0) return window.showToast("No queue data to export.", "info");
 
@@ -1291,7 +1278,6 @@
             window.showToast("CSV report generated!", "success");
         });
 
-        // Clear Loaded Vehicles
         document.getElementById('clearLoadedBtn').addEventListener('click', async () => {
             const loadedCards = document.querySelectorAll('.vehicle-item.is-loaded');
             if (loadedCards.length === 0) {
@@ -1562,14 +1548,18 @@
             window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
         });
 
-        const q = query(queueRef, where("status", "in", ["Waiting", "Loading", "Hold", "Loaded"]));
+        // Query all vehicles ordered by timestamp, filter in memory to avoid Firestore index limitations
+        const q = query(queueRef, orderBy("timestamp", "asc"));
         const emptyStateHTML = `<div class="empty-msg"><svg fill="currentColor" viewBox="0 0 16 16"><path d="M14 9V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM4 6h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/><path d="M1.5 14.5a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-13z"/></svg>No vehicles currently waiting</div>`;
 
         onSnapshot(q, (snapshot) => {
             const products = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
-            products.forEach(p => { document.getElementById(`list-${p}`).innerHTML = ''; });
+            products.forEach(p => { 
+                const el = document.getElementById(`list-${p}`);
+                if (el) el.innerHTML = ''; 
+            });
+
             let productCounts = { '40MM': 0, '25MM': 0, '20MM': 0, '12MM': 0, '6MM': 0, 'DUST': 0, 'MSAND': 0 };
-            
             let materialLoadedToday = { '40MM': 0, '25MM': 0, '20MM': 0, '12MM': 0, '6MM': 0, 'DUST': 0, 'MSAND': 0 };
             let currentSnapshotData = {};
             products.forEach(p => { currentSnapshotData[p] = []; });
@@ -1579,11 +1569,15 @@
             const currentHour = now.getHours();
             const todayStr = now.toLocaleDateString('en-GB');
 
+            // Shift active from 6:00 AM (06:00) to 5:59 PM (17:59)
             const isWithinShiftHours = currentHour >= 6 && currentHour < 18;
 
             currentVehicleList = [];
             snapshot.forEach(docSnap => {
-                currentVehicleList.push({ id: docSnap.id, ...docSnap.data() });
+                const item = { id: docSnap.id, ...docSnap.data() };
+                if (item.status !== "Archived") {
+                    currentVehicleList.push(item);
+                }
             });
 
             currentVehicleList.sort((a,b) => (a.orderIndex || a.timestamp) - (b.orderIndex || b.timestamp));
@@ -1660,8 +1654,8 @@
                     
                     const statusSpan = document.createElement('span');
                     statusSpan.className = `status-text status-${data.status}`;
-                    const statusDictKey = data.status.toLowerCase();
-                    statusSpan.textContent = I18N[currentLang][statusDictKey] || data.status;
+                    const statusDictKey = (data.status || 'waiting').toLowerCase();
+                    statusSpan.textContent = (I18N[currentLang] && I18N[currentLang][statusDictKey]) || data.status;
                     metaSpan.appendChild(statusSpan);
 
                     if (isStale) {
@@ -1726,12 +1720,12 @@
 
                     const holdBtn = document.createElement('button');
                     holdBtn.className = 'mini-btn';
-                    holdBtn.title = data.status === 'Hold' ? "Unhold / Return to Queue" : "Hold / Skip Turn";
+                    holdBtn.title = data.status === 'Hold' ? "Unhold" : "Hold";
                     holdBtn.innerHTML = data.status === 'Hold' ? "▶️" : "⏸️";
                     holdBtn.onclick = () => toggleHoldVehicle(id, data.status, data.vehicleNo);
                     
                     const notifyBtn = document.createElement('button');
-                    notifyBtn.className = 'mini-btn'; notifyBtn.title = "Notify Owner via WhatsApp"; notifyBtn.innerHTML = "💬";
+                    notifyBtn.className = 'mini-btn'; notifyBtn.title = "Notify via WhatsApp"; notifyBtn.innerHTML = "💬";
                     notifyBtn.onclick = () => notifyOwner(data.vehicleNo, data.driverPhone);
 
                     const noteBtn = document.createElement('button');
@@ -1760,11 +1754,14 @@
                 }
             });
 
-            document.getElementById('dailyClearedPill').textContent = `🚛 Loaded Today: ${totalLoadedToday}`;
+            const pill = document.getElementById('dailyClearedPill');
+            if (pill) pill.textContent = `🚛 Loaded Today: ${totalLoadedToday}`;
 
             const nowString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
             products.forEach(p => {
-                if (productCounts[p] === 0) document.getElementById(`list-${p}`).innerHTML = emptyStateHTML;
+                const list = document.getElementById(`list-${p}`);
+                if (list && productCounts[p] === 0) list.innerHTML = emptyStateHTML;
+                
                 const prevJSON = JSON.stringify(previousSnapshotData[p] || []);
                 const currJSON = JSON.stringify(currentSnapshotData[p] || []);
                 if (isFirstStatusLoad || prevJSON !== currJSON) queueLastUpdated[p] = nowString;
