@@ -737,6 +737,25 @@
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } 
         from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
+        // Material Rates for dynamic ETA (in minutes per truck)
+        const MATERIAL_LOAD_TIMES = {
+            '6MM': 75,   // 1.25 hours = 75 mins
+            '12MM': 90,  // 1.5 hours  = 90 mins
+            '20MM': 20,  // 20 mins
+            'DUST': 30,  // 30 mins
+            '25MM': 15,  // 15 mins
+            '40MM': 15,  // 15 mins
+            'MSAND': 10  // less than 10 mins (~10 mins)
+        };
+
+        function formatWaitDuration(totalMinutes) {
+            if (totalMinutes < 10) return "< 10 mins";
+            if (totalMinutes < 60) return `~${totalMinutes} mins`;
+            const hrs = Math.floor(totalMinutes / 60);
+            const mins = totalMinutes % 60;
+            return mins > 0 ? `~${hrs} hr ${mins} mins` : `~${hrs} hr`;
+        }
+
         window.showToast = function(message, type = "info") {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -782,7 +801,7 @@
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, ctx.currentTime); // A5 note
+                osc.frequency.setValueAtTime(880, ctx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.8);
                 gain.gain.setValueAtTime(0.5, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
@@ -801,7 +820,7 @@
             } else {
                 pinnedVehicleNo = vNo;
                 localStorage.setItem('pinnedVehicle', vNo);
-                window.showToast(`Pinned ${vNo} to top position tracking.`, 'info');
+                window.showToast(`Pinned ${vNo} to position tracking.`, 'info');
                 refreshSpotlightDisplay();
             }
         };
@@ -841,7 +860,9 @@
                     } else if (status === 'Loaded') {
                         textSpan.innerHTML = `<span class="spotlight-badge" style="background:#16a34a;">LOADED COMPLETED</span> Bill ready for exit.`;
                     } else {
-                        textSpan.innerHTML = `Position <strong>#${idx + 1}</strong> in <strong>${prod}</strong> queue (~${(idx + 1) * 15} mins ETA)`;
+                        const unitMins = MATERIAL_LOAD_TIMES[prod] || 15;
+                        const totalMins = (idx + 1) * unitMins;
+                        textSpan.innerHTML = `Position <strong>#${idx + 1}</strong> in <strong>${prod}</strong> queue (${formatWaitDuration(totalMins)} ETA)`;
                     }
                     break;
                 }
@@ -981,7 +1002,7 @@
         let isFirstStatusLoad = true;
         let queueLastUpdated = { '40MM': null, '25MM': null, '20MM': null, '12MM': null, '6MM': null, 'DUST': null, 'MSAND': null };
         let previousSnapshotData = {};
-        let knownStatuses = {}; // Tracks status changes to fire bell
+        let knownStatuses = {};
 
         getDoc(statusRef).then(docSnap => {
             if (!docSnap.exists()) {
@@ -1332,12 +1353,10 @@
                 const id = documentSnapshot.id; 
                 const prod = data.product;
 
-                // Track daily loaded counter
                 if (data.status === "Loaded" && data.dateAdded === todayStr) {
                     totalLoadedToday++;
                 }
 
-                // Audio bell trigger when status transitions to Loading
                 if (knownStatuses[id] && knownStatuses[id] !== "Loading" && data.status === "Loading") {
                     playQueueBell();
                     window.showToast(`🔔 ${data.vehicleNo} is now LOADING!`, 'success');
@@ -1354,12 +1373,12 @@
                     let timeDisplay = data.timeAdded || "N/A";
                     const isPinned = (pinnedVehicleNo && pinnedVehicleNo === data.vehicleNo);
 
-                    // Compute Estimated Wait Time (ETA) assuming ~15 mins per vehicle ahead
+                    // Accurate dynamic ETA calculation based on material type
                     const queuePosition = productCounts[prod];
                     let etaText = "";
+                    const unitRate = MATERIAL_LOAD_TIMES[prod] || 15;
                     if (data.status === "Waiting") {
-                        const estimatedMinutes = queuePosition * 15;
-                        etaText = `~${estimatedMinutes} mins`;
+                        etaText = formatWaitDuration(queuePosition * unitRate);
                     } else if (data.status === "Loading") {
                         etaText = `Loading now`;
                     } else {
@@ -1369,7 +1388,6 @@
                     const li = document.createElement('li');
                     li.className = `vehicle-item ${isLoaded ? 'is-loaded' : ''} ${isLoading ? 'is-loading' : ''} ${isPinned ? 'is-pinned' : ''}`;
 
-                    // Pin / Star Button for Drivers
                     const pinBtn = document.createElement('button');
                     pinBtn.className = `pin-btn ${isPinned ? 'active' : ''} no-print`;
                     pinBtn.innerHTML = isPinned ? '⭐' : '☆';
@@ -1400,7 +1418,6 @@
                     infoDiv.appendChild(vNoSpan);
                     infoDiv.appendChild(metaSpan);
 
-                    // Direct Phone / SMS bar if driver phone exists
                     if (data.driverPhone) {
                         const contactBar = document.createElement('div');
                         contactBar.className = 'driver-contact-bar admin-only no-print';
@@ -1465,7 +1482,6 @@
                 }
             });
 
-            // Update Loaded Today counter pill
             document.getElementById('dailyClearedPill').textContent = `🚛 Loaded Today: ${totalLoadedToday}`;
 
             const nowString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
@@ -1580,11 +1596,9 @@
                 message += "No vehicles currently in queue.\n";
             } else {
                 message += "```\n";
-                // 7-column header
                 message += headers.map(h => h.padEnd(COL_W, ' ').slice(0, COL_W)).join('|') + "\n";
                 message += headers.map(() => '-'.repeat(COL_W)).join('+') + "\n";
 
-                // 7-column vehicle rows
                 for (let i = 0; i < maxRows; i++) {
                     let row = products.map(prod => {
                         const val = queueData[prod][i] || '';
