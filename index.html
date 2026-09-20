@@ -6,6 +6,12 @@
     <meta name="google" content="notranslate">
     <title>Live Vehicle Queue Dashboard</title>
     
+    <!-- Resource Preconnects for Faster Asset Delivery -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
     <!-- Mobile PWA Support Meta Tags -->
     <link rel="manifest" href="./manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
@@ -23,11 +29,17 @@
       });
     </script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Non-blocking Font Loading -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+
+    <!-- Deferred QR Generator -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" 
             integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" 
             crossorigin="anonymous" 
-            referrerpolicy="no-referrer"></script>
+            referrerpolicy="no-referrer" defer></script>
+    
     <style>
         :root { 
             --primary: #4338ca; 
@@ -69,22 +81,36 @@
             --dark-green: #4ade80;
         }
 
-        html, body { height: 100%; margin: 0; }
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        html, body { 
+            height: 100%; 
+            margin: 0;
+            touch-action: manipulation;
+        }
 
         body { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background-color: var(--bg); 
             color: var(--text-main); 
-            box-sizing: border-box;
             line-height: 1.5;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
             transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         body.is-blocked:not(.admin-mode) { overflow: hidden; }
+
+        /* Focus Ring Standardization for WCAG 2.1 AA */
+        :focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
 
         .main-content {
             flex: 1 0 auto;
@@ -92,7 +118,6 @@
             max-width: 100%; 
             margin: 0 auto;
             width: 100%;
-            box-sizing: border-box;
         }
 
         /* Toast Notifications */
@@ -104,6 +129,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            pointer-events: none;
         }
         .toast {
             background: #1e293b;
@@ -116,6 +142,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            pointer-events: auto;
             animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
             min-width: 250px;
         }
@@ -142,7 +169,7 @@
             z-index: 9999;
         }
 
-        /* Modern Site Block Overlay */
+        /* Maintenance Overlay */
         #siteBlockOverlay {
             display: none;
             position: fixed;
@@ -153,7 +180,6 @@
             justify-content: center;
             align-items: center;
             padding: 1.5rem;
-            box-sizing: border-box;
         }
         .maintenance-card {
             background: rgba(255, 255, 255, 0.03);
@@ -197,7 +223,7 @@
         }
         body.admin-mode #siteBlockOverlay { display: none !important; }
 
-        /* Notification Prompt Modal Overlay */
+        /* Modal Overlay */
         #notificationModal {
             display: none;
             position: fixed;
@@ -209,7 +235,6 @@
             justify-content: center;
             align-items: center;
             padding: 1.5rem;
-            box-sizing: border-box;
         }
         .notification-modal-card {
             background: var(--card-bg);
@@ -243,6 +268,7 @@
         .app-header {
             background: var(--header-bg);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             padding: 0.75rem 1.25rem;
             display: flex;
@@ -253,7 +279,7 @@
             z-index: 50;
         }
         .header-title { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-        .header-title h2 { color: var(--text-main); letter-spacing: -0.5px; margin: 0; font-weight: 700; font-size: 1.4rem; } 
+        .header-title h1 { color: var(--text-main); letter-spacing: -0.5px; margin: 0; font-weight: 700; font-size: 1.4rem; } 
         .live-indicator {
             background-color: var(--success-light);
             color: var(--success);
@@ -309,7 +335,7 @@
         .spotlight-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .spotlight-badge { background: #4338ca; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; }
 
-        /* Professional Disclaimer Banner */
+        /* Disclaimer Banner */
         .disclaimer-box {
             display: flex;
             align-items: flex-start;
@@ -322,7 +348,6 @@
             border-radius: var(--radius);
             border: 1px solid #fecaca;
             box-shadow: var(--shadow-sm);
-            box-sizing: border-box;
             width: 100%;
         }
         body.dark-mode .disclaimer-box { border-color: rgba(239, 68, 68, 0.3); color: #f87171; }
@@ -422,7 +447,7 @@
         }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15); background-color: var(--card-bg); }
 
-        /* Responsive Product Grid */
+        /* Grid Layout */
         .product-grid { 
             display: grid; 
             grid-template-columns: repeat(7, 1fr); 
@@ -444,11 +469,17 @@
             position: relative;
         }
         
+        @media (max-width: 1100px) {
+            .product-grid { grid-template-columns: repeat(4, 1fr); }
+        }
         @media (max-width: 768px) {
             .product-grid { grid-template-columns: repeat(2, 1fr); }
         }
+        @media (max-width: 480px) {
+            .product-grid { grid-template-columns: 1fr; }
+        }
         
-        .product-card h3 { 
+        .product-card h2 { 
             margin: 0; padding: 0.75rem 0.25rem; background-color: var(--sub-card-bg); border-bottom: 1px solid var(--border); 
             text-align: center; display: flex; flex-direction: column; gap: 0.35rem; font-weight: 700; font-size: 0.9rem;
             color: var(--text-main); position: sticky; top: 0; z-index: 10; word-wrap: break-word;
@@ -467,7 +498,19 @@
         .quick-add-panel.active { display: flex; animation: fadeIn 0.2s ease; }
         .quick-add-panel input { min-width: 100px; padding: 0.4rem; font-size: 0.8rem; }
         
-        .vehicle-list { list-style: none; padding: 0; margin: 0; min-height: 150px; max-height: 460px; overflow-y: auto; overflow-x: hidden; position: relative; z-index: 2; }
+        .vehicle-list { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+            min-height: 150px; 
+            max-height: 460px; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            position: relative; 
+            z-index: 2; 
+            content-visibility: auto; 
+            contain-intrinsic-size: 150px; 
+        }
         .vehicle-list::-webkit-scrollbar { width: 4px; }
         .vehicle-list::-webkit-scrollbar-track { background: transparent; }
         .vehicle-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -526,7 +569,6 @@
         @media print { 
             @page { size: A4 portrait; margin: 4mm; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            /* Explicitly hides timestamps, wait badges, and metadata from print output */
             .no-print, .vehicle-meta, .empty-msg, .driver-contact-bar, .pin-btn, [id^="updated-"], .total-wait-badge { display: none !important; } 
             
             html, body { background-color: white !important; color: black !important; height: 100% !important; margin: 0 !important; padding: 0 !important; }
@@ -537,7 +579,7 @@
             .product-grid { display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 2px !important; flex: 1 !important; } 
             .product-card { box-shadow: none !important; border: 1px solid #000 !important; border-top: 2px solid #000 !important; border-radius: 0; display: flex !important; flex-direction: column !important; position: relative !important; background: white !important; } 
             
-            .product-card h3 { 
+            .product-card h2 { 
                 font-family: "Times New Roman", Times, serif !important;
                 font-size: 1.1rem !important; font-weight: 900 !important; padding: 5px 2px !important; border-bottom: 1px solid #000 !important; background: white !important; color: black !important;
             }
@@ -564,33 +606,30 @@
 </head>
 <body>
 
-    <!-- Offline Network Banner -->
-    <div id="offlineBanner" class="no-print">⚠️ Network disconnected. Reconnecting to live queue...</div>
+    <div id="offlineBanner" class="no-print" role="alert">⚠️ Network disconnected. Reconnecting to live queue...</div>
 
-    <!-- Site Blocking Overlay -->
-    <div id="siteBlockOverlay">
+    <div id="siteBlockOverlay" role="dialog" aria-modal="true" aria-labelledby="maintTitle">
         <div class="maintenance-card">
             <div class="maintenance-badge" data-i18n="system_notice">System Notice</div>
             <div class="maintenance-icon-box">
-                <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                 </svg>
             </div>
-            <h1 data-i18n="maint_title">Under Scheduled Maintenance</h1>
+            <h1 id="maintTitle" data-i18n="maint_title">Under Scheduled Maintenance</h1>
             <p data-i18n="maint_desc">Our live vehicle queue dashboard is temporarily offline for system upgrades and optimizations. We will be back online shortly.</p>
             <button onclick="document.getElementById('loginBtn').click()" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #e2e8f0; padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; width: 100%; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
-                <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5h1.232l.634.634a.5.5 0 0 0 .708 0l.633-.634H11.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1h-.732l-.634-.633a.5.5 0 0 0-.708 0l-.633.633H5.663A3.5 3.5 0 0 1 3.5 11.5zm0-5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg> Admin Sign In
+                <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5h1.232l.634.634a.5.5 0 0 0 .708 0l.633-.634H11.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1h-.732l-.634-.633a.5.5 0 0 0-.708 0l-.633.633H5.663A3.5 3.5 0 0 1 3.5 11.5zm0-5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg> Admin Sign In
             </button>
         </div>
     </div>
 
-    <!-- Notification Prompt Modal -->
-    <div id="notificationModal">
+    <div id="notificationModal" role="dialog" aria-modal="true" aria-labelledby="notifModalTitle">
         <div class="notification-modal-card">
             <div class="notification-icon-box">
-                <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/></svg>
+                <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/></svg>
             </div>
-            <h2 data-i18n="notif_title">Enable Live Updates</h2>
+            <h2 id="notifModalTitle" data-i18n="notif_title">Enable Live Updates</h2>
             <p data-i18n="notif_desc">Stay informed with real-time notifications for your vehicle status changes and queue updates.</p>
             <div class="notification-modal-actions">
                 <button class="btn-secondary" id="denyNotificationBtn" data-i18n="deny">Deny</button>
@@ -599,78 +638,82 @@
         </div>
     </div>
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container"></div>
+    <!-- Live Toast Container -->
+    <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <header class="app-header no-print">
         <div class="header-title">
-            <h2 data-i18n="header_title">Live Queue</h2>
+            <h1 data-i18n="header_title">Live Queue</h1>
             <div class="live-indicator" data-i18n="live_updates">Live Updates</div>
-            <!-- Admin only counter pill -->
             <div class="load-counter-pill admin-only-inline" id="dailyClearedPill">🚛 Loaded Today: 0</div>
         </div>
-        <div class="top-actions">
-            <button class="btn-secondary" id="langToggleBtn" style="padding: 0.4rem 0.6rem; font-size: 0.8rem;" title="Change Language">🌐 EN</button>
-            <button class="icon-only-btn btn-secondary" id="darkModeBtn" title="Toggle Dark / Light Theme">🌙</button>
-            <button class="icon-only-btn btn-secondary" id="audioToggleBtn" title="Toggle Bell Sound on Load">🔔</button>
-            <button class="icon-only-btn btn-secondary" onclick="window.print()" title="Print Queue">
-                <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm1 3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2H6v-2z"/></svg>
+        <nav class="top-actions" aria-label="Quick Actions">
+            <button class="btn-secondary" id="langToggleBtn" style="padding: 0.4rem 0.6rem; font-size: 0.8rem;" title="Change Language" aria-label="Change Language">🌐 EN</button>
+            <button class="icon-only-btn btn-secondary" id="darkModeBtn" title="Toggle Dark / Light Theme" aria-label="Toggle Theme">🌙</button>
+            <button class="icon-only-btn btn-secondary" id="audioToggleBtn" title="Toggle Bell Sound on Load" aria-label="Toggle Alert Bell">🔔</button>
+            <button class="icon-only-btn btn-secondary" onclick="window.print()" title="Print Queue" aria-label="Print Current Queue">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm1 3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2H6v-2z"/></svg>
             </button>
-            <button class="icon-only-btn btn-success" id="shareStatusBtn" title="Share Status via WhatsApp">
-                <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+            <button class="icon-only-btn btn-success" id="shareStatusBtn" title="Share Status via WhatsApp" aria-label="Share status via WhatsApp">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
             </button>
-            <button class="icon-only-btn btn-warning" id="loginBtn" title="Admin Login / Logout">
-                <svg id="loginIconSvg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5h1.232l.634.634a.5.5 0 0 0 .708 0l.633-.634H11.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1h-.732l-.634-.633a.5.5 0 0 0-.708 0l-.633.633H5.663A3.5 3.5 0 0 1 3.5 11.5zm0-5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>
+            <button class="icon-only-btn btn-warning" id="loginBtn" title="Admin Login / Logout" aria-label="Admin Access">
+                <svg id="loginIconSvg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5h1.232l.634.634a.5.5 0 0 0 .708 0l.633-.634H11.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1h-.732l-.634-.633a.5.5 0 0 0-.708 0l-.633.633H5.663A3.5 3.5 0 0 1 3.5 11.5zm0-5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>
             </button>
-        </div>
+        </nav>
     </header>
 
-    <div class="main-content">
-        <!-- Find My Position Banner -->
-        <div id="spotlightBanner" class="no-print">
+    <main class="main-content">
+        <section id="spotlightBanner" class="no-print" aria-label="Tracked Vehicle">
             <div class="spotlight-info">
-                <span style="font-size: 1.25rem;">⭐</span>
+                <span style="font-size: 1.25rem;" aria-hidden="true">⭐</span>
                 <div>
                     <strong id="spotlightVehicle">Vehicle Pinned</strong>
                     <div id="spotlightText" style="font-size: 0.85rem; color: #c7d2fe;">Checking position in queue...</div>
                 </div>
             </div>
-            <button class="mini-btn" onclick="clearSpotlight()" style="color: white; border: 1px solid rgba(255,255,255,0.3);" title="Unpin vehicle">✕</button>
-        </div>
+            <button class="mini-btn" onclick="clearSpotlight()" style="color: white; border: 1px solid rgba(255,255,255,0.3);" title="Unpin vehicle" aria-label="Unpin tracked vehicle">✕</button>
+        </section>
 
         <div id="siteBlockedAdminBanner" style="display: none; background: var(--danger-light); border: 1px solid #fca5a5; color: var(--danger); padding: 0.85rem 1.25rem; border-radius: var(--radius); margin-bottom: 1.5rem; box-shadow: var(--shadow-sm); align-items: center; gap: 1rem;">
-            <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
             <div style="flex: 1;">
                 <strong style="display: block; font-size: 0.95rem; letter-spacing: 0.3px;">Site Access Blocked</strong>
                 <span style="font-size: 0.85rem; color: #991b1b;">The public dashboard is currently hidden from users. Only administrators can view this page.</span>
             </div>
         </div>
 
-        <!-- Disclaimer Banner: Permanently Malayalam -->
-        <div class="disclaimer-box no-print">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        <!-- Disclaimer Banner -->
+        <aside class="disclaimer-box no-print" aria-label="Legal Disclaimer">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             <div class="disclaimer-text" id="disclaimerContent">
                 <strong>അറിയിപ്പ്:</strong> ഈ വെബ് സൈറ്റിൽ കാണുന്ന വിവരങ്ങളും ക്രഷറിലെ ക്യു ലിസ്റ്റും തമ്മിൽ ചിലപ്പോൾ മാറ്റങ്ങൾ ഉണ്ടാവാം. ആയതുകൊണ്ടുതന്നെ ഉപയോക്താക്കൾ ഏകദേശ വിവരങ്ങൾ ലഭിക്കാൻ മാത്രം ഈ ലിങ്ക് ഉപയോഗപ്പെടുത്തുക. ഇവിടെ പ്രദർശിപ്പിച്ചിട്ടുള്ള വിവരങ്ങളിൽ ഓഫീസ് ഉത്തരവാദിയല്ല. ഡ്രൈവേഴ്‌സിൻ്റെ സൗകര്യം മാത്രം ഉദ്ദേശിച്ചിട്ടുള്ളതാണ്.
             </div>
-        </div>
+        </aside>
 
-        <div id="announcementContainer" class="no-print"></div>
+        <section id="announcementContainer" class="no-print" aria-label="Announcements"></section>
 
-        <div id="maintenanceBanner" class="no-print" data-i18n="maint_banner">
+        <div id="maintenanceBanner" class="no-print" data-i18n="maint_banner" role="alert">
             ⚠️ CRUSHER UNDER MAINTENANCE - LOADING PAUSED / EXPECT DELAYS ⚠️
         </div>
 
-        <div class="controls-wrapper no-print">
+        <section class="controls-wrapper no-print" aria-label="Queue Controls">
             <div class="controls-row">
-                <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> <span data-i18n="search_label">Search Queue</span></span>
-                <input type="text" id="searchInput" placeholder="Enter last 4 digits (e.g. 1670)" maxlength="4">
+                <label for="searchInput" class="control-label">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg> 
+                    <span data-i18n="search_label">Search Queue</span>
+                </label>
+                <input type="search" id="searchInput" placeholder="Enter last 4 digits (e.g. 1670)" maxlength="4" autocomplete="off">
             </div>
 
             <div class="controls-row admin-only">
-                <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM1.5 14h13a.5.5 0 0 0 .5-.5V8.5a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5z"/><path d="M3.5 2.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2zM4 3v1h8V3H4z"/></svg> <span data-i18n="add_label">Add Vehicle</span></span>
-                <input type="text" id="vehicleNo" list="savedVehiclesList" placeholder="Vehicle No. (KL-26-H-1670)" oninput="this.value = formatVehicleNumber(this.value)">
-                <input type="tel" id="driverPhone" placeholder="Phone (e.g. 9847000000)" maxlength="10">
-                <select id="productType">
+                <span class="control-label">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM1.5 14h13a.5.5 0 0 0 .5-.5V8.5a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0-.5.5v5a.5.5 0 0 0 .5.5z"/><path d="M3.5 2.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2zM4 3v1h8V3H4z"/></svg> 
+                    <span data-i18n="add_label">Add Vehicle</span>
+                </span>
+                <input type="text" id="vehicleNo" list="savedVehiclesList" placeholder="Vehicle No. (KL-26-H-1670)" oninput="this.value = formatVehicleNumber(this.value)" aria-label="Vehicle Number">
+                <input type="tel" id="driverPhone" placeholder="Phone (e.g. 9847000000)" maxlength="10" aria-label="Driver Phone Number">
+                <select id="productType" aria-label="Select Material">
                     <option value="" disabled selected>Select Material</option>
                     <option value="40MM">40MM</option>
                     <option value="25MM">25MM</option>
@@ -680,72 +723,60 @@
                     <option value="DUST">DUST</option>
                     <option value="MSAND">MSAND</option>
                 </select>
-                <input type="text" id="vehicleNarration" placeholder="Remarks (Optional)">
+                <input type="text" id="vehicleNarration" placeholder="Remarks (Optional)" aria-label="Vehicle Remarks">
                 <button class="btn-primary" id="addVehicleBtn" data-i18n="add_btn">Add to Queue</button>
             </div>
 
             <div class="controls-row admin-only" style="border-bottom: none; padding-bottom: 0;">
-                <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/></svg> <span data-i18n="system_ops">System Ops</span></span>
+                <span class="control-label">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/></svg> 
+                    <span data-i18n="system_ops">System Ops</span>
+                </span>
                 <div style="display: flex; gap: 0.5rem; flex: 1; min-width: 200px; flex-wrap: wrap;">
                     <button id="maintBtn" class="btn-warning" style="flex:1;">Toggle Banner</button>
-                    <button id="shareMaintBtn" class="btn-success icon-only-btn" title="Broadcast Maintenance Alert"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg></button>
+                    <button id="shareMaintBtn" class="btn-success icon-only-btn" title="Broadcast Maintenance Alert" aria-label="Share Maintenance via WhatsApp"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg></button>
                     <button id="blockSiteBtn" class="btn-danger" style="flex:1;">Block Site</button>
                     <button id="toggleNotificationsBtn" class="btn-secondary" style="flex:1;">🔔 Notifications: On</button>
                     <button id="clearLoadedBtn" class="btn-danger" style="flex:1.2;" title="Remove all completed trucks">🧹 Clear Loaded</button>
                     <button id="exportCsvBtn" class="btn-secondary" style="flex:1.2;" title="Download Daily Audit CSV">📊 Export CSV</button>
                 </div>
                 <div style="display: flex; gap: 0.5rem; flex: 1.5; min-width: 250px; flex-wrap: wrap;">
-                    <select id="stockProductSelect" style="min-width: 100px;"><option value="40MM">40MM</option><option value="25MM">25MM</option><option value="20MM">20MM</option><option value="12MM">12MM</option><option value="6MM">6MM</option><option value="DUST">DUST</option><option value="MSAND">MSAND</option></select>
+                    <select id="stockProductSelect" style="min-width: 100px;" aria-label="Select Material for Stock Update">
+                        <option value="40MM">40MM</option><option value="25MM">25MM</option><option value="20MM">20MM</option><option value="12MM">12MM</option><option value="6MM">6MM</option><option value="DUST">DUST</option><option value="MSAND">MSAND</option>
+                    </select>
                     <button class="btn-warning" id="toggleStockBtn">Toggle Stock</button>
-                    <button class="btn-success icon-only-btn" id="shareStockBtn" title="Broadcast Stock Alert"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg></button>
+                    <button class="btn-success icon-only-btn" id="shareStockBtn" title="Broadcast Stock Alert" aria-label="Share Stock Alert via WhatsApp"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg></button>
                 </div>
             </div>
 
             <div class="controls-row admin-only" style="border-top: 1px solid var(--border); padding-top: 1.25rem;">
-                <span class="control-label"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2.281 4.385A2.999 2.999 0 0 0 4 7v3.5a2.5 2.5 0 0 1-2.5 2.5H1v1h14v-1h-.5A2.5 2.5 0 0 1 12 10.5V7a3 3 0 0 0-1.719-2.615l-.838-.419a2.001 2.001 0 0 0-2.886 0l-.838.419zm1.751-2.072A4.002 4.002 0 0 1 8 1.001 4.002 4.002 0 0 1 11.968 2.313a3.001 3.001 0 0 1 2.21 2.766 4.003 4.003 0 0 1-3.14 3.902V10.5a3.5 3.5 0 0 0 3.5 3.5h.962V15H.5v-1h.962a3.5 3.5 0 0 0 3.5-3.5V8.98a4.002 4.002 0 0 1-3.14-3.902 3.001 3.001 0 0 1 2.21-2.765z"/></svg> Megaphone</span>
-                <select id="announcementPresetSelect" style="flex: 1;"><option value="" disabled selected>-- Select Saved Announcement --</option><option value="Crusher Maintenance in progress. Loading expects delay of 1-2 hours.">⚙️ Maintenance Delay</option><option value="Heavy rain in plant area. Loading operations paused temporarily.">🌧️ Heavy Rain Pause</option><option value="Grid power outage. Generator setup in progress.">⚡ Power Outage</option><option value="Crusher operations running normally. All materials available.">✅ Normal Operations</option></select>
+                <span class="control-label">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.281 4.385A2.999 2.999 0 0 0 4 7v3.5a2.5 2.5 0 0 1-2.5 2.5H1v1h14v-1h-.5A2.5 2.5 0 0 1 12 10.5V7a3 3 0 0 0-1.719-2.615l-.838-.419a2.001 2.001 0 0 0-2.886 0l-.838.419zm1.751-2.072A4.002 4.002 0 0 1 8 1.001 4.002 4.002 0 0 1 11.968 2.313a3.001 3.001 0 0 1 2.21 2.766 4.003 4.003 0 0 1-3.14 3.902V10.5a3.5 3.5 0 0 0 3.5 3.5h.962V15H.5v-1h.962a3.5 3.5 0 0 0 3.5-3.5V8.98a4.002 4.002 0 0 1-3.14-3.902 3.001 3.001 0 0 1 2.21-2.765z"/></svg> Megaphone
+                </span>
+                <select id="announcementPresetSelect" style="flex: 1;" aria-label="Announcement Presets">
+                    <option value="" disabled selected>-- Select Saved Announcement --</option>
+                    <option value="Crusher Maintenance in progress. Loading expects delay of 1-2 hours.">⚙️ Maintenance Delay</option>
+                    <option value="Heavy rain in plant area. Loading operations paused temporarily.">🌧️ Heavy Rain Pause</option>
+                    <option value="Grid power outage. Generator setup in progress.">⚡ Power Outage</option>
+                    <option value="Crusher operations running normally. All materials available.">✅ Normal Operations</option>
+                </select>
                 <div class="btn-group" style="margin-top:0;">
-                    <button id="editPresetBtn" class="icon-only-btn btn-secondary" title="Edit Selected Preset"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5z"/></svg></button>
-                    <button id="deletePresetBtn" class="icon-only-btn btn-secondary" title="Delete Selected Preset"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></button>
+                    <button id="editPresetBtn" class="icon-only-btn btn-secondary" title="Edit Selected Preset" aria-label="Edit Selected Preset"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5z"/></svg></button>
+                    <button id="deletePresetBtn" class="icon-only-btn btn-secondary" title="Delete Selected Preset" aria-label="Delete Selected Preset"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></button>
                 </div>
-                <textarea id="announcementInput" placeholder="Enter custom message..." rows="3" style="flex: 2; resize: vertical;"></textarea>
+                <textarea id="announcementInput" placeholder="Enter custom message..." rows="3" style="flex: 2; resize: vertical;" aria-label="Custom Announcement Input"></textarea>
                 <div class="btn-group" style="margin-top:0;">
                     <button class="btn-primary" id="updateAnnouncementBtn">Publish</button>
-                    <button class="btn-secondary" id="saveAnnouncementBtn" title="Save as template">💾</button>
+                    <button class="btn-secondary" id="saveAnnouncementBtn" title="Save as template" aria-label="Save announcement as template">💾</button>
                     <button class="btn-secondary" id="clearAnnouncementBtn" title="Clear All">Clear</button>
-                    <button class="btn-success icon-only-btn" id="shareAnnouncementBtn" title="Share via WhatsApp"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg></button>
+                    <button class="btn-success icon-only-btn" id="shareAnnouncementBtn" title="Share via WhatsApp" aria-label="Share announcement via WhatsApp"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg></button>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Product Grid -->
-        <div class="product-grid" id="mainGrid">
-            <script>
-              const materials = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
-              document.write(materials.map(m => `
-                <div class="product-card">
-                    <div class="card-watermark">${m}</div>
-                    <h3>
-                        <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
-                            ${m}
-                            <button class="mini-btn admin-only-inline" onclick="toggleQuickAdd('${m}')" style="position: absolute; right: -5px;" title="Quick Add">➕</button>
-                        </div>
-                        <span id="badge-${m}" class="stock-badge stock-in" data-i18n="available">Available</span>
-                        <span id="total-wait-${m}" class="total-wait-badge">0 trucks (0m delay)</span>
-                        <span id="updated-${m}" style="font-size: 0.60rem; color: var(--text-muted); font-weight: normal; margin-top: 1px;">Updated: Never</span>
-                    </h3>
-                    <div class="quick-add-container">
-                        <div id="quick-add-${m}" class="quick-add-panel">
-                            <input type="text" id="quick-input-${m}" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = formatVehicleNumber(this.value)">
-                            <button class="btn-primary action-btn" onclick="quickAddVehicle('${m}')">Add</button>
-                        </div>
-                    </div>
-                    <ul class="vehicle-list" id="list-${m}"></ul>
-                </div>
-              `).join(''));
-            </script>
-        </div>
-    </div>
+        <!-- Product Grid (Hydrated cleanly via JavaScript without document.write anti-pattern) -->
+        <section class="product-grid" id="mainGrid" aria-label="Material Queue Columns"></section>
+    </main>
 
     <footer class="print-footer">
         <div class="print-footer-text">
@@ -764,18 +795,47 @@
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } 
         from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
-        // Material Rates for dynamic ETA (in minutes per truck)
+        const MATERIALS = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
+
+        // Build Product Columns Safely into the DOM
+        const grid = document.getElementById('mainGrid');
+        const fragment = document.createDocumentFragment();
+        MATERIALS.forEach(m => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <div class="card-watermark">${m}</div>
+                <h2>
+                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
+                        ${m}
+                        <button class="mini-btn admin-only-inline" onclick="window.toggleQuickAdd('${m}')" style="position: absolute; right: -5px;" title="Quick Add" aria-label="Quick add truck to ${m}">➕</button>
+                    </div>
+                    <span id="badge-${m}" class="stock-badge stock-in" data-i18n="available">Available</span>
+                    <span id="total-wait-${m}" class="total-wait-badge">0 trucks (0m delay)</span>
+                    <span id="updated-${m}" style="font-size: 0.60rem; color: var(--text-muted); font-weight: normal; margin-top: 1px;">Updated: Never</span>
+                </h2>
+                <div class="quick-add-container">
+                    <div id="quick-add-${m}" class="quick-add-panel">
+                        <input type="text" id="quick-input-${m}" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = window.formatVehicleNumber(this.value)" aria-label="Quick vehicle number for ${m}">
+                        <button class="btn-primary action-btn" onclick="window.quickAddVehicle('${m}')">Add</button>
+                    </div>
+                </div>
+                <ul class="vehicle-list" id="list-${m}" aria-label="${m} active queue"></ul>
+            `;
+            fragment.appendChild(card);
+        });
+        grid.appendChild(fragment);
+
         const MATERIAL_LOAD_TIMES = {
-            '6MM': 75,   // 1.25 hours = 75 mins
-            '12MM': 90,  // 1.5 hours  = 90 mins
-            '20MM': 20,  // 20 mins
-            'DUST': 30,  // 30 mins
-            '25MM': 15,  // 15 mins
-            '40MM': 15,  // 15 mins
-            'MSAND': 10  // ~10 mins
+            '6MM': 75,
+            '12MM': 90,
+            '20MM': 20,
+            'DUST': 30,
+            '25MM': 15,
+            '40MM': 15,
+            'MSAND': 10
         };
 
-        // Multi-Language Dictionary
         const I18N = {
             en: {
                 header_title: "Live Queue",
@@ -838,7 +898,7 @@
             refreshSpotlightDisplay();
         });
 
-        // Network Offline Monitor
+        // Network Monitor
         const offlineBanner = document.getElementById('offlineBanner');
         window.addEventListener('online', () => { offlineBanner.style.display = 'none'; });
         window.addEventListener('offline', () => { offlineBanner.style.display = 'block'; });
@@ -852,12 +912,23 @@
             return mins > 0 ? `~${hrs} hr ${mins} mins` : `~${hrs} hr`;
         }
 
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag] || tag));
+        }
+
         window.showToast = function(message, type = "info") {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             let icon = type === 'success' ? '✅' : type === 'error' ? '⚠️' : 'ℹ️';
-            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+            toast.innerHTML = `<span aria-hidden="true">${icon}</span> <span>${escapeHTML(message)}</span>`;
             container.appendChild(toast);
             setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 3000);
         };
@@ -875,7 +946,7 @@
             darkModeBtn.textContent = isDark ? '☀️' : '🌙';
         });
 
-        // Bell Audio
+        // Audio Alerts
         let audioBellEnabled = localStorage.getItem('audioBell') !== 'false';
         const audioToggleBtn = document.getElementById('audioToggleBtn');
         function updateAudioBtnUI() {
@@ -890,22 +961,26 @@
             if (audioBellEnabled) playQueueBell();
         });
 
+        let audioCtx = null;
         function playQueueBell() {
             if (!audioBellEnabled) return;
             try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.8);
-                gain.gain.setValueAtTime(0.5, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.8);
+                gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
                 osc.connect(gain);
-                gain.connect(ctx.destination);
+                gain.connect(audioCtx.destination);
                 osc.start();
-                osc.stop(ctx.currentTime + 0.8);
-            } catch(e) { console.log("Audio play blocked", e); }
+                osc.stop(audioCtx.currentTime + 0.8);
+            } catch(e) { console.warn("Audio play blocked", e); }
         }
 
         // Spotlight (Pin Vehicle)
@@ -941,24 +1016,23 @@
             vehicleTitle.textContent = `⭐ Vehicle: ${pinnedVehicleNo}`;
             let found = false;
 
-            const products = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
-            for (let prod of products) {
+            for (let prod of MATERIALS) {
                 const list = document.getElementById(`list-${prod}`);
                 if (!list) continue;
                 const items = Array.from(list.querySelectorAll('.vehicle-item'));
-                const idx = items.findIndex(el => el.querySelector('.vehicle-no')?.innerText === pinnedVehicleNo);
+                const idx = items.findIndex(el => el.querySelector('.vehicle-no')?.textContent === pinnedVehicleNo);
                 if (idx !== -1) {
                     found = true;
                     const item = items[idx];
-                    const status = item.querySelector('.status-text')?.innerText || 'Waiting';
+                    const status = item.querySelector('.status-text')?.textContent || 'Waiting';
                     if (status.includes('Loading') || status.includes('ലോഡിംഗ്')) {
-                        textSpan.innerHTML = `<span class="spotlight-badge" style="background:#2563eb;">NOW LOADING</span> inside ${prod} bay! Report immediately.`;
+                        textSpan.innerHTML = `<span class="spotlight-badge" style="background:#2563eb;">NOW LOADING</span> inside ${escapeHTML(prod)} bay! Report immediately.`;
                     } else if (status.includes('Loaded') || status.includes('പൂർത്തിയായി')) {
                         textSpan.innerHTML = `<span class="spotlight-badge" style="background:#16a34a;">LOADED COMPLETED</span> Bill ready for exit.`;
                     } else {
                         const unitMins = MATERIAL_LOAD_TIMES[prod] || 15;
                         const totalMins = (idx + 1) * unitMins;
-                        textSpan.innerHTML = `Position <strong>#${idx + 1}</strong> in <strong>${prod}</strong> queue (${formatWaitDuration(totalMins)} ETA)`;
+                        textSpan.innerHTML = `Position <strong>#${idx + 1}</strong> in <strong>${escapeHTML(prod)}</strong> queue (${formatWaitDuration(totalMins)} ETA)`;
                     }
                     break;
                 }
@@ -1015,7 +1089,12 @@
         };
         window.updateDatalist();
 
-        new QRCode(document.getElementById("qrcode"), { text: "https://updatesat.github.io/queue/", width: 45, height: 45 });
+        // Safe QR generation on page load
+        window.addEventListener('load', () => {
+            if (typeof QRCode !== 'undefined') {
+                new QRCode(document.getElementById("qrcode"), { text: "https://updatesat.github.io/queue/", width: 45, height: 45 });
+            }
+        });
 
         const firebaseConfig = {
             apiKey: "AIzaSyDOCw1bFl4DQNd4BimbHAiyRNUl8bf_i_U",
@@ -1037,7 +1116,7 @@
             if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
                 try {
                     new Notification(title, { body, icon: './favicon.ico' });
-                } catch(e) { console.log(e); }
+                } catch(e) { console.warn(e); }
             }
         }
 
@@ -1161,7 +1240,6 @@
             if (success) { input.value = ''; window.toggleQuickAdd(product); }
         };
 
-        // Queue Sequence Swapping (Move Up / Down)
         window.moveVehicle = async function(id, direction, product) {
             const sameProductQueue = currentVehicleList
                 .filter(v => v.product === product && v.status !== 'Loaded')
@@ -1188,7 +1266,6 @@
             }
         };
 
-        // CSV Export Feature
         document.getElementById('exportCsvBtn').addEventListener('click', () => {
             if (currentVehicleList.length === 0) return window.showToast("No queue data to export.", "info");
 
@@ -1207,7 +1284,6 @@
             window.showToast("CSV report generated!", "success");
         });
 
-        // Clear Loaded Vehicles
         document.getElementById('clearLoadedBtn').addEventListener('click', async () => {
             const loadedCards = document.querySelectorAll('.vehicle-item.is-loaded');
             if (loadedCards.length === 0) {
@@ -1244,7 +1320,9 @@
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
                 const option = document.createElement('option');
-                option.value = data.text; option.dataset.id = docSnap.id; option.dataset.title = data.title;
+                option.value = data.text; 
+                option.dataset.id = docSnap.id; 
+                option.dataset.title = data.title;
                 option.textContent = "⭐ " + data.title;
                 presetSelect.appendChild(option);
             });
@@ -1349,9 +1427,11 @@
                             actDiv.style.display = 'flex'; actDiv.style.gap = '0.5rem';
                             const editBtn = document.createElement('button');
                             editBtn.className = 'remove-ann-btn no-print'; editBtn.innerHTML = '✏️';
+                            editBtn.title = "Edit Announcement";
                             editBtn.onclick = () => window.editActiveAnnouncement(item.id, item.text);
                             const removeBtn = document.createElement('button');
                             removeBtn.className = 'remove-ann-btn no-print'; removeBtn.innerHTML = '✕';
+                            removeBtn.title = "Delete Announcement";
                             removeBtn.onclick = () => window.removeAnnouncement(item.id);
                             actDiv.appendChild(editBtn); actDiv.appendChild(removeBtn);
                             itemDiv.appendChild(actDiv);
@@ -1365,7 +1445,7 @@
 
                 if (data.stock) {
                     productStock = { ...productStock, ...data.stock };
-                    for (const prod of ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND']) {
+                    for (const prod of MATERIALS) {
                         const inStock = productStock[prod] !== false;
                         const badge = document.getElementById(`badge-${prod}`);
                         if (badge) {
@@ -1481,14 +1561,16 @@
         });
 
         const q = query(queueRef, orderBy("timestamp", "asc"));
-        const emptyStateHTML = `<div class="empty-msg"><svg fill="currentColor" viewBox="0 0 16 16"><path d="M14 9V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM4 6h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/><path d="M1.5 14.5a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-13z"/></svg>No vehicles currently waiting</div>`;
+        const emptyStateHTML = `<div class="empty-msg"><svg fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M14 9V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM4 6h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/><path d="M1.5 14.5a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-13z"/></svg>No vehicles currently waiting</div>`;
 
         onSnapshot(q, (snapshot) => {
-            const products = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
-            products.forEach(p => { document.getElementById(`list-${p}`).innerHTML = ''; });
+            MATERIALS.forEach(p => { 
+                const list = document.getElementById(`list-${p}`);
+                if (list) list.innerHTML = ''; 
+            });
             let productCounts = { '40MM': 0, '25MM': 0, '20MM': 0, '12MM': 0, '6MM': 0, 'DUST': 0, 'MSAND': 0 };
             let currentSnapshotData = {};
-            products.forEach(p => { currentSnapshotData[p] = []; });
+            MATERIALS.forEach(p => { currentSnapshotData[p] = []; });
 
             let totalLoadedToday = 0;
             const todayStr = new Date().toLocaleDateString('en-GB');
@@ -1498,7 +1580,6 @@
                 currentVehicleList.push({ id: docSnap.id, ...docSnap.data() });
             });
 
-            // Sort vehicles with custom orderIndex
             currentVehicleList.sort((a,b) => (a.orderIndex || a.timestamp) - (b.orderIndex || b.timestamp));
 
             currentVehicleList.forEach((data) => {
@@ -1543,6 +1624,7 @@
                     pinBtn.className = `pin-btn ${isPinned ? 'active' : ''} no-print`;
                     pinBtn.innerHTML = isPinned ? '⭐' : '☆';
                     pinBtn.title = isPinned ? 'Unpin this vehicle' : 'Track / Pin my vehicle position';
+                    pinBtn.setAttribute('aria-label', `Pin vehicle ${data.vehicleNo}`);
                     pinBtn.onclick = () => window.toggleSpotlight(data.vehicleNo);
                     li.appendChild(pinBtn);
 
@@ -1554,7 +1636,7 @@
 
                     const metaSpan = document.createElement('span');
                     metaSpan.className = 'vehicle-meta';
-                    metaSpan.innerHTML = `<span>${timeDisplay}</span>`;
+                    metaSpan.innerHTML = `<span>${escapeHTML(timeDisplay)}</span>`;
                     
                     const statusSpan = document.createElement('span');
                     statusSpan.className = `status-text status-${data.status}`;
@@ -1574,8 +1656,8 @@
                         const contactBar = document.createElement('div');
                         contactBar.className = 'driver-contact-bar admin-only no-print';
                         contactBar.innerHTML = `
-                            <a href="tel:${data.driverPhone}" class="comm-link comm-call">📞 Call</a>
-                            <a href="sms:${data.driverPhone}?body=${encodeURIComponent(`Notice for Vehicle ${data.vehicleNo}: Your turn for${prod} is ready.`)}" class="comm-link comm-sms">💬 SMS</a>
+                            <a href="tel:${escapeHTML(data.driverPhone)}" class="comm-link comm-call">📞 Call</a>
+                            <a href="sms:${escapeHTML(data.driverPhone)}?body=${encodeURIComponent(`Notice for Vehicle ${data.vehicleNo}: Your turn for${prod} is ready.`)}" class="comm-link comm-sms">💬 SMS</a>
                         `;
                         infoDiv.appendChild(contactBar);
                     }
@@ -1591,14 +1673,13 @@
                     const btnGroup = document.createElement('div');
                     btnGroup.className = 'btn-group admin-only no-print';
 
-                    // Sequence Adjusters (Move Up / Down)
                     const upBtn = document.createElement('button');
-                    upBtn.className = 'mini-btn'; upBtn.title = "Move Up"; upBtn.innerHTML = "▲";
-                    upBtn.onclick = () => moveVehicle(id, 'up', prod);
+                    upBtn.className = 'mini-btn'; upBtn.title = "Move Up"; upBtn.setAttribute('aria-label', 'Move Vehicle Up'); upBtn.innerHTML = "▲";
+                    upBtn.onclick = () => window.moveVehicle(id, 'up', prod);
 
                     const downBtn = document.createElement('button');
-                    downBtn.className = 'mini-btn'; downBtn.title = "Move Down"; downBtn.innerHTML = "▼";
-                    downBtn.onclick = () => moveVehicle(id, 'down', prod);
+                    downBtn.className = 'mini-btn'; downBtn.title = "Move Down"; downBtn.setAttribute('aria-label', 'Move Vehicle Down'); downBtn.innerHTML = "▼";
+                    downBtn.onclick = () => window.moveVehicle(id, 'down', prod);
 
                     const actionBtn = document.createElement('button');
                     actionBtn.className = 'btn-primary action-btn';
@@ -1606,31 +1687,31 @@
                     
                     if (data.status === "Waiting") {
                         actionBtn.textContent = 'Load';
-                        actionBtn.onclick = () => updateVehicleStatus(id, "Loading", data.vehicleNo);
+                        actionBtn.onclick = () => window.updateVehicleStatus(id, "Loading", data.vehicleNo);
                     } else if (data.status === "Loading") {
                         actionBtn.className = 'btn-success action-btn';
                         actionBtn.textContent = 'Finish';
-                        actionBtn.onclick = () => updateVehicleStatus(id, "Loaded", data.vehicleNo);
+                        actionBtn.onclick = () => window.updateVehicleStatus(id, "Loaded", data.vehicleNo);
                     } else {
                         actionBtn.className = 'btn-secondary action-btn';
                         actionBtn.textContent = 'Done';
                     }
                     
                     const notifyBtn = document.createElement('button');
-                    notifyBtn.className = 'mini-btn'; notifyBtn.title = "Notify Owner via WhatsApp"; notifyBtn.innerHTML = "💬";
-                    notifyBtn.onclick = () => notifyOwner(data.vehicleNo, data.driverPhone);
+                    notifyBtn.className = 'mini-btn'; notifyBtn.title = "Notify Owner via WhatsApp"; notifyBtn.setAttribute('aria-label', 'Notify Driver'); notifyBtn.innerHTML = "💬";
+                    notifyBtn.onclick = () => window.notifyOwner(data.vehicleNo, data.driverPhone);
 
                     const noteBtn = document.createElement('button');
-                    noteBtn.className = 'mini-btn'; noteBtn.title = "Add Note"; noteBtn.innerHTML = "✏️";
-                    noteBtn.onclick = () => editNarration(id, data.narration || "");
+                    noteBtn.className = 'mini-btn'; noteBtn.title = "Add Note"; noteBtn.setAttribute('aria-label', 'Add Note'); noteBtn.innerHTML = "✏️";
+                    noteBtn.onclick = () => window.editNarration(id, data.narration || "");
 
                     const editBtn = document.createElement('button');
-                    editBtn.className = 'mini-btn'; editBtn.title = "Edit Vehicle"; editBtn.innerHTML = "⚙️";
-                    editBtn.onclick = () => editVehicle(id, data.vehicleNo);
+                    editBtn.className = 'mini-btn'; editBtn.title = "Edit Vehicle"; editBtn.setAttribute('aria-label', 'Edit Vehicle'); editBtn.innerHTML = "⚙️";
+                    editBtn.onclick = () => window.editVehicle(id, data.vehicleNo);
 
                     const deleteBtn = document.createElement('button');
-                    deleteBtn.className = 'mini-btn'; deleteBtn.title = "Delete"; deleteBtn.innerHTML = "🗑️";
-                    deleteBtn.onclick = () => deleteVehicle(id);
+                    deleteBtn.className = 'mini-btn'; deleteBtn.title = "Delete"; deleteBtn.setAttribute('aria-label', 'Delete Vehicle'); deleteBtn.innerHTML = "🗑️";
+                    deleteBtn.onclick = () => window.deleteVehicle(id);
 
                     btnGroup.appendChild(upBtn);
                     btnGroup.appendChild(downBtn);
@@ -1648,7 +1729,7 @@
             document.getElementById('dailyClearedPill').textContent = `🚛 Loaded Today: ${totalLoadedToday}`;
 
             const nowString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-            products.forEach(p => {
+            MATERIALS.forEach(p => {
                 if (productCounts[p] === 0) document.getElementById(`list-${p}`).innerHTML = emptyStateHTML;
                 const prevJSON = JSON.stringify(previousSnapshotData[p] || []);
                 const currJSON = JSON.stringify(currentSnapshotData[p] || []);
@@ -1690,10 +1771,12 @@
             triggerWebNotification("Queue Status Update", `Vehicle ${vehicleNo} is now: ${newStatus}`);
         };
 
-        document.getElementById('searchInput').addEventListener('keyup', () => {
-            const input = document.getElementById('searchInput').value.trim();
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const input = e.target.value.trim();
             document.querySelectorAll('.vehicle-item').forEach(item => {
-                const lastFour = item.querySelector('.vehicle-no').innerText.replace(/-/g, '').slice(-4);
+                const vNoElem = item.querySelector('.vehicle-no');
+                if (!vNoElem) return;
+                const lastFour = vNoElem.textContent.replace(/-/g, '').slice(-4);
                 item.style.display = lastFour.includes(input) ? "flex" : "none";
             });
         });
@@ -1717,15 +1800,14 @@
             if (isMaintenance) message += "⚠️ CRUSHER UNDER MAINTENANCE ⚠️\n";
             message += "\n";
 
-            const products = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
-            const headers  = ['40M',  '25M',  '20M',  '12M',  '6MM',  'DST',  'MSD'];
+            const headers = ['40M', '25M', '20M', '12M', '6MM', 'DST', 'MSD'];
             const COL_W = 4;
 
             const queueData = {};
             let maxRows = 0;
             let hasAnyVehicle = false;
 
-            products.forEach(prod => {
+            MATERIALS.forEach(prod => {
                 queueData[prod] = [];
                 const isOutOfStock = productStock[prod] === false;
                 const listElement = document.getElementById(`list-${prod}`);
@@ -1737,8 +1819,8 @@
                 } else if (vehicles.length > 0 && !hasEmptyMsg) {
                     hasAnyVehicle = true;
                     vehicles.forEach(v => {
-                        const fullNo = v.querySelector('.vehicle-no')?.innerText || '';
-                        const status = v.querySelector('.status-text')?.innerText || '';
+                        const fullNo = v.querySelector('.vehicle-no')?.textContent || '';
+                        const status = v.querySelector('.status-text')?.textContent || '';
                         
                         const cleanDigits = fullNo.replace(/[^0-9]/g, '');
                         let shortNo = cleanDigits.length >= 4 ? cleanDigits.slice(-4) : cleanDigits;
@@ -1762,7 +1844,7 @@
                 message += headers.map(() => '-'.repeat(COL_W)).join('+') + "\n";
 
                 for (let i = 0; i < maxRows; i++) {
-                    let row = products.map(prod => {
+                    let row = MATERIALS.map(prod => {
                         const val = queueData[prod][i] || '';
                         return val.padEnd(COL_W, ' ').slice(0, COL_W);
                     }).join('|');
