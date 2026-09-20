@@ -563,8 +563,8 @@
                     <option value="40MM">40MM</option>
                     <option value="25MM">25MM</option>
                     <option value="20MM">20MM</option>
-                    <option value="6MM">6MM</option>
                     <option value="12MM">12MM</option>
+                    <option value="6MM">6MM</option>
                     <option value="DUST">DUST</option>
                     <option value="MSAND">MSAND</option>
                 </select>
@@ -581,7 +581,7 @@
                     <button class="btn-success icon-only-btn" id="shareMaintBtn" title="Broadcast Maintenance Alert"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592z"/></svg></button>
                 </div>
                 <div style="display: flex; gap: 0.5rem; flex: 1.5; min-width: 250px; flex-wrap: wrap;">
-                    <select id="stockProductSelect" style="min-width: 100px;"><option value="40MM">40MM</option><option value="25MM">25MM</option><option value="20MM">20MM</option><option value="6MM">6MM</option><option value="12MM">12MM</option><option value="DUST">DUST</option><option value="MSAND">MSAND</option></select>
+                    <select id="stockProductSelect" style="min-width: 100px;"><option value="40MM">40MM</option><option value="25MM">25MM</option><option value="20MM">20MM</option><option value="12MM">12MM</option><option value="6MM">6MM</option><option value="DUST">DUST</option><option value="MSAND">MSAND</option></select>
                     <button class="btn-warning" id="toggleStockBtn">Toggle Stock</button>
                     <button class="btn-success icon-only-btn" id="shareStockBtn" title="Broadcast Stock Alert"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66-.004 3.639-2.961 6.592-6.592 6.592z"/></svg></button>
                 </div>
@@ -607,7 +607,7 @@
         <!-- Product Grid -->
         <div class="product-grid" id="mainGrid">
             <script>
-              const materials = ['40MM', '25MM', '20MM', '6MM', '12MM', 'DUST', 'MSAND'];
+              const materials = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
               document.write(materials.map(m => `
                 <div class="product-card">
                     <div class="card-watermark">${m}</div>
@@ -792,9 +792,9 @@
 
         let isMaintenance = false;
         let announcementsList = [];
-        let productStock = { '40MM': true, '25MM': true, '20MM': true, '6MM': true, '12MM': true, 'DUST': true, 'MSAND': true };
+        let productStock = { '40MM': true, '25MM': true, '20MM': true, '12MM': true, '6MM': true, 'DUST': true, 'MSAND': true };
         let isFirstStatusLoad = true;
-        let queueLastUpdated = { '40MM': null, '25MM': null, '20MM': null, '6MM': null, '12MM': null, 'DUST': null, 'MSAND': null };
+        let queueLastUpdated = { '40MM': null, '25MM': null, '20MM': null, '12MM': null, '6MM': null, 'DUST': null, 'MSAND': null };
         let previousSnapshotData = {};
 
         getDoc(statusRef).then(docSnap => {
@@ -977,7 +977,7 @@
 
                 if (data.stock) {
                     productStock = { ...productStock, ...data.stock };
-                    for (const prod of ['40MM', '25MM', '20MM', '6MM', '12MM', 'DUST', 'MSAND']) {
+                    for (const prod of ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND']) {
                         const inStock = productStock[prod] !== false;
                         const badge = document.getElementById(`badge-${prod}`);
                         if (badge) {
@@ -1087,9 +1087,9 @@
         const emptyStateHTML = `<div class="empty-msg"><svg fill="currentColor" viewBox="0 0 16 16"><path d="M14 9V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM4 6h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/><path d="M1.5 14.5a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-13z"/></svg>No vehicles currently waiting</div>`;
 
         onSnapshot(q, (snapshot) => {
-            const products = ['40MM', '25MM', '20MM', '6MM', '12MM', 'DUST', 'MSAND'];
+            const products = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
             products.forEach(p => { document.getElementById(`list-${p}`).innerHTML = ''; });
-            let productCounts = { '40MM': 0, '25MM': 0, '20MM': 0, '6MM': 0, '12MM': 0, 'DUST': 0, 'MSAND': 0 };
+            let productCounts = { '40MM': 0, '25MM': 0, '20MM': 0, '12MM': 0, '6MM': 0, 'DUST': 0, 'MSAND': 0 };
             let currentSnapshotData = {};
             products.forEach(p => { currentSnapshotData[p] = []; });
 
@@ -1251,9 +1251,8 @@
             if (isMaintenance) message += "⚠️ CRUSHER UNDER MAINTENANCE ⚠️\n";
             message += "\n";
 
-            const products = ['40MM', '25MM', '20MM', '6MM', '12MM', 'DUST', 'MSAND'];
-            // 3-4 character compact headers so all 7 columns fit on standard mobile screens
-            const headers  = ['40M',  '25M',  '20M',  '6MM',  '12M',  'DST',  'MSD'];
+            const products = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
+            const headers  = ['40M',  '25M',  '20M',  '12M',  '6MM',  'DST',  'MSD'];
             const COL_W = 4;
 
             const queueData = {};
@@ -1275,7 +1274,6 @@
                         const fullNo = v.querySelector('.vehicle-no')?.innerText || '';
                         const status = v.querySelector('.status-text')?.innerText || '';
                         
-                        // Extract last 4 numeric digits (e.g., 1670)
                         const cleanDigits = fullNo.replace(/[^0-9]/g, '');
                         let shortNo = cleanDigits.length >= 4 ? cleanDigits.slice(-4) : cleanDigits;
                         
