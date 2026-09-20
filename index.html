@@ -747,25 +747,41 @@
             const acceptBtn = document.getElementById('acceptNotificationBtn');
             const denyBtn = document.getElementById('denyNotificationBtn');
 
-            // Hook up OneSignal Prompt Flow
-            setTimeout(() => { modal.style.display = 'flex'; }, 800);
+            window.OneSignalDeferred.push(async function(OneSignal) {
+                // Check if the user is already subscribed in OneSignal or granted browser permission
+                const isPushEnabled = await OneSignal.User.PushSubscription.optedIn;
+                const isPermissionGranted = (typeof Notification !== 'undefined' && Notification.permission === 'granted');
 
-            acceptBtn.onclick = async () => {
-                modal.style.display = 'none';
-                window.OneSignalDeferred.push(async function(OneSignal) {
+                // Do not display the prompt if already enabled
+                if (isPushEnabled || isPermissionGranted) {
+                    return;
+                }
+
+                // Show prompt only if not enabled
+                setTimeout(() => { modal.style.display = 'flex'; }, 800);
+
+                acceptBtn.onclick = async () => {
+                    modal.style.display = 'none';
                     try {
                         await OneSignal.Notifications.requestPermission();
                         window.showToast("Notifications activated successfully!", "success");
                     } catch (err) {
                         window.showToast("Error requesting notification permission.", "error");
                     }
-                });
-            };
+                };
 
-            denyBtn.onclick = () => {
-                modal.style.display = 'none';
-                window.showToast("Notifications disabled.", "info");
-            };
+                denyBtn.onclick = () => {
+                    modal.style.display = 'none';
+                    window.showToast("Notifications disabled.", "info");
+                };
+
+                // Listen for subscription changes dynamically
+                OneSignal.User.PushSubscription.addEventListener("change", (event) => {
+                    if (event.current.optedIn) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
         });
 
         setPersistence(auth, browserLocalPersistence).catch(console.error);
