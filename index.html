@@ -32,9 +32,9 @@
     </script>
 
     <!-- Non-blocking Font Loading -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"></noscript>
 
     <!-- Deferred QR Generator -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" 
@@ -115,7 +115,7 @@
 
         .main-content {
             flex: 1 0 auto;
-            padding: 1rem;
+            padding: 0.75rem;
             max-width: 100%; 
             margin: 0 auto;
             width: 100%;
@@ -313,6 +313,35 @@
 
         @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(21, 128, 61, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(21, 128, 61, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(21, 128, 61, 0); } }
 
+        /* Material Filter Chips */
+        .filter-chips-container {
+            display: flex;
+            gap: 0.4rem;
+            overflow-x: auto;
+            padding: 0.3rem 0 0.8rem 0;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .filter-chips-container::-webkit-scrollbar { display: none; }
+        .filter-chip {
+            padding: 0.35rem 0.75rem;
+            border-radius: 99px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .filter-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 2px 4px rgba(67, 56, 202, 0.3);
+        }
+
         #spotlightBanner {
             display: none;
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
@@ -491,7 +520,7 @@
                 padding: 0.5rem 0.2rem !important;
             }
             .vehicle-no {
-                font-size: 0.75rem !important;
+                font-size: 0.95rem !important;
             }
             .action-btn {
                 font-size: 0.65rem !important;
@@ -536,20 +565,79 @@
         .empty-msg svg { width: 24px; height: 24px; opacity: 0.5; }
         
         .vehicle-item { 
-            display: flex; flex-direction: column; padding: 0.6rem; border-bottom: 1px solid var(--border); 
+            display: flex; flex-direction: column; padding: 0.65rem 0.5rem; border-bottom: 1px solid var(--border); 
             gap: 0.35rem; animation: fadeIn 0.3s ease; background: var(--card-bg); word-wrap: break-word;
             position: relative;
+            cursor: default;
         }
+        body.admin-mode .vehicle-item { cursor: grab; }
+        body.admin-mode .vehicle-item:active { cursor: grabbing; }
+        .vehicle-item.dragging { opacity: 0.4; border: 2px dashed var(--primary); }
         .vehicle-item:last-child { border-bottom: none; }
         .vehicle-item:hover { background-color: var(--item-hover); }
         .vehicle-item.is-pinned { outline: 2px solid var(--primary); background-color: rgba(67, 56, 202, 0.05); }
         
-        .vehicle-info { display: flex; flex-direction: column; gap: 0.2rem; }
-        .vehicle-no { font-weight: 700; font-size: 0.85rem; color: var(--text-main); letter-spacing: 0.5px; text-align: center; }
-        .vehicle-meta { font-size: 0.7rem; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 2px;}
+        /* Queue Position Badge */
+        .pos-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: var(--sub-card-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 1px 5px;
+            border-radius: 4px;
+        }
+
+        .vehicle-info { display: flex; flex-direction: column; gap: 0.25rem; }
+        
+        /* License Plate Styling with Emphasized Digits */
+        .vehicle-no-plate {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            background: #fffbeb;
+            color: #1e293b;
+            border: 1.5px solid #d97706;
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+        }
+        body.dark-mode .vehicle-no-plate {
+            background: #1e1b4b;
+            color: #fef08a;
+            border-color: #6366f1;
+        }
+        .v-prefix { font-size: 0.8em; opacity: 0.85; margin-right: 2px; }
+        .v-digits { font-size: 1.15em; font-weight: 900; color: #000; letter-spacing: 1px; }
+        body.dark-mode .v-digits { color: #38bdf8; }
+
+        .vehicle-meta { font-size: 0.7rem; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 3px;}
         .status-text { font-weight: 600; padding: 2px 4px; border-radius: 4px; font-size: 0.65rem; text-transform: uppercase; }
         .eta-badge { font-size: 0.65rem; color: #3b82f6; font-weight: 600; background: rgba(59, 130, 246, 0.1); padding: 1px 6px; border-radius: 4px; }
         
+        /* Loading Progress Bar */
+        .queue-progress-bar {
+            width: 85%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 99px;
+            overflow: hidden;
+            margin: 2px auto 0 auto;
+        }
+        .queue-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+            border-radius: 99px;
+            transition: width 0.3s ease;
+        }
+
         .status-Waiting { background-color: var(--warning-light); color: var(--warning); }
         .status-Loading { background-color: #dbeafe; color: #2563eb; }
         .status-Loaded { background-color: var(--success-light); color: var(--success); }
@@ -561,9 +649,19 @@
 
         .narration-text { font-size: 0.7rem; color: var(--text-muted); background: var(--sub-card-bg); padding: 4px; border-radius: 4px; border-left: 2px solid #94a3b8; margin-top: 4px; text-align: center;}
         
-        .vehicle-item.is-loading { border-left: 3px solid #3b82f6; background-color: var(--item-hover); }
+        /* Active Glowing Pulse Effect for Loading bay */
+        .vehicle-item.is-loading { 
+            border-left: 4px solid #3b82f6; 
+            background: rgba(59, 130, 246, 0.05);
+            animation: pulseGlow 1.8s infinite alternate ease-in-out;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: inset 3px 0 0 #3b82f6, 0 0 0 rgba(59, 130, 246, 0); }
+            100% { box-shadow: inset 4px 0 6px #3b82f6, 0 0 10px rgba(59, 130, 246, 0.25); }
+        }
+
         .vehicle-item.is-loaded { opacity: 0.6; filter: grayscale(50%); }
-        .vehicle-item.is-loaded .vehicle-no { text-decoration: line-through; }
+        .vehicle-item.is-loaded .vehicle-no-plate { text-decoration: line-through; }
         
         .btn-group { display: flex; gap: 0.2rem; flex-wrap: wrap; margin-top: 0.2rem; justify-content: center; }
         .mini-btn { padding: 2px; border-radius: 4px; background: transparent; color: var(--text-muted); border: 1px solid transparent; width: 22px; height: 22px; font-size: 0.8rem;}
@@ -583,7 +681,7 @@
         @media print { 
             @page { size: A4 portrait; margin: 4mm; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .no-print, .vehicle-meta, .empty-msg, .driver-contact-bar, .pin-btn, [id^="updated-"], .total-wait-badge { display: none !important; } 
+            .no-print, .vehicle-meta, .empty-msg, .driver-contact-bar, .pin-btn, [id^="updated-"], .total-wait-badge, .pos-badge, .queue-progress-bar, .filter-chips-container { display: none !important; } 
             
             html, body { background-color: white !important; color: black !important; height: 100% !important; margin: 0 !important; padding: 0 !important; }
             body { display: flex !important; flex-direction: column !important; }
@@ -591,12 +689,10 @@
             
             .main-content { padding: 0; max-width: 100%; display: flex !important; flex-direction: column !important; flex: 1 !important; }
             
-            /* Forces 7 columns side by side stretching to the bottom in portrait mode */
             .product-grid { display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 0 !important; flex: 1 !important; height: calc(100vh - 75px) !important; } 
             
             .product-card { box-shadow: none !important; border: 1px solid #000 !important; border-top: 2px solid #000 !important; border-radius: 0; display: flex !important; flex-direction: column !important; position: relative !important; background: white !important; height: 100% !important; } 
             
-            /* Bigger and bolder heading matching your template */
             .product-card h2 { 
                 font-family: "Times New Roman", Times, serif !important;
                 font-size: 0.8rem !important; font-weight: 900 !important; padding: 6px 2px !important; border-bottom: 1px solid #000 !important; background: white !important; color: black !important;
@@ -614,8 +710,17 @@
             .vehicle-list { flex: 1 !important; max-height: none !important; height: 100% !important; overflow: visible !important; }
             
             .vehicle-item { padding: 5px 2px !important; border-bottom: 1px solid #000 !important; background: transparent !important; text-align: center !important; }
-            .vehicle-info > *:not(.vehicle-no) { display: none !important; }
-            .vehicle-no { font-size: 0.7rem !important; font-weight: 700 !important; text-align: center; color: black !important; width: 100% !important; }
+            .vehicle-info > *:not(.vehicle-no-plate) { display: none !important; }
+            .vehicle-no-plate { 
+                font-size: 0.85rem !important; 
+                font-weight: 900 !important; 
+                text-align: center; 
+                color: black !important; 
+                border: none !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                width: 100% !important; 
+            }
             
             .print-footer { 
                 display: flex !important; margin-top: auto !important; padding-top: 5px; border-top: 1px solid #000;
@@ -671,6 +776,7 @@
         <nav class="top-actions" aria-label="Quick Actions">
             <button class="btn-secondary" id="langToggleBtn" style="padding: 0.4rem 0.6rem; font-size: 0.8rem;" title="Change Language" aria-label="Change Language">🌐 EN</button>
             <button class="icon-only-btn btn-secondary" id="darkModeBtn" title="Toggle Dark / Light Theme" aria-label="Toggle Theme">🌙</button>
+            <button class="icon-only-btn btn-secondary" id="voiceToggleBtn" title="Toggle Voice Announcements" aria-label="Toggle Voice Alerts">🗣️</button>
             <button class="icon-only-btn btn-secondary" id="audioToggleBtn" title="Toggle Bell Sound on Load" aria-label="Toggle Alert Bell">🔔</button>
             <button class="icon-only-btn btn-secondary" onclick="window.print()" title="Print Queue" aria-label="Print Current Queue">
                 <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm1 3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2H6v-2z"/></svg>
@@ -685,6 +791,18 @@
     </header>
 
     <main class="main-content">
+        <!-- Sticky Quick Filter Chips -->
+        <div class="filter-chips-container no-print" id="materialFilterBar">
+            <button class="filter-chip active" onclick="window.filterMaterialBay('ALL')">All Bays</button>
+            <button class="filter-chip" onclick="window.filterMaterialBay('40MM')">40MM</button>
+            <button class="filter-chip" onclick="window.filterMaterialBay('25MM')">25MM</button>
+            <button class="filter-chip" onclick="window.filterMaterialBay('20MM')">20MM</button>
+            <button class="filter-chip" onclick="window.filterMaterialBay('12MM')">12MM</button>
+            <button class="filter-chip" onclick="window.filterMaterialBay('6MM')">6MM</button>
+            <button class="filter-chip" onclick="window.filterMaterialBay('DUST')">DUST</button>
+            <button class="filter-chip" onclick="window.filterMaterialBay('MSAND')">MSAND</button>
+        </div>
+
         <section id="spotlightBanner" class="no-print" aria-label="Tracked Vehicle">
             <div class="spotlight-info">
                 <span style="font-size: 1.25rem;" aria-hidden="true">⭐</span>
@@ -823,6 +941,7 @@
         MATERIALS.forEach(m => {
             const card = document.createElement('div');
             card.className = 'product-card';
+            card.id = `card-${m}`;
             card.innerHTML = `
                 <div class="card-watermark">${m}</div>
                 <h2>
@@ -840,7 +959,7 @@
                         <button class="btn-primary action-btn" onclick="window.quickAddVehicle('${m}')">Add</button>
                     </div>
                 </div>
-                <ul class="vehicle-list" id="list-${m}" aria-label="${m} active queue"></ul>
+                <ul class="vehicle-list" id="list-${m}" data-material="${m}" aria-label="${m} active queue"></ul>
             `;
             fragment.appendChild(card);
         });
@@ -918,6 +1037,22 @@
             refreshSpotlightDisplay();
         });
 
+        // Material Bay Quick Filter
+        window.filterMaterialBay = function(mat) {
+            document.querySelectorAll('.filter-chip').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.includes(mat) || (mat === 'ALL' && btn.textContent === 'All Bays'));
+            });
+            MATERIALS.forEach(m => {
+                const card = document.getElementById(`card-${m}`);
+                if (!card) return;
+                if (mat === 'ALL' || m === mat) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        };
+
         const offlineBanner = document.getElementById('offlineBanner');
         window.addEventListener('online', () => { offlineBanner.style.display = 'none'; });
         window.addEventListener('offline', () => { offlineBanner.style.display = 'block'; });
@@ -963,6 +1098,34 @@
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
             darkModeBtn.textContent = isDark ? '☀️' : '🌙';
         });
+
+        // Speech Synthesis Alert Engine
+        let voiceAnnounceEnabled = localStorage.getItem('voiceAnnounce') === 'true';
+        const voiceToggleBtn = document.getElementById('voiceToggleBtn');
+        function updateVoiceBtnUI() {
+            voiceToggleBtn.textContent = voiceAnnounceEnabled ? '🗣️' : '🔇';
+            voiceToggleBtn.title = voiceAnnounceEnabled ? 'Voice calls: Active' : 'Voice calls: Muted';
+        }
+        updateVoiceBtnUI();
+        voiceToggleBtn.addEventListener('click', () => {
+            voiceAnnounceEnabled = !voiceAnnounceEnabled;
+            localStorage.setItem('voiceAnnounce', voiceAnnounceEnabled);
+            updateVoiceBtnUI();
+            if (voiceAnnounceEnabled) {
+                speakText("Voice announcement enabled");
+            }
+        });
+
+        function speakText(text) {
+            if (!voiceAnnounceEnabled || !('speechSynthesis' in window)) return;
+            try {
+                window.speechSynthesis.cancel();
+                const utter = new SpeechSynthesisUtterance(text);
+                utter.rate = 0.9;
+                utter.pitch = 1.0;
+                window.speechSynthesis.speak(utter);
+            } catch(e) { console.warn("Voice synthesizer failed", e); }
+        }
 
         let audioBellEnabled = localStorage.getItem('audioBell') !== 'false';
         const audioToggleBtn = document.getElementById('audioToggleBtn');
@@ -1036,7 +1199,7 @@
                 const list = document.getElementById(`list-${prod}`);
                 if (!list) continue;
                 const items = Array.from(list.querySelectorAll('.vehicle-item'));
-                const idx = items.findIndex(el => el.querySelector('.vehicle-no')?.textContent === pinnedVehicleNo);
+                const idx = items.findIndex(el => el.dataset.vehicleno === pinnedVehicleNo);
                 if (idx !== -1) {
                     found = true;
                     const item = items[idx];
@@ -1192,11 +1355,20 @@
             }
         });
 
+        // Duplicate Vehicle Checking & Addition
         window.processAddVehicle = async function(vehicleNo, product, narration = "", phone = "") {
             if (!vehicleNo || !product) {
                 window.showToast("Enter vehicle number and select product.", "error");
                 return false;
             }
+
+            // Duplicate active queue check
+            const duplicate = currentVehicleList.find(v => v.vehicleNo === vehicleNo && v.status !== 'Loaded');
+            if (duplicate) {
+                const proceedDup = confirm(`⚠️ Vehicle ${vehicleNo} is already waiting in bay ${duplicate.product}! Do you still want to queue it for ${product}?`);
+                if (!proceedDup) return false;
+            }
+
             if (productStock[product] === false) {
                 const proceed = confirm(`Warning: ${product} is currently OUT OF STOCK. Add anyway?`);
                 if (!proceed) return false;
@@ -1280,6 +1452,79 @@
                 window.showToast("Error moving vehicle: " + e.message, "error");
             }
         };
+
+        // Drag & Drop Handlers
+        let draggedItemId = null;
+        let draggedItemProduct = null;
+
+        function attachDragEvents(element, id, product) {
+            element.addEventListener('dragstart', (e) => {
+                if (!document.body.classList.contains('admin-mode')) {
+                    e.preventDefault();
+                    return;
+                }
+                draggedItemId = id;
+                draggedItemProduct = product;
+                element.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            });
+            element.addEventListener('dragend', () => {
+                element.classList.remove('dragging');
+            });
+        }
+
+        // Attach drop targets to lists
+        MATERIALS.forEach(prod => {
+            const listEl = document.getElementById(`list-${prod}`);
+            if (!listEl) return;
+            listEl.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            });
+            listEl.addEventListener('drop', async (e) => {
+                e.preventDefault();
+                if (!draggedItemId || draggedItemProduct !== prod) return;
+                
+                const afterElement = getDragAfterElement(listEl, e.clientY);
+                const sameBayQueue = currentVehicleList
+                    .filter(v => v.product === prod && v.status !== 'Loaded')
+                    .sort((a,b) => (a.orderIndex || a.timestamp) - (b.orderIndex || b.timestamp));
+
+                const draggedDoc = sameBayQueue.find(v => v.id === draggedItemId);
+                if (!draggedDoc) return;
+
+                let newIndex = 0;
+                if (!afterElement) {
+                    newIndex = Date.now() + 10000;
+                } else {
+                    const afterId = afterElement.dataset.docid;
+                    const targetDoc = sameBayQueue.find(v => v.id === afterId);
+                    if (targetDoc) {
+                        newIndex = (targetDoc.orderIndex || targetDoc.timestamp) - 1;
+                    }
+                }
+
+                try {
+                    await updateDoc(doc(db, "vehicles", draggedItemId), { orderIndex: newIndex });
+                    window.showToast("Truck repositioned successfully!", "success");
+                } catch(err) {
+                    console.error(err);
+                }
+            });
+        });
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.vehicle-item:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
 
         document.getElementById('exportCsvBtn').addEventListener('click', () => {
             if (currentVehicleList.length === 0) return window.showToast("No queue data to export.", "info");
@@ -1578,6 +1823,18 @@
         const q = query(queueRef, orderBy("timestamp", "asc"));
         const emptyStateHTML = `<div class="empty-msg"><svg fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M14 9V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM4 6h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/><path d="M1.5 14.5a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-13z"/></svg>No vehicles currently waiting</div>`;
 
+        // Splits plate for high-contrast highlight
+        function formatLicensePlateHTML(vNo) {
+            const clean = vNo || '';
+            const last4Match = clean.match(/(\d{3,4})$/);
+            if (last4Match) {
+                const digits = last4Match[1];
+                const prefix = clean.substring(0, clean.length - digits.length);
+                return `<div class="vehicle-no-plate"><span class="v-prefix">${escapeHTML(prefix)}</span><span class="v-digits">${escapeHTML(digits)}</span></div>`;
+            }
+            return `<div class="vehicle-no-plate"><span class="v-digits">${escapeHTML(clean)}</span></div>`;
+        }
+
         onSnapshot(q, (snapshot) => {
             MATERIALS.forEach(p => { 
                 const list = document.getElementById(`list-${p}`);
@@ -1605,8 +1862,10 @@
                     totalLoadedToday++;
                 }
 
+                // Audio Bell & Voice Announcements
                 if (knownStatuses[id] && knownStatuses[id] !== "Loading" && data.status === "Loading") {
                     playQueueBell();
+                    speakText(`Vehicle ${data.vehicleNo.replace(/-/g, ' ')}, please report to ${prod} bay for loading`);
                     window.showToast(`🔔 ${data.vehicleNo} is now LOADING!`, 'success');
                 }
                 knownStatuses[id] = data.status;
@@ -1623,17 +1882,33 @@
 
                     const queuePosition = productCounts[prod];
                     let etaText = "";
+                    let progressPercent = 0;
                     const unitRate = MATERIAL_LOAD_TIMES[prod] || 15;
+
                     if (data.status === "Waiting") {
                         etaText = formatWaitDuration(queuePosition * unitRate);
+                        progressPercent = Math.max(10, Math.min(90, 100 - (queuePosition * 15)));
                     } else if (data.status === "Loading") {
                         etaText = `Loading now`;
+                        progressPercent = 100;
                     } else {
                         etaText = `Finished`;
+                        progressPercent = 100;
                     }
 
                     const li = document.createElement('li');
                     li.className = `vehicle-item ${isLoaded ? 'is-loaded' : ''} ${isLoading ? 'is-loading' : ''} ${isPinned ? 'is-pinned' : ''}`;
+                    li.setAttribute('draggable', 'true');
+                    li.dataset.docid = id;
+                    li.dataset.vehicleno = data.vehicleNo;
+
+                    attachDragEvents(li, id, prod);
+
+                    // Position counter badge
+                    const posBadge = document.createElement('span');
+                    posBadge.className = 'pos-badge no-print';
+                    posBadge.textContent = `#${queuePosition}`;
+                    li.appendChild(posBadge);
 
                     const pinBtn = document.createElement('button');
                     pinBtn.className = `pin-btn ${isPinned ? 'active' : ''} no-print`;
@@ -1645,9 +1920,9 @@
 
                     const infoDiv = document.createElement('div');
                     infoDiv.className = 'vehicle-info';
-                    const vNoSpan = document.createElement('span');
-                    vNoSpan.className = 'vehicle-no';
-                    vNoSpan.textContent = data.vehicleNo;
+
+                    // Number plate HTML
+                    infoDiv.innerHTML = formatLicensePlateHTML(data.vehicleNo);
 
                     const metaSpan = document.createElement('span');
                     metaSpan.className = 'vehicle-meta';
@@ -1664,8 +1939,15 @@
                     etaSpan.textContent = `⏱️ ${etaText}`;
                     metaSpan.appendChild(etaSpan);
 
-                    infoDiv.appendChild(vNoSpan);
                     infoDiv.appendChild(metaSpan);
+
+                    // Driver countdown/wait progress bar
+                    if (!isLoaded) {
+                        const progressBar = document.createElement('div');
+                        progressBar.className = 'queue-progress-bar no-print';
+                        progressBar.innerHTML = `<div class="queue-progress-fill" style="width: ${progressPercent}%;"></div>`;
+                        infoDiv.appendChild(progressBar);
+                    }
 
                     if (data.driverPhone) {
                         const contactBar = document.createElement('div');
@@ -1713,8 +1995,8 @@
                     }
                     
                     const notifyBtn = document.createElement('button');
-                    notifyBtn.className = 'mini-btn'; notifyBtn.title = "Notify Owner via WhatsApp"; notifyBtn.setAttribute('aria-label', 'Notify Driver'); notifyBtn.innerHTML = "💬";
-                    notifyBtn.onclick = () => notifyOwner(data.vehicleNo, data.driverPhone);
+                    notifyBtn.className = 'mini-btn'; notifyBtn.title = "Send WhatsApp Bay Pass"; notifyBtn.setAttribute('aria-label', 'Notify Driver'); notifyBtn.innerHTML = "💬";
+                    notifyBtn.onclick = () => notifyOwnerBayPass(data.vehicleNo, prod, queuePosition, data.driverPhone);
 
                     const noteBtn = document.createElement('button');
                     noteBtn.className = 'mini-btn'; noteBtn.title = "Add Note"; noteBtn.setAttribute('aria-label', 'Add Note'); noteBtn.innerHTML = "✏️";
@@ -1789,15 +2071,22 @@
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const input = e.target.value.trim();
             document.querySelectorAll('.vehicle-item').forEach(item => {
-                const vNoElem = item.querySelector('.vehicle-no');
-                if (!vNoElem) return;
-                const lastFour = vNoElem.textContent.replace(/-/g, '').slice(-4);
-                item.style.display = lastFour.includes(input) ? "flex" : "none";
+                const plateElem = item.querySelector('.v-digits');
+                if (!plateElem) return;
+                const digits = plateElem.textContent.trim();
+                item.style.display = digits.includes(input) ? "flex" : "none";
             });
         });
 
-        window.notifyOwner = (vehicleNo, phone = "") => {
-            let message = `*NOTIFICATION: Vehicle ${vehicleNo} is ready for loading. Please report to the billing point immediately within 5 minutes.*` + linkFooter;
+        // Structured WhatsApp Bay Pass Dispatch
+        window.notifyOwnerBayPass = (vehicleNo, product, queuePos, phone = "") => {
+            let message = `🎫 *CRUSHER PLANT GATE & BAY PASS*\n\n` +
+                          `• *Vehicle No:* ${vehicleNo}\n` +
+                          `• *Material Bay:* ${product}\n` +
+                          `• *Queue Pos:* #${queuePos}\n` +
+                          `• *Instruction:* Please keep truck cabin attended. When called, report to the ${product} weighbridge immediately within 5 mins.\n` +
+                          linkFooter;
+
             const target = phone ? `https://wa.me/91${phone}?text=${encodeURIComponent(message)}` : `https://wa.me/?text=${encodeURIComponent(message)}`;
             window.open(target, '_blank', 'noopener,noreferrer');
         };
@@ -1834,7 +2123,7 @@
                 } else if (vehicles.length > 0 && !hasEmptyMsg) {
                     hasAnyVehicle = true;
                     vehicles.forEach(v => {
-                        const fullNo = v.querySelector('.vehicle-no')?.textContent || '';
+                        const fullNo = v.dataset.vehicleno || '';
                         const status = v.querySelector('.status-text')?.textContent || '';
                         
                         const cleanDigits = fullNo.replace(/[^0-9]/g, '');
