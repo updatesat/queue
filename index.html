@@ -589,35 +589,34 @@
             
             .main-content { padding: 0; max-width: 100%; display: flex !important; flex-direction: column !important; flex: 1 !important; }
             
-            /* Forces 7 columns side by side in portrait mode matching your template */
-            .product-grid { display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 2px !important; flex: 1 !important; } 
+            /* Forces 7 columns side by side stretching to the bottom in portrait mode */
+            .product-grid { display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 0 !important; flex: 1 !important; height: calc(100vh - 75px) !important; } 
             
-            .product-card { box-shadow: none !important; border: 1px solid #000 !important; border-top: 2px solid #000 !important; border-radius: 0; display: flex !important; flex-direction: column !important; position: relative !important; background: white !important; } 
+            .product-card { box-shadow: none !important; border: 1px solid #000 !important; border-top: 2px solid #000 !important; border-radius: 0; display: flex !important; flex-direction: column !important; position: relative !important; background: white !important; height: 100% !important; } 
             
+            /* Bigger and bolder heading matching your template */
             .product-card h2 { 
                 font-family: "Times New Roman", Times, serif !important;
-                font-size: 0.55rem !important; font-weight: 900 !important; padding: 3px 1px !important; border-bottom: 1px solid #000 !important; background: white !important; color: black !important;
-                display: flex !important; flex-direction: column !important; gap: 2px !important;
+                font-size: 0.8rem !important; font-weight: 900 !important; padding: 6px 2px !important; border-bottom: 1px solid #000 !important; background: white !important; color: black !important;
+                display: flex !important; flex-direction: column !important; gap: 4px !important;
             }
 
-            /* Keeps stock badge and watermark visible during print */
-            .stock-badge { display: inline-block !important; font-size: 0.4rem !important; padding: 1px 3px !important; border: 1px solid #000 !important; color: black !important; background: transparent !important; }
+            .stock-badge { display: inline-block !important; font-size: 0.55rem !important; padding: 1px 4px !important; border: 1px solid #000 !important; color: black !important; background: transparent !important; }
             
             .card-watermark {
                 display: block !important; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(270deg);
-                font-family: "Times New Roman", Times, serif !important; font-size: 0.9rem !important; font-weight: 900 !important;
-                color: rgba(0, 0, 0, 0.05) !important; white-space: nowrap; pointer-events: none; z-index: 1; letter-spacing: 1px;
+                font-family: "Times New Roman", Times, serif !important; font-size: 1.1rem !important; font-weight: 900 !important;
+                color: rgba(0, 0, 0, 0.05) !important; white-space: nowrap; pointer-events: none; z-index: 1; letter-spacing: 2px;
             }
             
-            .vehicle-list { flex: 1 !important; max-height: none !important; overflow: visible !important; }
+            .vehicle-list { flex: 1 !important; max-height: none !important; height: 100% !important; overflow: visible !important; }
             
-            /* Displays strictly the vehicle number for each item inside the print layout */
-            .vehicle-item { padding: 3px 1px !important; border-bottom: 1px solid #000 !important; background: transparent !important; text-align: center !important; }
+            .vehicle-item { padding: 5px 2px !important; border-bottom: 1px solid #000 !important; background: transparent !important; text-align: center !important; }
             .vehicle-info > *:not(.vehicle-no) { display: none !important; }
-            .vehicle-no { font-size: 0.55rem !important; font-weight: 700 !important; text-align: center; color: black !important; width: 100% !important; }
+            .vehicle-no { font-size: 0.7rem !important; font-weight: 700 !important; text-align: center; color: black !important; width: 100% !important; }
             
             .print-footer { 
-                display: flex !important; margin-top: 3px !important; padding-top: 5px; border-top: 1px solid #000;
+                display: flex !important; margin-top: auto !important; padding-top: 5px; border-top: 1px solid #000;
                 align-items: center; justify-content: center; gap: 10px; 
             }
             .print-footer-text { font-size: 0.65rem !important; font-weight: 600 !important; text-align: right; }
