@@ -678,7 +678,7 @@
         .print-footer { display: none; }
         .card-watermark { display: none; }
 
-        @media print { 
+        @print { 
             @page { size: A4 portrait; margin: 4mm; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .no-print, .vehicle-meta, .empty-msg, .driver-contact-bar, .pin-btn, [id^="updated-"], .total-wait-badge, .pos-badge, .queue-progress-bar, .filter-chips-container { display: none !important; } 
@@ -712,7 +712,7 @@
             .vehicle-item { padding: 5px 2px !important; border-bottom: 1px solid #000 !important; background: transparent !important; text-align: center !important; }
             .vehicle-info > *:not(.vehicle-no-plate) { display: none !important; }
             .vehicle-no-plate { 
-                font-size: 0.85rem !important; 
+                font-size: 0.65rem !important; 
                 font-weight: 900 !important; 
                 text-align: center; 
                 color: black !important; 
