@@ -674,11 +674,92 @@
         body.admin-mode .admin-only { display: flex !important; }
         .admin-only-inline { display: none !important; }
         body.admin-mode .admin-only-inline { display: inline-flex !important; }
+
+        /* TV Kiosk Mode Toggle Button: Admin Only */
+        #tvKioskModeBtn { display: none !important; }
+        body.admin-mode #tvKioskModeBtn { display: inline-flex !important; }
         
         .print-footer { display: none; }
         .card-watermark { display: none; }
 
-        @print { 
+        /* ========================================================
+           TV DISPLAY / DIGITAL KIOSK MODE STYLES & AUTO-SCROLL
+        ======================================================== */
+        body.tv-kiosk-mode .no-print,
+        body.tv-kiosk-mode .app-header nav:not(#tvKioskModeBtn),
+        body.tv-kiosk-mode .filter-chips-container,
+        body.tv-kiosk-mode .disclaimer-box,
+        body.tv-kiosk-mode .controls-wrapper,
+        body.tv-kiosk-mode .admin-only,
+        body.tv-kiosk-mode .pin-btn,
+        body.tv-kiosk-mode .pos-badge {
+            display: none !important;
+        }
+        body.tv-kiosk-mode .app-header {
+            background: var(--card-bg);
+            border-bottom: 2px solid var(--primary);
+            padding: 1rem 2rem;
+        }
+        body.tv-kiosk-mode .header-title h1 {
+            font-size: 2.2rem !important;
+        }
+        body.tv-kiosk-mode .main-content {
+            padding: 1rem;
+            max-width: 100% !important;
+            height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+        }
+        body.tv-kiosk-mode .product-grid {
+            grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+            gap: 1rem !important;
+            flex: 1 !important;
+            height: 100% !important;
+        }
+        body.tv-kiosk-mode .product-card {
+            border-width: 2px;
+            box-shadow: var(--shadow-lg);
+            display: flex !important;
+            flex-direction: column !important;
+            height: 100% !important;
+        }
+        body.tv-kiosk-mode .product-card h2 {
+            font-size: 1.15rem !important;
+            padding: 0.8rem 0.5rem !important;
+            position: static !important;
+        }
+        body.tv-kiosk-mode .vehicle-list {
+            max-height: none !important;
+            flex: 1 !important;
+            overflow-y: auto !important;
+            scroll-behavior: smooth;
+        }
+        body.tv-kiosk-mode .vehicle-item {
+            padding: 1rem 0.5rem !important;
+            border-bottom: 2px solid var(--border) !important;
+        }
+        body.tv-kiosk-mode .vehicle-no-plate {
+            font-size: 1.35rem !important;
+            padding: 6px 14px;
+            border-width: 2px;
+        }
+        body.tv-kiosk-mode .v-digits {
+            font-size: 1.3em !important;
+        }
+        body.tv-kiosk-mode .vehicle-meta {
+            font-size: 0.9rem !important;
+            gap: 6px;
+        }
+        body.tv-kiosk-mode .status-text {
+            font-size: 0.8rem !important;
+            padding: 4px 8px;
+        }
+        body.tv-kiosk-mode .eta-badge {
+            font-size: 0.85rem !important;
+            padding: 2px 8px;
+        }
+
+        @media print { 
             @page { size: A4 portrait; margin: 4mm; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .no-print, .vehicle-meta, .empty-msg, .driver-contact-bar, .pin-btn, [id^="updated-"], .total-wait-badge, .pos-badge, .queue-progress-bar, .filter-chips-container { display: none !important; } 
@@ -689,14 +770,14 @@
             
             .main-content { padding: 0; max-width: 100%; display: flex !important; flex-direction: column !important; flex: 1 !important; }
             
-            .product-grid { display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 0 !important; flex: 1 !important; height: calc(100vh - 75px) !important; } 
+            .product-grid { display: grid !important; grid-template-columns: repeat(7, 1fr) !important; gap: 2px !important; flex: 1 !important; height: calc(100vh - 75px) !important; } 
             
-            .product-card { box-shadow: none !important; border: 1px solid #000 !important; border-top: 2px solid #000 !important; border-radius: 0; display: flex !important; flex-direction: column !important; position: relative !important; background: white !important; height: 100% !important; } 
+            .product-card { box-shadow: none !important; border: 1.5px solid #000 !important; border-top: 2.5px solid #000 !important; border-radius: 0; display: flex !important; flex-direction: column !important; position: relative !important; background: white !important; height: 100% !important; } 
             
             .product-card h2 { 
                 font-family: "Times New Roman", Times, serif !important;
-                font-size: 0.8rem !important; font-weight: 900 !important; padding: 6px 2px !important; border-bottom: 1px solid #000 !important; background: white !important; color: black !important;
-                display: flex !important; flex-direction: column !important; gap: 4px !important;
+                font-size: 0.95rem !important; font-weight: 900 !important; padding: 6px 1px !important; border-bottom: 1.5px solid #000 !important; background: white !important; color: black !important;
+                display: flex !important; flex-direction: column !important; gap: 3px !important;
             }
 
             .stock-badge { display: inline-block !important; font-size: 0.55rem !important; padding: 1px 4px !important; border: 1px solid #000 !important; color: black !important; background: transparent !important; }
@@ -709,17 +790,21 @@
             
             .vehicle-list { flex: 1 !important; max-height: none !important; height: 100% !important; overflow: visible !important; }
             
-            .vehicle-item { padding: 5px 2px !important; border-bottom: 1px solid #000 !important; background: transparent !important; text-align: center !important; }
+            .vehicle-item { padding: 3px 1px !important; border-bottom: 1px solid #000 !important; background: transparent !important; text-align: center !important; }
             .vehicle-info > *:not(.vehicle-no-plate) { display: none !important; }
             .vehicle-no-plate { 
-                font-size: 0.65rem !important; 
+                font-size: 0.45rem !important; 
                 font-weight: 900 !important; 
                 text-align: center; 
-                color: black !important; 
+                color: #000000 !important; 
                 border: none !important;
                 background: transparent !important;
                 box-shadow: none !important;
                 width: 100% !important; 
+            }
+            .v-prefix, .v-digits {
+                color: #000000 !important;
+                font-weight: 900 !important;
             }
             
             .print-footer { 
@@ -774,6 +859,7 @@
             <div class="load-counter-pill admin-only-inline" id="dailyClearedPill">🚛 Loaded Today: 0</div>
         </div>
         <nav class="top-actions" aria-label="Quick Actions">
+            <button class="btn-secondary" id="tvKioskModeBtn" title="Toggle TV Kiosk Display Mode" aria-label="Toggle TV Kiosk Mode">📺 TV Mode</button>
             <button class="btn-secondary" id="langToggleBtn" style="padding: 0.4rem 0.6rem; font-size: 0.8rem;" title="Change Language" aria-label="Change Language">🌐 EN</button>
             <button class="icon-only-btn btn-secondary" id="darkModeBtn" title="Toggle Dark / Light Theme" aria-label="Toggle Theme">🌙</button>
             <button class="icon-only-btn btn-secondary" id="voiceToggleBtn" title="Toggle Voice Announcements" aria-label="Toggle Voice Alerts">🗣️</button>
@@ -1019,6 +1105,55 @@
                 deny: "വേണ്ട"
             }
         };
+
+        // TV / Kiosk Mode Toggle Handler & Auto-Scrolling Engine
+        const tvKioskModeBtn = document.getElementById('tvKioskModeBtn');
+        let isTvMode = localStorage.getItem('tvKioskMode') === 'true';
+        let tvScrollInterval = null;
+
+        function updateTvModeUI() {
+            if (isTvMode) {
+                document.body.classList.add('tv-kiosk-mode');
+                tvKioskModeBtn.textContent = '🖥️ Exit TV Mode';
+                tvKioskModeBtn.className = 'btn-primary';
+                startTvAutoScroll();
+            } else {
+                document.body.classList.remove('tv-kiosk-mode');
+                tvKioskModeBtn.textContent = '📺 TV Mode';
+                tvKioskModeBtn.className = 'btn-secondary';
+                stopTvAutoScroll();
+            }
+        }
+
+        function startTvAutoScroll() {
+            stopTvAutoScroll();
+            tvScrollInterval = setInterval(() => {
+                if (!document.body.classList.contains('tv-kiosk-mode')) return;
+                MATERIALS.forEach(prod => {
+                    const listEl = document.getElementById(`list-${prod}`);
+                    if (!listEl) return;
+                    if (listEl.scrollTop + listEl.clientHeight >= listEl.scrollHeight - 5) {
+                        listEl.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                        listEl.scrollBy({ top: 120, behavior: 'smooth' });
+                    }
+                });
+            }, 4000);
+        }
+
+        function stopTvAutoScroll() {
+            if (tvScrollInterval) {
+                clearInterval(tvScrollInterval);
+                tvScrollInterval = null;
+            }
+        }
+
+        updateTvModeUI();
+        tvKioskModeBtn.addEventListener('click', () => {
+            isTvMode = !isTvMode;
+            localStorage.setItem('tvKioskMode', isTvMode);
+            updateTvModeUI();
+        });
 
         let currentLang = localStorage.getItem('appLang') || 'en';
         function applyTranslations() {
@@ -1549,7 +1684,7 @@
             if (loadedCards.length === 0) {
                 return window.showToast("No loaded vehicles found to clear.", "info");
             }
-            if (!confirm(`Are you sure you want to clear all ${loadedCards.length} completed/loaded vehicles from the dashboard?`)) return;
+            if (!confirm(`Are you sure you want to clear all ${loadedCards.length} completed/loaded vehicles from the database?`)) return;
 
             try {
                 const qLoaded = query(queueRef);
@@ -1835,7 +1970,7 @@
             return `<div class="vehicle-no-plate"><span class="v-digits">${escapeHTML(clean)}</span></div>`;
         }
 
-        onSnapshot(q, (snapshot) => {
+        onSnapshot(q, async (snapshot) => {
             MATERIALS.forEach(p => { 
                 const list = document.getElementById(`list-${p}`);
                 if (list) list.innerHTML = ''; 
@@ -1848,19 +1983,40 @@
             const todayStr = new Date().toLocaleDateString('en-GB');
 
             currentVehicleList = [];
+            
+            // Automatic deletion of loaded vehicles only when TV mode is active
+            const batch = writeBatch(db);
+            let hasLoadedToDelete = false;
+
             snapshot.forEach(docSnap => {
-                currentVehicleList.push({ id: docSnap.id, ...docSnap.data() });
+                const vData = docSnap.data();
+                if (vData.status === "Loaded" && isTvMode) {
+                    batch.delete(docSnap.ref);
+                    hasLoadedToDelete = true;
+                    if (vData.dateAdded === todayStr) {
+                        totalLoadedToday++;
+                    }
+                } else {
+                    if (vData.status === "Loaded" && vData.dateAdded === todayStr) {
+                        totalLoadedToday++;
+                    }
+                    currentVehicleList.push({ id: docSnap.id, ...vData });
+                }
             });
+
+            if (hasLoadedToDelete && isTvMode) {
+                try {
+                    await batch.commit();
+                } catch(err) {
+                    console.warn("Auto-deletion batch error:", err);
+                }
+            }
 
             currentVehicleList.sort((a,b) => (a.orderIndex || a.timestamp) - (b.orderIndex || b.timestamp));
 
             currentVehicleList.forEach((data) => {
                 const id = data.id; 
                 const prod = data.product;
-
-                if (data.status === "Loaded" && data.dateAdded === todayStr) {
-                    totalLoadedToday++;
-                }
 
                 // Audio Bell & Voice Announcements
                 if (knownStatuses[id] && knownStatuses[id] !== "Loading" && data.status === "Loading") {
