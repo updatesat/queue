@@ -678,6 +678,28 @@
         /* TV Kiosk Mode Toggle Button: Admin Only */
         #tvKioskModeBtn { display: none !important; }
         body.admin-mode #tvKioskModeBtn { display: inline-flex !important; }
+
+        /* Floating Exit TV Mode Button */
+        #floatingExitTvBtn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999999;
+            background: var(--danger);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 99px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            border: 2px solid white;
+            animation: fadeIn 0.3s ease;
+        }
+        body.tv-kiosk-mode #floatingExitTvBtn {
+            display: inline-flex !important;
+        }
         
         .print-footer { display: none; }
         .card-watermark { display: none; }
@@ -817,6 +839,8 @@
     </style>
 </head>
 <body>
+
+    <button id="floatingExitTvBtn" onclick="window.toggleTvModeFromFloating()">🖥️ Exit TV Mode</button>
 
     <div id="offlineBanner" class="no-print" role="alert">⚠️ Network disconnected. Reconnecting to live queue...</div>
 
@@ -1124,6 +1148,12 @@
                 stopTvAutoScroll();
             }
         }
+
+        window.toggleTvModeFromFloating = function() {
+            isTvMode = false;
+            localStorage.setItem('tvKioskMode', 'false');
+            updateTvModeUI();
+        };
 
         function startTvAutoScroll() {
             stopTvAutoScroll();
