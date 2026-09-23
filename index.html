@@ -7,10 +7,10 @@
     <title>Live Vehicle Queue Dashboard</title>
     
     <!-- Resource Preconnects -->
-    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-    <link rel="preconnect" href="[https://www.gstatic.com](https://www.gstatic.com)" crossorigin>
-    <link rel="preconnect" href="[https://cdnjs.cloudflare.com](https://cdnjs.cloudflare.com)" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
     <!-- Mobile PWA Support Meta Tags -->
     <link rel="manifest" href="./manifest.json">
@@ -19,7 +19,7 @@
     <meta name="theme-color" content="#4338ca">
 
     <!-- OneSignal SDK Integration -->
-    <script src="[https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js](https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js)" defer></script>
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(async function(OneSignal) {
@@ -32,12 +32,12 @@
     </script>
 
     <!-- Non-blocking Font Loading -->
-    <link rel="preload" as="style" href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap)">
-    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap)" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap)" rel="stylesheet"></noscript>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"></noscript>
 
     <!-- Deferred QR Generator -->
-    <script src="[https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js](https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js)" 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" 
             integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" 
             crossorigin="anonymous" 
             referrerpolicy="no-referrer" defer></script>
@@ -1029,7 +1029,7 @@
     <footer class="print-footer">
         <div class="print-footer-text">
             TO GET LIVE UPDATE OF THE LIST PLS LOGIN:<br>
-            <a href="[https://updatesat.github.io/queue/](https://updatesat.github.io/queue/)" target="_blank" rel="noopener noreferrer">[https://updatesat.github.io/queue/](https://updatesat.github.io/queue/)</a>
+            <a href="https://updatesat.github.io/queue/" target="_blank" rel="noopener noreferrer">https://updatesat.github.io/queue/</a>
         </div>
         <div id="qrcode"></div>
     </footer>
@@ -1037,11 +1037,11 @@
     <datalist id="savedVehiclesList"></datalist>
 
     <script type="module">
-        import { initializeApp } from "[https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js](https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js)";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy, setDoc, getDoc, getDocs, writeBatch } 
-        from "[https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js](https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js)";
+        from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } 
-        from "[https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js](https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js)";
+        from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
         const MATERIALS = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
 
@@ -1550,7 +1550,7 @@
 
         window.addEventListener('load', () => {
             if (typeof QRCode !== 'undefined') {
-                new QRCode(document.getElementById("qrcode"), { text: "[https://updatesat.github.io/queue/](https://updatesat.github.io/queue/)", width: 45, height: 45 });
+                new QRCode(document.getElementById("qrcode"), { text: "https://updatesat.github.io/queue/", width: 45, height: 45 });
             }
         });
 
@@ -1582,7 +1582,7 @@
         async function sendOneSignalPush(title, message) {
             if (notificationsPaused) return;
 
-            const RELAY_URL = "[https://onesignal-proxy.pesimdad.workers.dev](https://onesignal-proxy.pesimdad.workers.dev)";
+            const RELAY_URL = "https://onesignal-proxy.pesimdad.workers.dev";
 
             try {
                 const response = await fetch(RELAY_URL, {
@@ -1638,7 +1638,7 @@
         const queueRef = collection(db, "vehicles");
         const statusRef = doc(db, "system_status", "main"); 
         const savedAnnouncementsRef = collection(db, "saved_announcements");
-        const linkFooter = "\n\n🌐 Live updates: [https://updatesat.github.io/queue/](https://updatesat.github.io/queue/)";
+        const linkFooter = "\n\n🌐 Live updates: https://updatesat.github.io/queue/";
 
         let isMaintenance = false;
         let announcementsList = [];
@@ -2112,7 +2112,7 @@
             const inputText = annInput.value.trim();
             if (!inputText) return window.showToast("Please select an announcement or type one first.", "error");
             let message = `📢 *OFFICIAL ANNOUNCEMENT*\n\n• ${inputText}\n` + linkFooter;
-            window.open(`[https://wa.me/?text=$](https://wa.me/?text=$){encodeURIComponent(message.trim())}`, '_blank', 'noopener,noreferrer');
+            window.open(`https://wa.me/?text=${encodeURIComponent(message.trim())}`, '_blank', 'noopener,noreferrer');
         });
 
         document.getElementById('shareMaintBtn').addEventListener('click', () => {
@@ -2120,7 +2120,7 @@
                 ? "⚠️ *ALERT: CRUSHER UNDER MAINTENANCE* ⚠️\n\nLoading is currently paused. Please expect delays."
                 : "✅ *ALERT: MAINTENANCE COMPLETE* ✅\n\nThe crusher is now operational and loading has resumed normally.";
             message += linkFooter;
-            window.open(`[https://wa.me/?text=$](https://wa.me/?text=$){encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
         });
 
         const q = query(queueRef, orderBy("timestamp", "asc"));
@@ -2291,11 +2291,11 @@
 
                     const upBtn = document.createElement('button');
                     upBtn.className = 'mini-btn'; upBtn.title = "Move Up"; upBtn.setAttribute('aria-label', 'Move Vehicle Up'); upBtn.innerHTML = "▲";
-                    upBtn.onclick = () => moveVehicle(id, 'up', prod);
+                    upBtn.onclick = () => window.moveVehicle(id, 'up', prod);
 
                     const downBtn = document.createElement('button');
                     downBtn.className = 'mini-btn'; downBtn.title = "Move Down"; downBtn.setAttribute('aria-label', 'Move Vehicle Down'); downBtn.innerHTML = "▼";
-                    downBtn.onclick = () => moveVehicle(id, 'down', prod);
+                    downBtn.onclick = () => window.moveVehicle(id, 'down', prod);
 
                     const actionBtn = document.createElement('button');
                     actionBtn.className = 'btn-primary action-btn';
@@ -2303,11 +2303,11 @@
                     
                     if (data.status === "Waiting") {
                         actionBtn.textContent = 'Load';
-                        actionBtn.onclick = () => updateVehicleStatus(id, "Loading", data.vehicleNo);
+                        actionBtn.onclick = () => window.updateVehicleStatus(id, "Loading", data.vehicleNo);
                     } else if (data.status === "Loading") {
                         actionBtn.className = 'btn-success action-btn';
                         actionBtn.textContent = 'Finish';
-                        actionBtn.onclick = () => updateVehicleStatus(id, "Loaded", data.vehicleNo);
+                        actionBtn.onclick = () => window.updateVehicleStatus(id, "Loaded", data.vehicleNo);
                     } else {
                         actionBtn.className = 'btn-secondary action-btn';
                         actionBtn.textContent = 'Done';
@@ -2315,19 +2315,19 @@
                     
                     const notifyBtn = document.createElement('button');
                     notifyBtn.className = 'mini-btn'; notifyBtn.title = "Send WhatsApp Bay Pass"; notifyBtn.setAttribute('aria-label', 'Notify Driver'); notifyBtn.innerHTML = "💬";
-                    notifyBtn.onclick = () => notifyOwnerBayPass(data.vehicleNo, prod, queuePosition, data.driverPhone);
+                    notifyBtn.onclick = () => window.notifyOwnerBayPass(data.vehicleNo, prod, queuePosition, data.driverPhone);
 
                     const noteBtn = document.createElement('button');
                     noteBtn.className = 'mini-btn'; noteBtn.title = "Add Note"; noteBtn.setAttribute('aria-label', 'Add Note'); noteBtn.innerHTML = "✏️";
-                    noteBtn.onclick = () => editNarration(id, data.narration || "");
+                    noteBtn.onclick = () => window.editNarration(id, data.narration || "");
 
                     const editBtn = document.createElement('button');
                     editBtn.className = 'mini-btn'; editBtn.title = "Edit Vehicle"; editBtn.setAttribute('aria-label', 'Edit Vehicle'); editBtn.innerHTML = "⚙️";
-                    editBtn.onclick = () => editVehicle(id, data.vehicleNo);
+                    editBtn.onclick = () => window.editVehicle(id, data.vehicleNo);
 
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'mini-btn'; deleteBtn.title = "Delete"; deleteBtn.setAttribute('aria-label', 'Delete Vehicle'); deleteBtn.innerHTML = "🗑️";
-                    deleteBtn.onclick = () => deleteVehicle(id);
+                    deleteBtn.onclick = () => window.deleteVehicle(id);
 
                     btnGroup.appendChild(upBtn);
                     btnGroup.appendChild(downBtn);
@@ -2407,7 +2407,7 @@
                           `• *Instruction:* Please keep truck cabin attended. When called, report to the ${product} weighbridge immediately within 5 mins.\n` +
                           linkFooter;
 
-            const target = phone ? `[https://wa.me/91$](https://wa.me/91$){phone}?text=${encodeURIComponent(message)}` : `[https://wa.me/?text=$](https://wa.me/?text=$){encodeURIComponent(message)}`;
+            const target = phone ? `https://wa.me/91${phone}?text=${encodeURIComponent(message)}` : `https://wa.me/?text=${encodeURIComponent(message)}`;
             window.open(target, '_blank', 'noopener,noreferrer');
         };
 
@@ -2416,7 +2416,7 @@
             const inStock = productStock[prod] !== false;
             let message = inStock ? `✅ *STOCK UPDATE:*\n\n${prod} is now *AVAILABLE* for loading.` : `🔴 *STOCK ALERT:*\n\n${prod} is currently *OUT OF STOCK*.`;
             message += linkFooter;
-            window.open(`[https://wa.me/?text=$](https://wa.me/?text=$){encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
         });
 
         document.getElementById('shareStatusBtn').addEventListener('click', () => {
@@ -2480,7 +2480,7 @@
             }
 
             message += linkFooter;
-            window.open(`[https://wa.me/?text=$](https://wa.me/?text=$){encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
         });
     </script>
 </body>
