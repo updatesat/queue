@@ -512,7 +512,7 @@
         /* Mobile View: 2 Columns Side-by-Side */
         @media (max-width: 768px) {
             .product-grid { 
-                grid-template-columns: repeat(2, minmax(0, 1fr)); 
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important; 
                 gap: 0.4rem; 
             }
             .product-card h2 {
@@ -901,16 +901,16 @@
     </header>
 
     <main class="main-content">
-        <!-- Sticky Quick Filter Chips -->
+        <!-- Sticky Multi-Select Filter Chips -->
         <div class="filter-chips-container no-print" id="materialFilterBar">
-            <button class="filter-chip active" onclick="window.filterMaterialBay('ALL')">All Bays</button>
-            <button class="filter-chip" onclick="window.filterMaterialBay('40MM')">40MM</button>
-            <button class="filter-chip" onclick="window.filterMaterialBay('25MM')">25MM</button>
-            <button class="filter-chip" onclick="window.filterMaterialBay('20MM')">20MM</button>
-            <button class="filter-chip" onclick="window.filterMaterialBay('12MM')">12MM</button>
-            <button class="filter-chip" onclick="window.filterMaterialBay('6MM')">6MM</button>
-            <button class="filter-chip" onclick="window.filterMaterialBay('DUST')">DUST</button>
-            <button class="filter-chip" onclick="window.filterMaterialBay('MSAND')">MSAND</button>
+            <button class="filter-chip active" id="chip-ALL" onclick="window.toggleMaterialBay('ALL')">All Bays</button>
+            <button class="filter-chip" id="chip-40MM" onclick="window.toggleMaterialBay('40MM')">40MM</button>
+            <button class="filter-chip" id="chip-25MM" onclick="window.toggleMaterialBay('25MM')">25MM</button>
+            <button class="filter-chip" id="chip-20MM" onclick="window.toggleMaterialBay('20MM')">20MM</button>
+            <button class="filter-chip" id="chip-12MM" onclick="window.toggleMaterialBay('12MM')">12MM</button>
+            <button class="filter-chip" id="chip-6MM" onclick="window.toggleMaterialBay('6MM')">6MM</button>
+            <button class="filter-chip" id="chip-DUST" onclick="window.toggleMaterialBay('DUST')">DUST</button>
+            <button class="filter-chip" id="chip-MSAND" onclick="window.toggleMaterialBay('MSAND')">MSAND</button>
         </div>
 
         <section id="spotlightBanner" class="no-print" aria-label="Tracked Vehicle">
@@ -1057,7 +1057,10 @@
                 <h2>
                     <div style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative;">
                         ${m}
-                        <button class="mini-btn admin-only-inline" onclick="window.toggleQuickAdd('${m}')" style="position: absolute; right: -5px;" title="Quick Add" aria-label="Quick add truck to ${m}">➕</button>
+                        <div style="position: absolute; right: -5px; display: flex; gap: 2px;">
+                            <button class="mini-btn admin-only-inline" onclick="window.toggleBulkAdd('${m}')" title="Bulk Add Vehicles" aria-label="Bulk add trucks to ${m}">📋</button>
+                            <button class="mini-btn admin-only-inline" onclick="window.toggleQuickAdd('${m}')" title="Quick Add Single" aria-label="Quick add truck to ${m}">➕</button>
+                        </div>
                     </div>
                     <span id="badge-${m}" class="stock-badge stock-in" data-i18n="available">Available</span>
                     <span id="total-wait-${m}" class="total-wait-badge">0 trucks (0m delay)</span>
@@ -1067,6 +1070,13 @@
                     <div id="quick-add-${m}" class="quick-add-panel">
                         <input type="text" id="quick-input-${m}" list="savedVehiclesList" placeholder="No. (KL-26)" oninput="this.value = window.formatVehicleNumber(this.value)" aria-label="Quick vehicle number for ${m}">
                         <button class="btn-primary action-btn" onclick="window.quickAddVehicle('${m}')">Add</button>
+                    </div>
+                    <div id="bulk-add-${m}" class="quick-add-panel" style="flex-direction: column; gap: 4px;">
+                        <textarea id="bulk-input-${m}" rows="3" style="width: 100%; font-size: 0.75rem; padding: 4px; resize: vertical;" placeholder="Paste numbers (e.g. 1670, 2450, KL-07-AB-1234)"></textarea>
+                        <div style="display: flex; gap: 4px; width: 100%;">
+                            <button class="btn-primary action-btn" style="flex: 1;" onclick="window.bulkAddVehicles('${m}')">⚡ Add All</button>
+                            <button class="btn-secondary mini-btn" onclick="window.toggleBulkAdd('${m}')" title="Cancel">✕</button>
+                        </div>
                     </div>
                 </div>
                 <ul class="vehicle-list" id="list-${m}" data-material="${m}" aria-label="${m} active queue"></ul>
@@ -1202,20 +1212,49 @@
             refreshSpotlightDisplay();
         });
 
-        // Material Bay Quick Filter
-        window.filterMaterialBay = function(mat) {
-            document.querySelectorAll('.filter-chip').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.includes(mat) || (mat === 'ALL' && btn.textContent === 'All Bays'));
+        // Active Multi-Filter Bays State (empty set means ALL)
+        const activeFilteredBays = new Set();
+
+        window.toggleMaterialBay = function(mat) {
+            const allChip = document.getElementById('chip-ALL');
+
+            if (mat === 'ALL') {
+                activeFilteredBays.clear();
+            } else {
+                if (activeFilteredBays.has(mat)) {
+                    activeFilteredBays.delete(mat);
+                } else {
+                    activeFilteredBays.add(mat);
+                }
+            }
+
+            const isAllMode = activeFilteredBays.size === 0 || activeFilteredBays.size === MATERIALS.length;
+            if (isAllMode) activeFilteredBays.clear();
+
+            allChip.classList.toggle('active', isAllMode);
+            MATERIALS.forEach(m => {
+                const chip = document.getElementById(`chip-${m}`);
+                if (chip) {
+                    chip.classList.toggle('active', !isAllMode && activeFilteredBays.has(m));
+                }
             });
+
+            let visibleCount = 0;
             MATERIALS.forEach(m => {
                 const card = document.getElementById(`card-${m}`);
                 if (!card) return;
-                if (mat === 'ALL' || m === mat) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
+
+                const isVisible = isAllMode || activeFilteredBays.has(m);
+                card.style.display = isVisible ? 'flex' : 'none';
+                if (isVisible) visibleCount++;
             });
+
+            const mainGrid = document.getElementById('mainGrid');
+            if (window.innerWidth > 768 && !document.body.classList.contains('tv-kiosk-mode')) {
+                mainGrid.style.gridTemplateColumns = `repeat(${visibleCount || 7}, minmax(0, 1fr))`;
+            } else {
+                mainGrid.style.gridTemplateColumns = '';
+            }
         };
 
         const offlineBanner = document.getElementById('offlineBanner');
@@ -1406,9 +1445,85 @@
         };
 
         window.toggleQuickAdd = (product) => {
+            const bulkDiv = document.getElementById(`bulk-add-${product}`);
+            if (bulkDiv && bulkDiv.classList.contains('active')) bulkDiv.classList.remove('active');
             const div = document.getElementById(`quick-add-${product}`);
             div.classList.toggle('active');
             if(div.classList.contains('active')) document.getElementById(`quick-input-${product}`).focus();
+        };
+
+        window.toggleBulkAdd = (product) => {
+            const quickDiv = document.getElementById(`quick-add-${product}`);
+            if (quickDiv && quickDiv.classList.contains('active')) quickDiv.classList.remove('active');
+            const bulkDiv = document.getElementById(`bulk-add-${product}`);
+            bulkDiv.classList.toggle('active');
+            if (bulkDiv.classList.contains('active')) {
+                document.getElementById(`bulk-input-${product}`).focus();
+            }
+        };
+
+        window.bulkAddVehicles = async (product) => {
+            const textarea = document.getElementById(`bulk-input-${product}`);
+            const rawVal = textarea.value.trim();
+            if (!rawVal) {
+                window.showToast("Please enter at least one vehicle number.", "error");
+                return;
+            }
+
+            const vehicleEntries = rawVal
+                .split(/[\n,;\s]+/)
+                .map(v => v.trim())
+                .filter(v => v.length > 0);
+
+            if (vehicleEntries.length === 0) {
+                window.showToast("No valid vehicle numbers found.", "error");
+                return;
+            }
+
+            if (productStock[product] === false) {
+                const proceed = confirm(`Warning: ${product} is currently OUT OF STOCK. Add all ${vehicleEntries.length} vehicles anyway?`);
+                if (!proceed) return;
+            }
+
+            const batch = writeBatch(db);
+            const now = new Date();
+            const dateString = now.toLocaleDateString('en-GB');
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+            let baseTimestamp = Date.now();
+            let addedCount = 0;
+
+            for (let rawNo of vehicleEntries) {
+                const formattedNo = window.formatVehicleNumber(rawNo.toUpperCase());
+                window.saveVehicleToLocal(formattedNo);
+
+                const newDocRef = doc(collection(db, "vehicles"));
+                const itemTimestamp = baseTimestamp + (addedCount * 10);
+
+                batch.set(newDocRef, {
+                    vehicleNo: formattedNo,
+                    product: product,
+                    narration: "Bulk Added",
+                    driverPhone: "",
+                    dateAdded: dateString,
+                    timeAdded: timeString,
+                    status: "Waiting",
+                    timestamp: itemTimestamp,
+                    orderIndex: itemTimestamp
+                });
+                addedCount++;
+            }
+
+            try {
+                await batch.commit();
+                textarea.value = '';
+                window.toggleBulkAdd(product);
+                window.showToast(`Successfully added ${addedCount} vehicles to ${product}!`, "success");
+                triggerWebNotification("Bulk Queue Added", `${addedCount} vehicles queued in ${product}.`);
+                sendOneSignalPush("Bulk Queue Added", `${addedCount} vehicles queued in ${product}.`);
+            } catch (err) {
+                console.error("Bulk add error:", err);
+                window.showToast("Error executing bulk add: " + err.message, "error");
+            }
         };
 
         window.saveVehicleToLocal = function(vNo) {
@@ -1467,7 +1582,6 @@
         async function sendOneSignalPush(title, message) {
             if (notificationsPaused) return;
 
-            // Update this with your actual deployed Cloudflare Worker URL
             const RELAY_URL = "https://onesignal-proxy.pesimdad.workers.dev";
 
             try {
@@ -1548,7 +1662,6 @@
                 return false;
             }
 
-            // Duplicate active queue check
             const duplicate = currentVehicleList.find(v => v.vehicleNo === vehicleNo && v.status !== 'Loaded');
             if (duplicate) {
                 const proceedDup = confirm(`⚠️ Vehicle ${vehicleNo} is already waiting in bay ${duplicate.product}! Do you still want to queue it for ${product}?`);
@@ -2039,7 +2152,6 @@
 
             currentVehicleList = [];
             
-            // Automatic deletion of loaded vehicles only when TV mode is active
             const batch = writeBatch(db);
             let hasLoadedToDelete = false;
 
@@ -2073,7 +2185,6 @@
                 const id = data.id; 
                 const prod = data.product;
 
-                // Audio Bell & Voice Announcements
                 if (knownStatuses[id] && knownStatuses[id] !== "Loading" && data.status === "Loading") {
                     playQueueBell();
                     speakText(`Vehicle ${data.vehicleNo.replace(/-/g, ' ')}, please report to ${prod} bay for loading`);
@@ -2115,7 +2226,6 @@
 
                     attachDragEvents(li, id, prod);
 
-                    // Position counter badge
                     const posBadge = document.createElement('span');
                     posBadge.className = 'pos-badge no-print';
                     posBadge.textContent = `#${queuePosition}`;
@@ -2132,7 +2242,6 @@
                     const infoDiv = document.createElement('div');
                     infoDiv.className = 'vehicle-info';
 
-                    // Number plate HTML
                     infoDiv.innerHTML = formatLicensePlateHTML(data.vehicleNo);
 
                     const metaSpan = document.createElement('span');
@@ -2152,7 +2261,6 @@
 
                     infoDiv.appendChild(metaSpan);
 
-                    // Driver countdown/wait progress bar
                     if (!isLoaded) {
                         const progressBar = document.createElement('div');
                         progressBar.className = 'queue-progress-bar no-print';
