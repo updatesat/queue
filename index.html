@@ -1463,6 +1463,27 @@
             }
         }
 
+        // SECURE ONE-SIGNAL PUSH VIA CLOUDFLARE WORKER PROXY
+        async function sendOneSignalPush(title, message) {
+            if (notificationsPaused) return;
+
+            // Update this with your actual deployed Cloudflare Worker URL
+            const RELAY_URL = "https://onesignal-proxy.workers.dev";
+
+            try {
+                const response = await fetch(RELAY_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ title, message })
+                });
+
+                const resData = await response.json();
+                console.log("Relay push notification sent successfully:", resData);
+            } catch (err) {
+                console.error("Error sending push via relay proxy:", err);
+            }
+        }
+
         window.addEventListener('load', () => {
             applyTranslations();
             const modal = document.getElementById('notificationModal');
@@ -1559,6 +1580,7 @@
                 });
                 window.showToast(`Added ${vehicleNo} to ${product}`, "success");
                 triggerWebNotification("New Vehicle in Queue", `Vehicle ${vehicleNo} added to ${product}.`);
+                sendOneSignalPush("New Vehicle in Queue", `Vehicle ${vehicleNo} has been added to ${product}.`);
                 return true;
             } catch (error) {
                 window.showToast("Error adding vehicle: " + error.message, "error");
@@ -1934,6 +1956,7 @@
         document.getElementById('maintBtn').addEventListener('click', async () => {
             await setDoc(statusRef, { maintenance: !isMaintenance }, { merge: true });
             triggerWebNotification("Crusher Status Update", isMaintenance ? "Crusher is now operational." : "Crusher is undergoing maintenance.");
+            sendOneSignalPush("Crusher Status Update", isMaintenance ? "Crusher is now operational." : "Crusher is undergoing maintenance.");
         });
 
         document.getElementById('toggleStockBtn').addEventListener('click', async () => {
@@ -1941,6 +1964,7 @@
             const currentStatus = productStock[prod] !== false;
             await setDoc(statusRef, { stock: { [prod]: !currentStatus } }, { merge: true });
             triggerWebNotification("Stock Update", `${prod} is now ${!currentStatus ? 'Available' : 'Out of Stock'}.`);
+            sendOneSignalPush("Stock Update", `${prod} is now ${!currentStatus ? 'Available' : 'Out of Stock'}.`);
         });
 
         document.getElementById('updateAnnouncementBtn').addEventListener('click', async () => {
@@ -1953,6 +1977,7 @@
                 annInput.value = ''; presetSelect.selectedIndex = 0;
                 window.showToast("Published!", "success");
                 triggerWebNotification("Official Announcement", text);
+                sendOneSignalPush("Official Announcement", text);
             } catch (error) { window.showToast("Error publishing: " + error.message, "error"); }
         });
 
@@ -2252,6 +2277,7 @@
         window.updateVehicleStatus = async (id, newStatus, vehicleNo) => {
             await updateDoc(doc(db, "vehicles", id), { status: newStatus });
             triggerWebNotification("Queue Status Update", `Vehicle ${vehicleNo} is now: ${newStatus}`);
+            sendOneSignalPush("Queue Status Update", `Vehicle ${vehicleNo} is now: ${newStatus}`);
         };
 
         document.getElementById('searchInput').addEventListener('input', (e) => {
