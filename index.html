@@ -7,10 +7,10 @@
     <title>Live Vehicle Queue Dashboard</title>
     
     <!-- Resource Preconnects -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+    <link rel="preconnect" href="[https://www.gstatic.com](https://www.gstatic.com)" crossorigin>
+    <link rel="preconnect" href="[https://cdnjs.cloudflare.com](https://cdnjs.cloudflare.com)" crossorigin>
 
     <!-- Mobile PWA Support Meta Tags -->
     <link rel="manifest" href="./manifest.json">
@@ -19,7 +19,7 @@
     <meta name="theme-color" content="#4338ca">
 
     <!-- OneSignal SDK Integration -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script src="[https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js](https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js)" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(async function(OneSignal) {
@@ -32,12 +32,12 @@
     </script>
 
     <!-- Non-blocking Font Loading -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" as="style" href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap)">
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap)" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap)" rel="stylesheet"></noscript>
 
     <!-- Deferred QR Generator -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" 
+    <script src="[https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js](https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js)" 
             integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" 
             crossorigin="anonymous" 
             referrerpolicy="no-referrer" defer></script>
@@ -901,18 +901,6 @@
     </header>
 
     <main class="main-content">
-        <!-- Sticky Multi-Select Filter Chips -->
-        <div class="filter-chips-container no-print" id="materialFilterBar">
-            <button class="filter-chip active" id="chip-ALL" onclick="window.toggleMaterialBay('ALL')">All Bays</button>
-            <button class="filter-chip" id="chip-40MM" onclick="window.toggleMaterialBay('40MM')">40MM</button>
-            <button class="filter-chip" id="chip-25MM" onclick="window.toggleMaterialBay('25MM')">25MM</button>
-            <button class="filter-chip" id="chip-20MM" onclick="window.toggleMaterialBay('20MM')">20MM</button>
-            <button class="filter-chip" id="chip-12MM" onclick="window.toggleMaterialBay('12MM')">12MM</button>
-            <button class="filter-chip" id="chip-6MM" onclick="window.toggleMaterialBay('6MM')">6MM</button>
-            <button class="filter-chip" id="chip-DUST" onclick="window.toggleMaterialBay('DUST')">DUST</button>
-            <button class="filter-chip" id="chip-MSAND" onclick="window.toggleMaterialBay('MSAND')">MSAND</button>
-        </div>
-
         <section id="spotlightBanner" class="no-print" aria-label="Tracked Vehicle">
             <div class="spotlight-info">
                 <span style="font-size: 1.25rem;" aria-hidden="true">⭐</span>
@@ -1022,6 +1010,18 @@
             </div>
         </section>
 
+        <!-- Sticky Multi-Select Filter Chips (Just above queue list) -->
+        <div class="filter-chips-container no-print" id="materialFilterBar">
+            <button class="filter-chip active" id="chip-ALL" onclick="window.toggleMaterialBay('ALL')">All Bays</button>
+            <button class="filter-chip" id="chip-40MM" onclick="window.toggleMaterialBay('40MM')">40MM</button>
+            <button class="filter-chip" id="chip-25MM" onclick="window.toggleMaterialBay('25MM')">25MM</button>
+            <button class="filter-chip" id="chip-20MM" onclick="window.toggleMaterialBay('20MM')">20MM</button>
+            <button class="filter-chip" id="chip-12MM" onclick="window.toggleMaterialBay('12MM')">12MM</button>
+            <button class="filter-chip" id="chip-6MM" onclick="window.toggleMaterialBay('6MM')">6MM</button>
+            <button class="filter-chip" id="chip-DUST" onclick="window.toggleMaterialBay('DUST')">DUST</button>
+            <button class="filter-chip" id="chip-MSAND" onclick="window.toggleMaterialBay('MSAND')">MSAND</button>
+        </div>
+
         <!-- Product Grid -->
         <section class="product-grid" id="mainGrid" aria-label="Material Queue Columns"></section>
     </main>
@@ -1029,7 +1029,7 @@
     <footer class="print-footer">
         <div class="print-footer-text">
             TO GET LIVE UPDATE OF THE LIST PLS LOGIN:<br>
-            <a href="https://updatesat.github.io/queue/" target="_blank" rel="noopener noreferrer">https://updatesat.github.io/queue/</a>
+            <a href="[https://updatesat.github.io/queue/](https://updatesat.github.io/queue/)" target="_blank" rel="noopener noreferrer">[https://updatesat.github.io/queue/](https://updatesat.github.io/queue/)</a>
         </div>
         <div id="qrcode"></div>
     </footer>
@@ -1037,11 +1037,11 @@
     <datalist id="savedVehiclesList"></datalist>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { initializeApp } from "[https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js](https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js)";
         import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy, setDoc, getDoc, getDocs, writeBatch } 
-        from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+        from "[https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js](https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js)";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } 
-        from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+        from "[https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js](https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js)";
 
         const MATERIALS = ['40MM', '25MM', '20MM', '12MM', '6MM', 'DUST', 'MSAND'];
 
@@ -1550,7 +1550,7 @@
 
         window.addEventListener('load', () => {
             if (typeof QRCode !== 'undefined') {
-                new QRCode(document.getElementById("qrcode"), { text: "https://updatesat.github.io/queue/", width: 45, height: 45 });
+                new QRCode(document.getElementById("qrcode"), { text: "[https://updatesat.github.io/queue/](https://updatesat.github.io/queue/)", width: 45, height: 45 });
             }
         });
 
@@ -1582,7 +1582,7 @@
         async function sendOneSignalPush(title, message) {
             if (notificationsPaused) return;
 
-            const RELAY_URL = "https://onesignal-proxy.pesimdad.workers.dev";
+            const RELAY_URL = "[https://onesignal-proxy.pesimdad.workers.dev](https://onesignal-proxy.pesimdad.workers.dev)";
 
             try {
                 const response = await fetch(RELAY_URL, {
@@ -1638,7 +1638,7 @@
         const queueRef = collection(db, "vehicles");
         const statusRef = doc(db, "system_status", "main"); 
         const savedAnnouncementsRef = collection(db, "saved_announcements");
-        const linkFooter = "\n\n🌐 Live updates: https://updatesat.github.io/queue/";
+        const linkFooter = "\n\n🌐 Live updates: [https://updatesat.github.io/queue/](https://updatesat.github.io/queue/)";
 
         let isMaintenance = false;
         let announcementsList = [];
@@ -2112,7 +2112,7 @@
             const inputText = annInput.value.trim();
             if (!inputText) return window.showToast("Please select an announcement or type one first.", "error");
             let message = `📢 *OFFICIAL ANNOUNCEMENT*\n\n• ${inputText}\n` + linkFooter;
-            window.open(`https://wa.me/?text=${encodeURIComponent(message.trim())}`, '_blank', 'noopener,noreferrer');
+            window.open(`[https://wa.me/?text=$](https://wa.me/?text=$){encodeURIComponent(message.trim())}`, '_blank', 'noopener,noreferrer');
         });
 
         document.getElementById('shareMaintBtn').addEventListener('click', () => {
@@ -2120,7 +2120,7 @@
                 ? "⚠️ *ALERT: CRUSHER UNDER MAINTENANCE* ⚠️\n\nLoading is currently paused. Please expect delays."
                 : "✅ *ALERT: MAINTENANCE COMPLETE* ✅\n\nThe crusher is now operational and loading has resumed normally.";
             message += linkFooter;
-            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+            window.open(`[https://wa.me/?text=$](https://wa.me/?text=$){encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
         });
 
         const q = query(queueRef, orderBy("timestamp", "asc"));
@@ -2407,7 +2407,7 @@
                           `• *Instruction:* Please keep truck cabin attended. When called, report to the ${product} weighbridge immediately within 5 mins.\n` +
                           linkFooter;
 
-            const target = phone ? `https://wa.me/91${phone}?text=${encodeURIComponent(message)}` : `https://wa.me/?text=${encodeURIComponent(message)}`;
+            const target = phone ? `[https://wa.me/91$](https://wa.me/91$){phone}?text=${encodeURIComponent(message)}` : `[https://wa.me/?text=$](https://wa.me/?text=$){encodeURIComponent(message)}`;
             window.open(target, '_blank', 'noopener,noreferrer');
         };
 
@@ -2416,7 +2416,7 @@
             const inStock = productStock[prod] !== false;
             let message = inStock ? `✅ *STOCK UPDATE:*\n\n${prod} is now *AVAILABLE* for loading.` : `🔴 *STOCK ALERT:*\n\n${prod} is currently *OUT OF STOCK*.`;
             message += linkFooter;
-            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+            window.open(`[https://wa.me/?text=$](https://wa.me/?text=$){encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
         });
 
         document.getElementById('shareStatusBtn').addEventListener('click', () => {
@@ -2426,6 +2426,12 @@
 
             const headers = ['40M', '25M', '20M', '12M', '6MM', 'DST', 'MSD'];
             const COL_W = 4;
+            const NBSP = '\u00A0';
+
+            const padSticky = (str, len) => {
+                const s = String(str || '').slice(0, len);
+                return s + NBSP.repeat(Math.max(0, len - s.length));
+            };
 
             const queueData = {};
             let maxRows = 0;
@@ -2444,13 +2450,8 @@
                     hasAnyVehicle = true;
                     vehicles.forEach(v => {
                         const fullNo = v.dataset.vehicleno || '';
-                        const status = v.querySelector('.status-text')?.textContent || '';
-                        
                         const cleanDigits = fullNo.replace(/[^0-9]/g, '');
                         let shortNo = cleanDigits.length >= 4 ? cleanDigits.slice(-4) : cleanDigits;
-                        
-                        if (status.includes('Loading') || status.includes('ലോഡിംഗ്')) shortNo = `*${shortNo}`;
-
                         queueData[prod].push(shortNo);
                     });
                 }
@@ -2464,22 +2465,22 @@
                 message += "No vehicles currently in queue.\n";
             } else {
                 message += "```\n";
-                message += headers.map(h => h.padEnd(COL_W, ' ').slice(0, COL_W)).join('|') + "\n";
+                message += headers.map(h => padSticky(h, COL_W)).join('|') + "\n";
                 message += headers.map(() => '-'.repeat(COL_W)).join('+') + "\n";
 
                 for (let i = 0; i < maxRows; i++) {
                     let row = MATERIALS.map(prod => {
                         const val = queueData[prod][i] || '';
-                        return val.padEnd(COL_W, ' ').slice(0, COL_W);
+                        return padSticky(val, COL_W);
                     }).join('|');
                     message += row + "\n";
                 }
                 message += "```\n";
-                message += "*(Legend: `*XXXX` = Loading, `OOS` = Out of Stock)*\n";
+                message += "*(Legend: `OOS` = Out of Stock)*\n";
             }
 
             message += linkFooter;
-            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+            window.open(`[https://wa.me/?text=$](https://wa.me/?text=$){encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
         });
     </script>
 </body>
