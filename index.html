@@ -8,9 +8,9 @@
     
     <!-- Resource Preconnects -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
     <!-- Mobile PWA Support Meta Tags -->
     <link rel="manifest" href="./manifest.json">
@@ -30,9 +30,6 @@
         });
       });
     </script>
-
-    <!-- Client-side OCR Scanner -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
 
     <!-- Non-blocking Font Loading -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
@@ -471,92 +468,6 @@
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15); background-color: var(--card-bg); }
 
         /* ========================================================
-           CAMERA OCR VIEWFINDER MODAL
-        ======================================================== */
-        #ocrModal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 999999;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-        .ocr-container {
-            background: #111827;
-            border: 1px solid #374151;
-            border-radius: 14px;
-            width: 100%;
-            max-width: 440px;
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-        .ocr-header {
-            padding: 0.75rem 1rem;
-            background: #1f2937;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #f3f4f6;
-            font-weight: 700;
-            font-size: 0.95rem;
-        }
-        .camera-viewport {
-            position: relative;
-            width: 100%;
-            height: 280px;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        #cameraVideo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .target-box {
-            position: absolute;
-            width: 80%;
-            height: 70px;
-            border: 2px dashed #22c55e;
-            border-radius: 8px;
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .target-box span {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #86efac;
-            background: rgba(0,0,0,0.6);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-        .ocr-footer {
-            padding: 0.85rem 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            background: #1f2937;
-        }
-        #ocrStatusText {
-            font-size: 0.8rem;
-            color: #9ca3af;
-            text-align: center;
-            min-height: 18px;
-        }
-
-        /* ========================================================
            7 COLUMNS ON DESKTOP, 2 COLUMNS ON MOBILE
         ======================================================== */
         .product-grid { 
@@ -963,29 +874,6 @@
         </div>
     </div>
 
-    <!-- Live OCR Scanner Modal -->
-    <div id="ocrModal" role="dialog" aria-modal="true" aria-label="Camera License Plate Scanner">
-        <div class="ocr-container">
-            <div class="ocr-header">
-                <span>📷 Scan License Plate</span>
-                <button class="mini-btn" onclick="window.closeOcrModal()" style="color:white; font-size:1rem;">✕</button>
-            </div>
-            <div class="camera-viewport">
-                <video id="cameraVideo" playsinline autoplay muted></video>
-                <div class="target-box">
-                    <span>ALIGN PLATE HERE</span>
-                </div>
-            </div>
-            <div class="ocr-footer">
-                <div id="ocrStatusText">Point camera directly at the number plate...</div>
-                <div style="display: flex; gap: 0.5rem;">
-                    <button class="btn-secondary" style="flex:1;" onclick="window.closeOcrModal()">Cancel</button>
-                    <button class="btn-primary" id="captureOcrBtn" style="flex:2;" onclick="window.captureAndScanPlate()">Capture & Read</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <header class="app-header no-print">
@@ -1060,7 +948,6 @@
                     <span data-i18n="add_label">Add Vehicle</span>
                 </span>
                 <input type="text" id="vehicleNo" list="savedVehiclesList" placeholder="Vehicle No. (KL-26-H-1670)" oninput="this.value = formatVehicleNumber(this.value)" aria-label="Vehicle Number">
-                <button type="button" class="btn-secondary" onclick="window.openOcrModal()" title="Scan License Plate with Camera" style="flex: 0 0 auto;">📷 Scan</button>
                 <input type="tel" id="driverPhone" placeholder="Phone (e.g. 9847000000)" maxlength="10" aria-label="Driver Phone Number">
                 <select id="productType" aria-label="Select Material">
                     <option value="" disabled selected>Select Material</option>
@@ -1325,26 +1212,28 @@
             refreshSpotlightDisplay();
         });
 
-        // Active Multi-Filter Bays State (empty set means ALL)
-        const activeFilteredBays = new Set();
+        // Persistent Multi-Filter Bays State
+        let storedFilters = [];
+        try {
+            storedFilters = JSON.parse(localStorage.getItem('savedFilteredBays') || '[]');
+        } catch(e) {
+            storedFilters = [];
+        }
+        const activeFilteredBays = new Set(Array.isArray(storedFilters) ? storedFilters : []);
 
-        window.toggleMaterialBay = function(mat) {
+        function saveFilterStateToLocal() {
+            localStorage.setItem('savedFilteredBays', JSON.stringify([...activeFilteredBays]));
+        }
+
+        function renderBayFilterView() {
             const allChip = document.getElementById('chip-ALL');
-
-            if (mat === 'ALL') {
+            const isAllMode = activeFilteredBays.size === 0 || activeFilteredBays.size === MATERIALS.length;
+            if (isAllMode && activeFilteredBays.size !== 0) {
                 activeFilteredBays.clear();
-            } else {
-                if (activeFilteredBays.has(mat)) {
-                    activeFilteredBays.delete(mat);
-                } else {
-                    activeFilteredBays.add(mat);
-                }
+                saveFilterStateToLocal();
             }
 
-            const isAllMode = activeFilteredBays.size === 0 || activeFilteredBays.size === MATERIALS.length;
-            if (isAllMode) activeFilteredBays.clear();
-
-            allChip.classList.toggle('active', isAllMode);
+            if (allChip) allChip.classList.toggle('active', isAllMode);
             MATERIALS.forEach(m => {
                 const chip = document.getElementById(`chip-${m}`);
                 if (chip) {
@@ -1363,12 +1252,31 @@
             });
 
             const mainGrid = document.getElementById('mainGrid');
-            if (window.innerWidth > 768 && !document.body.classList.contains('tv-kiosk-mode')) {
-                mainGrid.style.gridTemplateColumns = `repeat(${visibleCount || 7}, minmax(0, 1fr))`;
-            } else {
-                mainGrid.style.gridTemplateColumns = '';
+            if (mainGrid) {
+                if (window.innerWidth > 768 && !document.body.classList.contains('tv-kiosk-mode')) {
+                    mainGrid.style.gridTemplateColumns = `repeat(${visibleCount || 7}, minmax(0, 1fr))`;
+                } else {
+                    mainGrid.style.gridTemplateColumns = '';
+                }
             }
+        }
+
+        window.toggleMaterialBay = function(mat) {
+            if (mat === 'ALL') {
+                activeFilteredBays.clear();
+            } else {
+                if (activeFilteredBays.has(mat)) {
+                    activeFilteredBays.delete(mat);
+                } else {
+                    activeFilteredBays.add(mat);
+                }
+            }
+            saveFilterStateToLocal();
+            renderBayFilterView();
         };
+
+        // Initialize saved filter state immediately upon DOM setup
+        renderBayFilterView();
 
         const offlineBanner = document.getElementById('offlineBanner');
         window.addEventListener('online', () => { offlineBanner.style.display = 'none'; });
@@ -1660,113 +1568,6 @@
             });
         };
         window.updateDatalist();
-
-        // CAMERA OCR ENGINE
-        let cameraStream = null;
-
-        window.openOcrModal = async function() {
-            const modal = document.getElementById('ocrModal');
-            const video = document.getElementById('cameraVideo');
-            const status = document.getElementById('ocrStatusText');
-            status.textContent = "Opening camera viewfinder...";
-            modal.style.display = 'flex';
-
-            try {
-                cameraStream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } }
-                });
-                video.srcObject = cameraStream;
-                status.textContent = "Align license plate inside target box, then tap Capture.";
-            } catch (err) {
-                status.textContent = "Camera permission failed or unavailable.";
-                window.showToast("Camera access error: " + err.message, "error");
-            }
-        };
-
-        window.closeOcrModal = function() {
-            const modal = document.getElementById('ocrModal');
-            const video = document.getElementById('cameraVideo');
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-                cameraStream = null;
-            }
-            video.srcObject = null;
-            modal.style.display = 'none';
-        };
-
-        window.captureAndScanPlate = async function() {
-            const video = document.getElementById('cameraVideo');
-            const status = document.getElementById('ocrStatusText');
-            const captureBtn = document.getElementById('captureOcrBtn');
-
-            if (!video.videoWidth) {
-                status.textContent = "Camera stream not ready yet.";
-                return;
-            }
-
-            captureBtn.disabled = true;
-            status.textContent = "Capturing & processing optical text...";
-
-            // Draw to offscreen canvas
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            // Crop target center region for faster OCR & precision
-            const cropW = Math.floor(canvas.width * 0.85);
-            const cropH = Math.floor(canvas.height * 0.35);
-            const cropX = Math.floor((canvas.width - cropW) / 2);
-            const cropY = Math.floor((canvas.height - cropH) / 2);
-
-            const croppedCanvas = document.createElement('canvas');
-            croppedCanvas.width = cropW;
-            croppedCanvas.height = cropH;
-            const cropCtx = croppedCanvas.getContext('2d');
-            cropCtx.drawImage(canvas, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
-
-            try {
-                if (typeof Tesseract === 'undefined') {
-                    throw new Error("OCR library loading. Please verify network connection.");
-                }
-
-                status.textContent = "Analyzing plate characters...";
-                const result = await Tesseract.recognize(croppedCanvas, 'eng', {
-                    tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -'
-                });
-
-                const rawText = result.data.text.toUpperCase().replace(/[^A-Z0-9]/g, ' ');
-                const words = rawText.split(/\s+/).filter(w => w.length >= 3);
-
-                // Attempt matching standard Indian Plate or 4-digit token
-                let detectedPlate = "";
-                for (let w of words) {
-                    if (/^[A-Z]{2}\d{1,2}[A-Z]{1,3}\d{1,4}$/.test(w) || /^\d{4}$/.test(w)) {
-                        detectedPlate = w;
-                        break;
-                    }
-                }
-
-                if (!detectedPlate && words.length > 0) {
-                    detectedPlate = words.join('');
-                }
-
-                if (detectedPlate) {
-                    const formatted = window.formatVehicleNumber(detectedPlate);
-                    document.getElementById('vehicleNo').value = formatted;
-                    window.showToast(`OCR Detected: ${formatted}`, "success");
-                    window.closeOcrModal();
-                } else {
-                    status.textContent = "No legible vehicle number found. Adjust angle and re-try.";
-                }
-            } catch (err) {
-                console.error(err);
-                status.textContent = "OCR failed: " + err.message;
-            } finally {
-                captureBtn.disabled = false;
-            }
-        };
 
         window.addEventListener('load', () => {
             if (typeof QRCode !== 'undefined') {
@@ -2583,6 +2384,7 @@
             });
             previousSnapshotData = currentSnapshotData;
             refreshSpotlightDisplay();
+            renderBayFilterView();
         });
 
         window.editNarration = async (id, currentNarration) => {
