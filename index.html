@@ -261,6 +261,33 @@
         .notification-modal-actions { display: flex; gap: 0.75rem; }
         .notification-modal-actions button { flex: 1; padding: 0.7rem 1rem; font-size: 0.9rem; border-radius: 8px; }
 
+        /* Queue Position History Modal Style for Drivers */
+        #historyModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 999999;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+        .history-modal-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            animation: fadeIn 0.3s ease-out;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
         .app-header {
             background: var(--header-bg);
             backdrop-filter: blur(12px);
@@ -358,33 +385,6 @@
         }
         .spotlight-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .spotlight-badge { background: #4338ca; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; }
-
-        /* Queue History Modal Style for Drivers */
-        #historyModal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 999999;
-            justify-content: center;
-            align-items: center;
-            padding: 1.5rem;
-        }
-        .history-modal-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            max-width: 480px;
-            width: 100%;
-            box-shadow: var(--shadow-lg);
-            animation: fadeIn 0.3s ease-out;
-            max-height: 80vh;
-            display: flex;
-            flex-direction: column;
-        }
 
         .disclaimer-box {
             display: flex;
@@ -885,6 +885,21 @@
         </div>
     </div>
 
+    <!-- PWA Install Prompt Modal -->
+    <div id="installPromptModal" role="dialog" aria-modal="true" aria-labelledby="installModalTitle" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 999999; justify-content: center; align-items: center; padding: 1.5rem;">
+        <div class="notification-modal-card" style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem 2rem; max-width: 400px; width: 100%; text-align: center; box-shadow: var(--shadow-lg);">
+            <div class="notification-icon-box" style="width: 56px; height: 56px; background: rgba(67, 56, 202, 0.1); border: 1px solid rgba(67, 56, 202, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; color: var(--primary);">
+                📱
+            </div>
+            <h2 id="installModalTitle">Install Live Queue App</h2>
+            <p>Install our app on your device for quick access, live tracking, and instant alerts right from your home screen.</p>
+            <div class="notification-modal-actions" style="display: flex; gap: 0.75rem;">
+                <button class="btn-secondary" id="dismissInstallBtn" style="flex: 1; padding: 0.7rem 1rem; border-radius: 8px;">Not Now</button>
+                <button class="btn-primary" id="acceptInstallBtn" style="flex: 1; padding: 0.7rem 1rem; border-radius: 8px;">Install Now</button>
+            </div>
+        </div>
+    </div>
+
     <div id="siteBlockOverlay" role="dialog" aria-modal="true" aria-labelledby="maintTitle">
         <div class="maintenance-card">
             <div class="maintenance-badge" data-i18n="system_notice">System Notice</div>
@@ -1329,11 +1344,10 @@
         function recordBayLoadCompletion(product, durationMinutes) {
             if (!bayLoadHistory[product]) bayLoadHistory[product] = [];
             bayLoadHistory[product].push(durationMinutes);
-            if (bayLoadHistory[product].length > 10) bayLoadHistory[product].shift(); // keep last 10 samples
+            if (bayLoadHistory[product].length > 10) bayLoadHistory[product].shift();
             localStorage.setItem('bayLoadHistory_' + product, JSON.stringify(bayLoadHistory[product]));
         }
 
-        // Load historical throughput samples from local storage if available
         MATERIALS.forEach(prod => {
             try {
                 const savedHistory = JSON.parse(localStorage.getItem('bayLoadHistory_' + prod));
@@ -1523,7 +1537,6 @@
             content.innerHTML = `<p style="text-align:center; padding: 1rem;">Loading timeline events for ${vehicleNo}...</p>`;
             modal.style.display = 'flex';
 
-            // Gather local audit / status transition history for this vehicle
             let historyEvents = [];
             try {
                 const localLogs = JSON.parse(localStorage.getItem('vehHistory_' + vehicleNo) || '[]');
@@ -1715,7 +1728,6 @@
             }
         }
 
-        // SECURE ONE-SIGNAL PUSH VIA CLOUDFLARE WORKER PROXY
         async function sendOneSignalPush(title, message) {
             if (notificationsPaused) return;
 
@@ -1770,6 +1782,44 @@
             });
         });
 
+        // PWA Install Prompt Script Integration
+        let deferredInstallPrompt = null;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+
+            const isDismissed = localStorage.getItem('pwaInstallDismissed') === 'true';
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+            if (!isDismissed && !isStandalone) {
+                setTimeout(() => {
+                    const installModal = document.getElementById('installPromptModal');
+                    if (installModal) installModal.style.display = 'flex';
+                }, 1500);
+            }
+        });
+
+        document.getElementById('acceptInstallBtn')?.addEventListener('click', async () => {
+            const installModal = document.getElementById('installPromptModal');
+            if (installModal) installModal.style.display = 'none';
+
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                const { outcome } = await deferredInstallPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    window.showToast("App installed successfully!", "success");
+                }
+                deferredInstallPrompt = null;
+            }
+        });
+
+        document.getElementById('dismissInstallBtn')?.addEventListener('click', () => {
+            const installModal = document.getElementById('installPromptModal');
+            if (installModal) installModal.style.display = 'none';
+            localStorage.setItem('pwaInstallDismissed', 'true');
+        });
+
         setPersistence(auth, browserLocalPersistence).catch(console.error);
 
         const queueRef = collection(db, "vehicles");
@@ -1792,7 +1842,6 @@
             }
         });
 
-        // Duplicate Vehicle Checking & Addition
         window.processAddVehicle = async function(vehicleNo, product, narration = "", phone = "") {
             if (!vehicleNo || !product) {
                 window.showToast("Enter vehicle number and select product.", "error");
@@ -1893,7 +1942,6 @@
             }
         };
 
-        // Drag & Drop Handlers
         let draggedItemId = null;
         let draggedItemProduct = null;
 
@@ -2283,7 +2331,6 @@
             const lastResetDate = localStorage.getItem('lastQueueResetDate');
 
             if (lastResetDate && lastResetDate !== todayStr) {
-                // A new day has started! Archive previous day's data locally and clean up loaded items
                 let dayArchive = [];
                 snapshotDocs.forEach(docSnap => {
                     const data = docSnap.data();
@@ -2561,7 +2608,6 @@
                 updatePayload.loadingStartedAt = nowTime;
                 logVehicleTimeline(vehicleNo, `Started loading in ${product} bay`);
             } else if (newStatus === "Loaded") {
-                // Fetch vehicle doc to calculate loading duration sample for dynamic wait times
                 const docSnap = await getDoc(doc(db, "vehicles", id));
                 if (docSnap.exists()) {
                     const dData = docSnap.data();
@@ -2590,7 +2636,6 @@
             });
         });
 
-        // Structured WhatsApp Bay Pass Dispatch
         window.notifyOwnerBayPass = (vehicleNo, product, queuePos, phone = "") => {
             let message = `🎫 *CRUSHER PLANT GATE & BAY PASS*\n\n` +
                           `• *Vehicle No:* ${vehicleNo}\n` +
