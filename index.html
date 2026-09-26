@@ -359,6 +359,33 @@
         .spotlight-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .spotlight-badge { background: #4338ca; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; }
 
+        /* Queue History Modal Style for Drivers */
+        #historyModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 999999;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+        .history-modal-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            animation: fadeIn 0.3s ease-out;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
         .disclaimer-box {
             display: flex;
             align-items: flex-start;
@@ -620,7 +647,8 @@
 
         .vehicle-meta { font-size: 0.7rem; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 3px;}
         .status-text { font-weight: 600; padding: 2px 4px; border-radius: 4px; font-size: 0.65rem; text-transform: uppercase; }
-        .eta-badge { font-size: 0.65rem; color: #3b82f6; font-weight: 600; background: rgba(59, 130, 246, 0.1); padding: 1px 6px; border-radius: 4px; }
+        .eta-badge { font-size: 0.65rem; color: #3b82f6; font-weight: 600; background: rgba(59, 130, 246, 0.1); padding: 1px 6px; border-radius: 4px; cursor: pointer; }
+        .eta-badge:hover { text-decoration: underline; background: rgba(59, 130, 246, 0.2); }
         
         /* Loading Progress Bar */
         .queue-progress-bar {
@@ -843,6 +871,19 @@
     <button id="floatingExitTvBtn" onclick="window.toggleTvModeFromFloating()">🖥️ Exit TV Mode</button>
 
     <div id="offlineBanner" class="no-print" role="alert">⚠️ Network disconnected. Reconnecting to live queue...</div>
+
+    <!-- Queue Position History Modal -->
+    <div id="historyModal" role="dialog" aria-modal="true" aria-labelledby="historyModalTitle">
+        <div class="history-modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 id="historyModalTitle" style="margin: 0; font-size: 1.1rem; color: var(--text-main);">📊 Vehicle History & Timeline</h3>
+                <button class="mini-btn" onclick="document.getElementById('historyModal').style.display='none'" style="font-size: 1rem;">✕</button>
+            </div>
+            <div id="historyModalContent" style="overflow-y: auto; flex: 1; font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px;">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
 
     <div id="siteBlockOverlay" role="dialog" aria-modal="true" aria-labelledby="maintTitle">
         <div class="maintenance-card">
@@ -1275,13 +1316,42 @@
             renderBayFilterView();
         };
 
-        // Initialize saved filter state immediately upon DOM setup
         renderBayFilterView();
 
         const offlineBanner = document.getElementById('offlineBanner');
         window.addEventListener('online', () => { offlineBanner.style.display = 'none'; });
         window.addEventListener('offline', () => { offlineBanner.style.display = 'block'; });
         if (!navigator.onLine) offlineBanner.style.display = 'block';
+
+        // FEATURE 1: Dynamic Estimated Wait Time Calculation Engine based on recent throughput
+        const bayLoadHistory = { '40MM': [], '25MM': [], '20MM': [], '12MM': [], '6MM': [], 'DUST': [], 'MSAND': [] };
+        
+        function recordBayLoadCompletion(product, durationMinutes) {
+            if (!bayLoadHistory[product]) bayLoadHistory[product] = [];
+            bayLoadHistory[product].push(durationMinutes);
+            if (bayLoadHistory[product].length > 10) bayLoadHistory[product].shift(); // keep last 10 samples
+            localStorage.setItem('bayLoadHistory_' + product, JSON.stringify(bayLoadHistory[product]));
+        }
+
+        // Load historical throughput samples from local storage if available
+        MATERIALS.forEach(prod => {
+            try {
+                const savedHistory = JSON.parse(localStorage.getItem('bayLoadHistory_' + prod));
+                if (Array.isArray(savedHistory) && savedHistory.length > 0) {
+                    bayLoadHistory[prod] = savedHistory;
+                }
+            } catch(e) {}
+        });
+
+        function getDynamicWaitTimeMinutes(product, queuePosition) {
+            let avgTimePerTruck = MATERIAL_LOAD_TIMES[product] || 15;
+            const history = bayLoadHistory[product];
+            if (history && history.length >= 3) {
+                const sum = history.reduce((a, b) => a + b, 0);
+                avgTimePerTruck = Math.round(sum / history.length);
+            }
+            return queuePosition * avgTimePerTruck;
+        }
 
         function formatWaitDuration(totalMinutes) {
             if (totalMinutes < 10) return "< 10 mins";
@@ -1434,8 +1504,7 @@
                     } else if (status.includes('Loaded') || status.includes('പൂർത്തിയായി')) {
                         textSpan.innerHTML = `<span class="spotlight-badge" style="background:#16a34a;">LOADED COMPLETED</span> Bill ready for exit.`;
                     } else {
-                        const unitMins = MATERIAL_LOAD_TIMES[prod] || 15;
-                        const totalMins = (idx + 1) * unitMins;
+                        const totalMins = getDynamicWaitTimeMinutes(prod, idx + 1);
                         textSpan.innerHTML = `Position <strong>#${idx + 1}</strong> in <strong>${escapeHTML(prod)}</strong> queue (${formatWaitDuration(totalMins)} ETA)`;
                     }
                     break;
@@ -1445,6 +1514,51 @@
                 textSpan.textContent = "Vehicle not found in active queues or was cleared.";
             }
             banner.style.display = 'flex';
+        }
+
+        // FEATURE 2: Queue Position History / Timeline Modal for Drivers
+        window.openVehicleHistoryModal = function(vehicleNo) {
+            const modal = document.getElementById('historyModal');
+            const content = document.getElementById('historyModalContent');
+            content.innerHTML = `<p style="text-align:center; padding: 1rem;">Loading timeline events for ${vehicleNo}...</p>`;
+            modal.style.display = 'flex';
+
+            // Gather local audit / status transition history for this vehicle
+            let historyEvents = [];
+            try {
+                const localLogs = JSON.parse(localStorage.getItem('vehHistory_' + vehicleNo) || '[]');
+                historyEvents = localLogs;
+            } catch(e) {}
+
+            if (historyEvents.length === 0) {
+                content.innerHTML = `
+                    <div style="text-align: center; padding: 1.5rem;">
+                        <p style="font-weight: 600; color: var(--text-main);">Vehicle: ${escapeHTML(vehicleNo)}</p>
+                        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Timeline logs start recording from active session state changes.</p>
+                    </div>`;
+            } else {
+                let html = `<p style="font-weight:600; color:var(--text-main); margin-bottom: 0.5rem;">Timeline for: ${escapeHTML(vehicleNo)}</p>`;
+                historyEvents.forEach(ev => {
+                    html += `
+                        <div style="background:var(--sub-card-bg); padding: 8px 12px; border-radius: 6px; border-left: 3px solid var(--primary); display:flex; justify-content:space-between; align-items:center;">
+                            <span>${escapeHTML(ev.desc)}</span>
+                            <span style="font-size:0.75rem; color:var(--text-muted);">${escapeHTML(ev.time)}</span>
+                        </div>`;
+                });
+                content.innerHTML = html;
+            }
+        };
+
+        function logVehicleTimeline(vehicleNo, desc) {
+            if (!vehicleNo) return;
+            try {
+                const key = 'vehHistory_' + vehicleNo;
+                let logs = JSON.parse(localStorage.getItem(key) || '[]');
+                const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                logs.push({ desc, time: timeStr });
+                if (logs.length > 15) logs.shift();
+                localStorage.setItem(key, JSON.stringify(logs));
+            } catch(e) {}
         }
 
         window.formatVehicleNumber = function(val) {
@@ -1529,8 +1643,10 @@
                     timeAdded: timeString,
                     status: "Waiting",
                     timestamp: itemTimestamp,
-                    orderIndex: itemTimestamp
+                    orderIndex: itemTimestamp,
+                    loadingStartedAt: null
                 });
+                logVehicleTimeline(formattedNo, `Added to ${product} queue`);
                 addedCount++;
             }
 
@@ -1710,8 +1826,10 @@
                     timeAdded: timeString, 
                     status: "Waiting", 
                     timestamp: nowTimestamp,
-                    orderIndex: nowTimestamp
+                    orderIndex: nowTimestamp,
+                    loadingStartedAt: null
                 });
+                logVehicleTimeline(vehicleNo, `Added to ${product} queue`);
                 window.showToast(`Added ${vehicleNo} to ${product}`, "success");
                 triggerWebNotification("New Vehicle in Queue", `Vehicle ${vehicleNo} added to ${product}.`);
                 sendOneSignalPush("New Vehicle in Queue", `Vehicle ${vehicleNo} has been added to ${product}.`);
@@ -1768,6 +1886,7 @@
             try {
                 await updateDoc(doc(db, "vehicles", currentDoc.id), { orderIndex: targetOrder });
                 await updateDoc(doc(db, "vehicles", targetDoc.id), { orderIndex: tempOrder });
+                logVehicleTimeline(currentDoc.vehicleNo, `Repositioned in ${product} queue`);
                 window.showToast("Queue priority updated.", "success");
             } catch (e) {
                 window.showToast("Error moving vehicle: " + e.message, "error");
@@ -1794,7 +1913,6 @@
             });
         }
 
-        // Attach drop targets to lists
         MATERIALS.forEach(prod => {
             const listEl = document.getElementById(`list-${prod}`);
             if (!listEl) return;
@@ -1827,6 +1945,7 @@
 
                 try {
                     await updateDoc(doc(db, "vehicles", draggedItemId), { orderIndex: newIndex });
+                    logVehicleTimeline(draggedDoc.vehicleNo, `Dragged to new position in ${prod}`);
                     window.showToast("Truck repositioned successfully!", "success");
                 } catch(err) {
                     console.error(err);
@@ -2147,7 +2266,6 @@
         const q = query(queueRef, orderBy("timestamp", "asc"));
         const emptyStateHTML = `<div class="empty-msg"><svg fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M14 9V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM4 6h8a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"/><path d="M1.5 14.5a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-13z"/></svg>No vehicles currently waiting</div>`;
 
-        // Splits plate for high-contrast highlight
         function formatLicensePlateHTML(vNo) {
             const clean = vNo || '';
             const last4Match = clean.match(/(\d{3,4})$/);
@@ -2159,7 +2277,29 @@
             return `<div class="vehicle-no-plate"><span class="v-digits">${escapeHTML(clean)}</span></div>`;
         }
 
+        // FEATURE 4: Automated Daily Reset / Archiving Engine
+        function performDailyResetCheck(snapshotDocs) {
+            const todayStr = new Date().toLocaleDateString('en-GB');
+            const lastResetDate = localStorage.getItem('lastQueueResetDate');
+
+            if (lastResetDate && lastResetDate !== todayStr) {
+                // A new day has started! Archive previous day's data locally and clean up loaded items
+                let dayArchive = [];
+                snapshotDocs.forEach(docSnap => {
+                    const data = docSnap.data();
+                    dayArchive.push({ ...data, id: docSnap.id });
+                });
+                localStorage.setItem('archive_' + lastResetDate, JSON.stringify(dayArchive));
+                localStorage.setItem('lastQueueResetDate', todayStr);
+                window.showToast("Daily system archive generated for " + lastResetDate, "info");
+            } else if (!lastResetDate) {
+                localStorage.setItem('lastQueueResetDate', todayStr);
+            }
+        }
+
         onSnapshot(q, async (snapshot) => {
+            performDailyResetCheck(snapshot);
+
             MATERIALS.forEach(p => { 
                 const list = document.getElementById(`list-${p}`);
                 if (list) list.innerHTML = ''; 
@@ -2226,10 +2366,10 @@
                     const queuePosition = productCounts[prod];
                     let etaText = "";
                     let progressPercent = 0;
-                    const unitRate = MATERIAL_LOAD_TIMES[prod] || 15;
 
                     if (data.status === "Waiting") {
-                        etaText = formatWaitDuration(queuePosition * unitRate);
+                        const totalMins = getDynamicWaitTimeMinutes(prod, queuePosition);
+                        etaText = formatWaitDuration(totalMins);
                         progressPercent = Math.max(10, Math.min(90, 100 - (queuePosition * 15)));
                     } else if (data.status === "Loading") {
                         etaText = `Loading now`;
@@ -2277,7 +2417,9 @@
 
                     const etaSpan = document.createElement('span');
                     etaSpan.className = 'eta-badge';
+                    etaSpan.title = 'Click to view vehicle history/timeline';
                     etaSpan.textContent = `⏱️ ${etaText}`;
+                    etaSpan.onclick = () => window.openVehicleHistoryModal(data.vehicleNo);
                     metaSpan.appendChild(etaSpan);
 
                     infoDiv.appendChild(metaSpan);
@@ -2324,11 +2466,11 @@
                     
                     if (data.status === "Waiting") {
                         actionBtn.textContent = 'Load';
-                        actionBtn.onclick = () => window.updateVehicleStatus(id, "Loading", data.vehicleNo);
+                        actionBtn.onclick = () => window.updateVehicleStatus(id, "Loading", data.vehicleNo, prod);
                     } else if (data.status === "Loading") {
                         actionBtn.className = 'btn-success action-btn';
                         actionBtn.textContent = 'Finish';
-                        actionBtn.onclick = () => window.updateVehicleStatus(id, "Loaded", data.vehicleNo);
+                        actionBtn.onclick = () => window.updateVehicleStatus(id, "Loaded", data.vehicleNo, prod);
                     } else {
                         actionBtn.className = 'btn-secondary action-btn';
                         actionBtn.textContent = 'Done';
@@ -2340,7 +2482,7 @@
 
                     const noteBtn = document.createElement('button');
                     noteBtn.className = 'mini-btn'; noteBtn.title = "Add Note"; noteBtn.setAttribute('aria-label', 'Add Note'); noteBtn.innerHTML = "✏️";
-                    noteBtn.onclick = () => editNarration(id, data.narration || "");
+                    noteBtn.onclick = () => editNarration(id, data.narration || "", data.vehicleNo);
 
                     const editBtn = document.createElement('button');
                     editBtn.className = 'mini-btn'; editBtn.title = "Edit Vehicle"; editBtn.setAttribute('aria-label', 'Edit Vehicle'); editBtn.innerHTML = "⚙️";
@@ -2348,7 +2490,7 @@
 
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'mini-btn'; deleteBtn.title = "Delete"; deleteBtn.setAttribute('aria-label', 'Delete Vehicle'); deleteBtn.innerHTML = "🗑️";
-                    deleteBtn.onclick = () => deleteVehicle(id);
+                    deleteBtn.onclick = () => deleteVehicle(id, data.vehicleNo);
 
                     btnGroup.appendChild(upBtn);
                     btnGroup.appendChild(downBtn);
@@ -2376,7 +2518,7 @@
                 if (updateLabel) updateLabel.innerText = queueLastUpdated[p] ? `Updated: ${queueLastUpdated[p]}` : `Updated: Never`;
 
                 const waitingTrucks = (currentSnapshotData[p] || []).filter(v => v.status === 'Waiting').length;
-                const totalMins = waitingTrucks * (MATERIAL_LOAD_TIMES[p] || 15);
+                const totalMins = getDynamicWaitTimeMinutes(p, waitingTrucks);
                 const waitBadge = document.getElementById(`total-wait-${p}`);
                 if (waitBadge) {
                     waitBadge.textContent = `${waitingTrucks} waiting (${formatWaitDuration(totalMins)})`;
@@ -2387,9 +2529,12 @@
             renderBayFilterView();
         });
 
-        window.editNarration = async (id, currentNarration) => {
+        window.editNarration = async (id, currentNarration, vehicleNo) => {
             const newNarration = prompt("Enter or update narration/remarks:", currentNarration);
-            if (newNarration !== null) await updateDoc(doc(db, "vehicles", id), { narration: newNarration.trim() });
+            if (newNarration !== null) {
+                await updateDoc(doc(db, "vehicles", id), { narration: newNarration.trim() });
+                logVehicleTimeline(vehicleNo, `Remarks updated: ${newNarration.trim()}`);
+            }
         };
 
         window.editVehicle = async (id, currentNo) => {
@@ -2397,15 +2542,40 @@
             if (newNo && newNo.trim() !== "") {
                 const formatted = window.formatVehicleNumber(newNo.trim().toUpperCase());
                 await updateDoc(doc(db, "vehicles", id), { vehicleNo: formatted });
+                logVehicleTimeline(formatted, `Vehicle plate corrected from ${currentNo}`);
             }
         };
 
-        window.deleteVehicle = async (id) => {
-            if (confirm("Remove this vehicle from the database?")) await deleteDoc(doc(db, "vehicles", id));
+        window.deleteVehicle = async (id, vehicleNo) => {
+            if (confirm("Remove this vehicle from the database?")) {
+                await deleteDoc(doc(db, "vehicles", id));
+                logVehicleTimeline(vehicleNo, `Removed from queue database`);
+            }
         };
 
-        window.updateVehicleStatus = async (id, newStatus, vehicleNo) => {
-            await updateDoc(doc(db, "vehicles", id), { status: newStatus });
+        window.updateVehicleStatus = async (id, newStatus, vehicleNo, product) => {
+            const nowTime = Date.now();
+            let updatePayload = { status: newStatus };
+
+            if (newStatus === "Loading") {
+                updatePayload.loadingStartedAt = nowTime;
+                logVehicleTimeline(vehicleNo, `Started loading in ${product} bay`);
+            } else if (newStatus === "Loaded") {
+                // Fetch vehicle doc to calculate loading duration sample for dynamic wait times
+                const docSnap = await getDoc(doc(db, "vehicles", id));
+                if (docSnap.exists()) {
+                    const dData = docSnap.data();
+                    if (dData.loadingStartedAt) {
+                        const durationMins = Math.round((nowTime - dData.loadingStartedAt) / 60000);
+                        if (durationMins > 0 && durationMins < 300) {
+                            recordBayLoadCompletion(product, durationMins);
+                        }
+                    }
+                }
+                logVehicleTimeline(vehicleNo, `Loading completed in ${product} bay`);
+            }
+
+            await updateDoc(doc(db, "vehicles", id), updatePayload);
             triggerWebNotification("Queue Status Update", `Vehicle ${vehicleNo} is now: ${newStatus}`);
             sendOneSignalPush("Queue Status Update", `Vehicle ${vehicleNo} is now: ${newStatus}`);
         };
@@ -2504,6 +2674,17 @@
             message += linkFooter;
             window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
         });
+
+        // FEATURE 3: Offline Fallback Caching (PWA Service Worker Registration & Local Snapshot Fallback)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(reg => {
+                    console.log('ServiceWorker registration successful with scope: ', reg.scope);
+                }).catch(err => {
+                    console.warn('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
     </script>
 </body>
 </html>
