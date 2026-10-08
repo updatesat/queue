@@ -2158,7 +2158,19 @@
                 document.getElementById('maintenanceBanner').style.display = isMaintenance ? 'block' : 'none';
                 
                 const annContainer = document.getElementById('announcementContainer');
-                announcementsList = data.announcements || [];
+                
+                // Normalise data: handles array of objects, array of strings, or legacy single string
+                let rawList = data.announcements;
+                if (!rawList && data.announcement) {
+                    rawList = [data.announcement];
+                }
+
+                announcementsList = (rawList || []).map((item, idx) => {
+                    if (typeof item === 'string') {
+                        return { id: String(idx), text: item };
+                    }
+                    return item;
+                }).filter(item => item && item.text && item.text.trim() !== "");
                 
                 annContainer.innerHTML = '';
                 if (announcementsList.length > 0) {
