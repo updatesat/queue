@@ -2119,7 +2119,7 @@
         window.editActiveAnnouncement = async (id, currentText) => {
             const newText = prompt("Edit the published announcement:", currentText);
             if (newText !== null && newText.trim() !== '') {
-                const updatedList = announcementsList.map(item => (item.id === id || item === currentText) ? { id: item.id || id, text: newText.trim() } : item);
+                const updatedList = announcementsList.map(item => item.id === id ? { id: item.id, text: newText.trim() } : item);
                 try { 
                     await setDoc(statusRef, { announcements: updatedList }, { merge: true }); 
                     window.showToast("Announcement updated!", "success");
@@ -2158,32 +2158,16 @@
                 document.getElementById('maintenanceBanner').style.display = isMaintenance ? 'block' : 'none';
                 
                 const annContainer = document.getElementById('announcementContainer');
-                
-                // Robust announcements list resolution (supports array, legacy string formats, or data.announcement)
-                let rawAnnouncements = data.announcements;
-                if (typeof rawAnnouncements === 'string') {
-                    rawAnnouncements = rawAnnouncements ? [{ id: 'legacy_str', text: rawAnnouncements }] : [];
-                }
-                if (!Array.isArray(rawAnnouncements)) {
-                    rawAnnouncements = [];
-                }
-                if (rawAnnouncements.length === 0 && data.announcement) {
-                    rawAnnouncements = [{ id: 'legacy_single', text: data.announcement }];
-                }
-                announcementsList = rawAnnouncements;
+                announcementsList = data.announcements || [];
                 
                 annContainer.innerHTML = '';
                 if (announcementsList.length > 0) {
                     announcementsList.forEach(item => {
-                        const textVal = typeof item === 'object' && item !== null ? (item.text || '') : String(item || '');
-                        const itemId = typeof item === 'object' && item !== null ? (item.id || Math.random().toString()) : 'legacy_' + Math.random();
-                        if (!textVal.trim()) return;
-
                         const itemDiv = document.createElement('div');
                         itemDiv.className = 'announcement-item';
                         const textSpan = document.createElement('div');
                         textSpan.className = 'announcement-text-content';
-                        textSpan.textContent = "📢 " + textVal;
+                        textSpan.textContent = "📢 " + item.text;
                         itemDiv.appendChild(textSpan);
 
                         if (document.body.classList.contains('admin-mode')) {
@@ -2192,11 +2176,11 @@
                             const editBtn = document.createElement('button');
                             editBtn.className = 'remove-ann-btn no-print'; editBtn.innerHTML = '✏️';
                             editBtn.title = "Edit Announcement";
-                            editBtn.onclick = () => window.editActiveAnnouncement(itemId, textVal);
+                            editBtn.onclick = () => window.editActiveAnnouncement(item.id, item.text);
                             const removeBtn = document.createElement('button');
                             removeBtn.className = 'remove-ann-btn no-print'; removeBtn.innerHTML = '✕';
                             removeBtn.title = "Delete Announcement";
-                            removeBtn.onclick = () => window.removeAnnouncement(itemId);
+                            removeBtn.onclick = () => window.removeAnnouncement(item.id);
                             actDiv.appendChild(editBtn); actDiv.appendChild(removeBtn);
                             itemDiv.appendChild(actDiv);
                         }
@@ -2299,7 +2283,7 @@
         });
 
         window.removeAnnouncement = async (id) => {
-            const updatedList = announcementsList.filter(item => (item.id !== id && item !== id));
+            const updatedList = announcementsList.filter(item => item.id !== id);
             try { await setDoc(statusRef, { announcements: updatedList }, { merge: true }); } catch (error) {}
         };
 
@@ -2322,7 +2306,7 @@
         document.getElementById('shareMaintBtn').addEventListener('click', () => {
             let message = isMaintenance 
                 ? "⚠️ *ALERT: CRUSHER UNDER MAINTENANCE* ⚠️\n\nLoading is currently paused. Please expect delays."
-                : "✅ *ALERT: MAINTENANCE COMPLETE* ✅\n\nThe crusher is now operational and loading has resumed normal operations.";
+                : "✅ *ALERT: MAINTENANCE COMPLETE* ✅\n\nThe crusher is now operational and loading has resumed normally.";
             message += linkFooter;
             window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
         });
@@ -2624,4 +2608,128 @@
                 updatePayload.loadingStartedAt = nowTime;
                 logVehicleTimeline(vehicleNo, `Started loading in ${product} bay`);
             } else if (newStatus === "Loaded") {
-                const docSnap = await getDoc(doc(db, "vehicles", id
+                const docSnap = await getDoc(doc(db, "vehicles", id));
+                if (docSnap.exists()) {
+                    const dData = docSnap.data();
+                    if (dData.loadingStartedAt) {
+                        const durationMins = Math.round((nowTime - dData.loadingStartedAt) / 60000);
+                        if (durationMins > 0 && durationMins < 300) {
+                            recordBayLoadCompletion(product, durationMins);
+                        }
+                    }
+                }
+                logVehicleTimeline(vehicleNo, `Loading completed in ${product} bay`);
+            }
+
+            await updateDoc(doc(db, "vehicles", id), updatePayload);
+            triggerWebNotification("Queue Status Update", `Vehicle ${vehicleNo} is now: ${newStatus}`);
+            sendOneSignalPush("Queue Status Update", `Vehicle ${vehicleNo} is now: ${newStatus}`);
+        };
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const input = e.target.value.trim();
+            document.querySelectorAll('.vehicle-item').forEach(item => {
+                const plateElem = item.querySelector('.v-digits');
+                if (!plateElem) return;
+                const digits = plateElem.textContent.trim();
+                item.style.display = digits.includes(input) ? "flex" : "none";
+            });
+        });
+
+        window.notifyOwnerBayPass = (vehicleNo, product, queuePos, phone = "") => {
+            let message = `🎫 *CRUSHER PLANT GATE & BAY PASS*\n\n` +
+                          `• *Vehicle No:* ${vehicleNo}\n` +
+                          `• *Material Bay:* ${product}\n` +
+                          `• *Queue Pos:* #${queuePos}\n` +
+                          `• *Instruction:* Please keep truck cabin attended. When called, report to the ${product} weighbridge immediately within 5 mins.\n` +
+                          linkFooter;
+
+            const target = phone ? `https://wa.me/91${phone}?text=${encodeURIComponent(message)}` : `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(target, '_blank', 'noopener,noreferrer');
+        };
+
+        document.getElementById('shareStockBtn').addEventListener('click', () => {
+            const prod = document.getElementById('stockProductSelect').value;
+            const inStock = productStock[prod] !== false;
+            let message = inStock ? `✅ *STOCK UPDATE:*\n\n${prod} is now *AVAILABLE* for loading.` : `🔴 *STOCK ALERT:*\n\n${prod} is currently *OUT OF STOCK*.`;
+            message += linkFooter;
+            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+        });
+
+        document.getElementById('shareStatusBtn').addEventListener('click', () => {
+            let message = "*LIVE CRUSHER QUEUE (ALL MATERIALS)*\n";
+            if (isMaintenance) message += "⚠️ CRUSHER UNDER MAINTENANCE ⚠️\n";
+            message += "\n";
+
+            const headers = ['40M', '25M', '20M', '12M', '6MM', 'DST', 'MSD'];
+            const COL_W = 4;
+            const NBSP = '\u00A0';
+
+            const padSticky = (str, len) => {
+                const s = String(str || '').slice(0, len);
+                return s + NBSP.repeat(Math.max(0, len - s.length));
+            };
+
+            const queueData = {};
+            let maxRows = 0;
+            let hasAnyVehicle = false;
+
+            MATERIALS.forEach(prod => {
+                queueData[prod] = [];
+                const isOutOfStock = productStock[prod] === false;
+                const listElement = document.getElementById(`list-${prod}`);
+                const vehicles = listElement ? listElement.querySelectorAll('.vehicle-item') : [];
+                const hasEmptyMsg = listElement ? listElement.querySelector('.empty-msg') : false;
+
+                if (isOutOfStock) {
+                    queueData[prod].push("OOS");
+                } else if (vehicles.length > 0 && !hasEmptyMsg) {
+                    hasAnyVehicle = true;
+                    vehicles.forEach(v => {
+                        const fullNo = v.dataset.vehicleno || '';
+                        const cleanDigits = fullNo.replace(/[^0-9]/g, '');
+                        let shortNo = cleanDigits.length >= 4 ? cleanDigits.slice(-4) : cleanDigits;
+                        queueData[prod].push(shortNo);
+                    });
+                }
+
+                if (queueData[prod].length > maxRows) {
+                    maxRows = queueData[prod].length;
+                }
+            });
+
+            if (!hasAnyVehicle && maxRows === 0) {
+                message += "No vehicles currently in queue.\n";
+            } else {
+                message += "```\n";
+                message += headers.map(h => padSticky(h, COL_W)).join('|') + "\n";
+                message += headers.map(() => '-'.repeat(COL_W)).join('+') + "\n";
+
+                for (let i = 0; i < maxRows; i++) {
+                    let row = MATERIALS.map(prod => {
+                        const val = queueData[prod][i] || '';
+                        return padSticky(val, COL_W);
+                    }).join('|');
+                    message += row + "\n";
+                }
+                message += "```\n";
+                message += "*(Legend: `OOS` = Out of Stock)*\n";
+            }
+
+            message += linkFooter;
+            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+        });
+
+        // FEATURE 3: Offline Fallback Caching (PWA Service Worker Registration & Local Snapshot Fallback)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(reg => {
+                    console.log('ServiceWorker registration successful with scope: ', reg.scope);
+                }).catch(err => {
+                    console.warn('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
