@@ -838,9 +838,32 @@
                 color: rgba(0, 0, 0, 0.05) !important; white-space: nowrap; pointer-events: none; z-index: 1; letter-spacing: 2px;
             }
             
-            .vehicle-list { flex: 1 !important; max-height: none !important; height: 100% !important; overflow: visible !important; }
+            /* --- MODIFIED FOR STRETCHED ROW LINES --- */
+            .vehicle-list { 
+                flex: 1 !important; 
+                max-height: none !important; 
+                height: 100% !important; 
+                overflow: visible !important; 
+                display: flex !important;
+                flex-direction: column !important;
+                /* Creates repeating blank table-like lines down to the bottom */
+                background-image: repeating-linear-gradient(
+                    to bottom,
+                    transparent,
+                    transparent 24px,
+                    #000 24px,
+                    #000 25px
+                ) !important;
+            }
             
-            .vehicle-item { padding: 3px 1px !important; border-bottom: 1px solid #000 !important; background: transparent !important; text-align: center !important; }
+            .vehicle-item { 
+                padding: 3px 1px !important; 
+                border-bottom: 1px solid #000 !important; 
+                background: transparent !important; 
+                text-align: center !important; 
+            }
+            /* ---------------------------------------- */
+
             .vehicle-info > *:not(.vehicle-no-plate) { display: none !important; }
             .vehicle-no-plate { 
                 font-size: 0.45rem !important; 
